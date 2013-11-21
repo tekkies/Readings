@@ -1,3 +1,7 @@
+# Readings #
+Install released version from play store at http://goo.gl/0buPLO
+
+
 # ToDo #
 
 ## Priority ##
