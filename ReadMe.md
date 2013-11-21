@@ -1,5 +1,5 @@
 # Readings #
-Install released version from play store at http://goo.gl/0buPLO
+Install released version from play store at http://goo.gl/0buPLO (hxxps://play.google.com/store/apps/details?id=uk.co.tekkies.readings)
 
 
 # ToDo #
