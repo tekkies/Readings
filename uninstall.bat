@@ -1,0 +1,1 @@
+adb uninstall uk.co.tekkies.readings

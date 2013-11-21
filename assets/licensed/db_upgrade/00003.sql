@@ -1,0 +1,4 @@
+DROP TABLE Book
+;
+DROP TABLE Reading
+;
