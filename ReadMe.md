@@ -1,7 +1,13 @@
-# Readings #
+# Download Binary #
 
-Install released version from play store at http://goo.gl/0buPLO (hxxps://play.google.com/store/apps/details?id=uk.co.tekkies.readings)
+Install released version from play store at [https://play.google.com/store/apps/details?id=uk.co.tekkies.readings](http://goo.gl/0buPLO)
 
+# Build #
+
+Build using [Eclipse/ADT](http://developer.android.com/sdk/installing/installing-adt.html) - Just import the project into the Eclipse workspace.
+
+
+[](http://developer.android.com/sdk/installing/installing-adt.html "Eclipse/ADT")
 
 # ToDo #
 
