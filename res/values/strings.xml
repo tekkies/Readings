@@ -33,5 +33,6 @@ Some assets (e.g. icons) were created using the Android Asset Studio</string>
     <string name="loading">"Loading&#8230;"</string>
     <string name="show_summary">Show Summary</string>
     <string name="sorry_no_summary_available_yet">Sorry, no summary available, yet.</string>
+    <string name="whats_new">What\'s New</string>
 
 </resources>

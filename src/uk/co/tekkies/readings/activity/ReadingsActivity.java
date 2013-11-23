@@ -194,7 +194,7 @@ public class ReadingsActivity extends FragmentActivity implements OnDateSetListe
         LayoutInflater inflater = LayoutInflater.from(this);
         View view = inflater.inflate(R.layout.dialog_whatsnew, null);
         Builder builder = new AlertDialog.Builder(this);
-        builder.setView(view).setTitle("Whats New").setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        builder.setView(view).setTitle(getString(R.string.whats_new)).setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
