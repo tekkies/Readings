@@ -1,6 +1,10 @@
 # Download Binary #
 
-Install released version from play store at [https://play.google.com/store/apps/details?id=uk.co.tekkies.readings](http://goo.gl/0buPLO)
+Try it out!
+
+<a href="http://goo.gl/dHdjhS">
+<img class="alignright" alt="Get it on Google Play" src="https://developer.android.com/images/brand/en_generic_rgb_wo_45.png" width="129" height="45" />
+</a>
 
 # Build #
 
