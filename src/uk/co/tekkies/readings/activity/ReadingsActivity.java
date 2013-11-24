@@ -38,6 +38,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -62,6 +63,7 @@ import android.widget.Toast;
 public class ReadingsActivity extends FragmentActivity implements OnDateSetListener, OnClickListener {
 
     private static final String VERSION_KEY = "version_number";
+    static final String NEWS_TOAST_URL = "http://tekkies.co.uk/readings/api/news-toast/";
     private static final int CENTER_PAGE = 100;
     public static Calendar centerCalendar = null;
     SimpleDateFormat thisYearDateFormat;
@@ -90,40 +92,44 @@ public class ReadingsActivity extends FragmentActivity implements OnDateSetListe
         showNewsToast();
     }
     
-    private static Handler handler = new Handler(){
+    private static Handler newsToastHandler = new Handler(){
         @Override
         public void handleMessage(Message msg){
-            //((Passage)msg.obj).setSummary("downloaded");
-            //stringValues.set(index, msg.what+"|eek");
-            //int index = stringValues.indexOf(msg.obj);
-            //stringValues.set(index, msg.what+"|eek");
             Toast.makeText(readingsActivity, msg.obj.toString(), Toast.LENGTH_LONG).show();
-//            notifyDataSetChanged();
         }
     };
 
    
     private void showNewsToast() {
+        final String versionName = getVersionName();
         Thread thread = new Thread(new Runnable(){
-            final String parameter="dummy";
             @Override
             public void run(){
-                String summary=downloadSummaryBackground(parameter);
-                Message message = Message.obtain(handler, 0, summary);
-                handler.sendMessage(message);
+                String summary=downloadSummaryBackground(versionName);
+                Message message = Message.obtain(newsToastHandler, 0, summary);
+                newsToastHandler.sendMessage(message);
             }
           });
-         thread.setName("DownloadSummary");
+         thread.setName("Download news toast");
          thread.start();
     }
+
+    private String getVersionName() {
+        String versionName="";
+        try {
+            versionName = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+        } catch (NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return versionName;
+    }
     
-    private String downloadSummaryBackground(String parameter2) {
+    private String downloadSummaryBackground(String versionName) {
         String summary=null;
         
         URL url;
         try {
-            String summaryUrl = "http://tekkies.co.uk/readings/summary/genesis1.txt";
-            url = new URL(summaryUrl);
+            url = new URL(NEWS_TOAST_URL+"?"+versionName);
             URLConnection connection = url.openConnection();
             connection.connect();
             BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
@@ -131,7 +137,7 @@ public class ReadingsActivity extends FragmentActivity implements OnDateSetListe
             summary = "";
             while( line != null)
             {
-                summary += line;
+                summary += line+"\n";
                 line = reader.readLine();
             }
             reader.close();
