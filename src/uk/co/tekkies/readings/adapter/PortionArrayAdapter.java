@@ -21,11 +21,11 @@ import java.util.List;
 
 import uk.co.tekkies.readings.R;
 import uk.co.tekkies.readings.ReadingsApplication;
+import uk.co.tekkies.readings.activity.PassageActivity;
 import uk.co.tekkies.readings.activity.ReadingsActivity;
 import uk.co.tekkies.readings.fragment.ReadingsFragment;
 import uk.co.tekkies.readings.model.ParcelableReadings;
 import uk.co.tekkies.readings.model.Passage;
-import uk.co.tekkies.readings.workinprogress.PassageActivity;
 
 import android.app.Activity;
 import android.content.Context;
@@ -86,8 +86,11 @@ public class PortionArrayAdapter extends ArrayAdapter<Passage> implements OnClic
     public void onClick(View v) {
         switch (v.getId()) {
 
-        case R.id.imageViewReadOffline:
         case R.id.passage:
+            openIntegratedReader(((View) v.getParent().getParent()).getTag().toString());
+            break;
+        
+        case R.id.imageViewReadOffline:
             openOfflineBible(((View) v.getParent().getParent()).getTag().toString());
             break;
         case R.id.imageListen:

@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-package uk.co.tekkies.readings.workinprogress;
+package uk.co.tekkies.readings.fragment;
 
 import uk.co.tekkies.readings.R;
 import android.database.Cursor;

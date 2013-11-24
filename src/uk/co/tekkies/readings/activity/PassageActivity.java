@@ -14,10 +14,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-package uk.co.tekkies.readings.workinprogress;
+package uk.co.tekkies.readings.activity;
 
 import uk.co.tekkies.readings.R;
 import uk.co.tekkies.readings.ReadingsApplication;
+import uk.co.tekkies.readings.fragment.PassageFragment;
 import uk.co.tekkies.readings.model.ParcelableReadings;
 import android.content.SharedPreferences;
 import android.os.Bundle;

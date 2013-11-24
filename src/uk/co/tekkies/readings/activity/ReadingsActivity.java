@@ -49,6 +49,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
 import android.widget.DatePicker;
 
 public class ReadingsActivity extends FragmentActivity implements OnDateSetListener, OnClickListener {
