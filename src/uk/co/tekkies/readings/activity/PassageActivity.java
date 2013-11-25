@@ -52,6 +52,16 @@ public class PassageActivity extends FragmentActivity implements OnClickListener
         setContentView(R.layout.passage_activity);
         passableReadings = (ParcelableReadings) (getIntent().getParcelableExtra(ParcelableReadings.PARCEL_NAME));
         setupPager();
+        gotoPage(passableReadings.selected);
+    }
+
+    private void gotoPage(String selected) {
+        for(int page=0;page<passableReadings.passages.size();page++){
+            if(passableReadings.passages.get(page).getTitle().equalsIgnoreCase(selected)){
+                viewPager.setCurrentItem(page);
+                break;
+            }
+        }
     }
 
     private void setChosenTheme() {
