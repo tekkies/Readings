@@ -130,7 +130,7 @@ public class ReadingsActivity extends FragmentActivity implements OnDateSetListe
         URL url;
         try {
             //Append version, so we can easily prompt users to upgrade, if necessary.
-            url = new URL(NEWS_TOAST_URL + "?" + versionName);
+            url = new URL(NEWS_TOAST_URL + "?v=" + versionName);
             URLConnection connection = url.openConnection();
             connection.connect();
             BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
