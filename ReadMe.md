@@ -15,10 +15,6 @@ Build using [Eclipse/ADT](http://developer.android.com/sdk/installing/installing
 
 # ToDo #
 
-## Priority ##
-- Move into GitHub
- - Submodule Summaries
-
 ## Passage Activity ##
 - Remove summary action bar icon
 ## Reading Activity ##
@@ -36,15 +32,10 @@ Build using [Eclipse/ADT](http://developer.android.com/sdk/installing/installing
   - http://stackoverflow.com/questions/2651360/how-to-provide-animation-when-calling-another-activity-in-android
 ## Future ##
 - Chain MP3 playing
-- Autoscroll
-- TTS
+  - Autoscroll?
+  - TTS announce 
 - NIV
- - Get install stats for leverge for content provider
+ - Get install stats for leverge for content provider?
 - Customise passage list icons
  - Checkbox for read
   - Sync
-
-# Testing #
-- v2.xx -> v3.xx upgrade
- - Enable summary then upgrade
- - Disable summary then upgrade
