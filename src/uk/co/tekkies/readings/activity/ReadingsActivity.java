@@ -29,6 +29,7 @@ import uk.co.tekkies.readings.ReadingsApplication;
 import uk.co.tekkies.readings.fragment.DatePickerFragment;
 import uk.co.tekkies.readings.fragment.ReadingsFragment;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.DatePickerDialog.OnDateSetListener;
@@ -73,6 +74,7 @@ public class ReadingsActivity extends FragmentActivity implements OnDateSetListe
     Boolean today = true;
     static ReadingsActivity readingsActivity;
 
+    @SuppressLint("SimpleDateFormat") //We don't actually want local formatting.  It's too cluttered.
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
