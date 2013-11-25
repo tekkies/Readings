@@ -35,14 +35,12 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 
-public class PassageActivity extends FragmentActivity implements OnClickListener {
+public class PassageActivity extends BaseActivity {
 
     PagerAdapter pagerAdapter;
     ViewPager viewPager;
     ParcelableReadings passableReadings;
-    SharedPreferences sharedPreferences;
-    Boolean nightMode;
-
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         setChosenTheme();
@@ -64,11 +62,6 @@ public class PassageActivity extends FragmentActivity implements OnClickListener
         }
     }
 
-    private void setChosenTheme() {
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        nightMode = sharedPreferences.getBoolean(getString(R.string.pref_key_night_mode), false);
-        setTheme(nightMode ? R.style.Night : R.style.Day);
-    }
 
     private void setupPager() {
         pagerAdapter = new PagerAdapter(getSupportFragmentManager());
@@ -132,15 +125,4 @@ public class PassageActivity extends FragmentActivity implements OnClickListener
         }
     }
 
-    private void doDayNightToggle() {
-        nightMode = !nightMode;
-        sharedPreferences.edit().putBoolean(getString(R.string.pref_key_night_mode), nightMode).commit();
-        recreate();
-    }
-
-    public void onClick(View v) {
-        switch (v.getId()) {
-
-        }
-    }
 }

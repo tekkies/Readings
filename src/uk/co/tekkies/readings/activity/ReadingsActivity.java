@@ -52,7 +52,7 @@ import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.DatePicker;
 
-public class ReadingsActivity extends FragmentActivity implements OnDateSetListener, OnClickListener {
+public class ReadingsActivity extends BaseActivity implements OnDateSetListener, OnClickListener {
 
     private static final String VERSION_KEY = "version_number";
     private static final int CENTER_PAGE = 100;
