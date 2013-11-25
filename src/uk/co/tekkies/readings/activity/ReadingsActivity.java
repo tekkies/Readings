@@ -32,7 +32,6 @@ import uk.co.tekkies.readings.fragment.ReadingsFragment;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.DatePickerDialog.OnDateSetListener;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -72,8 +71,7 @@ public class ReadingsActivity extends FragmentActivity implements OnDateSetListe
     PagerAdapter pagerAdapter;
     ViewPager viewPager;
     Boolean today = true;
-    static ReadingsActivity readingsActivity; 
-    
+    static ReadingsActivity readingsActivity;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -91,31 +89,32 @@ public class ReadingsActivity extends FragmentActivity implements OnDateSetListe
         }
         showNewsToast();
     }
-    
-    private static Handler newsToastHandler = new Handler(){
+
+    private static Handler newsToastHandler = new Handler() {
         @Override
-        public void handleMessage(Message msg){
+        public void handleMessage(Message msg) {
             Toast.makeText(readingsActivity, msg.obj.toString(), Toast.LENGTH_LONG).show();
         }
     };
 
-   
     private void showNewsToast() {
         final String versionName = getVersionName();
-        Thread thread = new Thread(new Runnable(){
+        Thread thread = new Thread(new Runnable() {
             @Override
-            public void run(){
-                String summary=downloadSummaryBackground(versionName);
-                Message message = Message.obtain(newsToastHandler, 0, summary);
-                newsToastHandler.sendMessage(message);
+            public void run() {
+                String summary = backgroundDownloadNewsToast(versionName);
+                if(summary != null && summary != "") {
+                    Message message = Message.obtain(newsToastHandler, 0, summary);
+                    newsToastHandler.sendMessage(message);
+                }
             }
-          });
-         thread.setName("Download news toast");
-         thread.start();
+        });
+        thread.setName("Download news toast");
+        thread.start();
     }
 
     private String getVersionName() {
-        String versionName="";
+        String versionName = "";
         try {
             versionName = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
         } catch (NameNotFoundException e) {
@@ -123,33 +122,34 @@ public class ReadingsActivity extends FragmentActivity implements OnDateSetListe
         }
         return versionName;
     }
-    
-    private String downloadSummaryBackground(String versionName) {
-        String summary=null;
-        
+
+    private String backgroundDownloadNewsToast(String versionName) {
+        String summary = null;
         URL url;
         try {
-            url = new URL(NEWS_TOAST_URL+"?"+versionName);
+            //Append version, so we can easily prompt users to upgrade, if necessary.
+            url = new URL(NEWS_TOAST_URL + "?" + versionName);
             URLConnection connection = url.openConnection();
             connection.connect();
             BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
             String line = reader.readLine();
-            summary = "";
-            while( line != null)
-            {
-                summary += line+"\n";
+            //Sanity check message:  e.g. We wouldn't want to toast html from a hotspot paywall
+            if(line.equals("uk.co.tekkies.readings.news-toast")) {
                 line = reader.readLine();
+                summary = "";
+                while (line != null) {
+                    summary += line + "\n";
+                    line = reader.readLine();
+                }
             }
             reader.close();
         } catch (Exception e) {
+            //Ignore any problems.  It's no big deal if the toast doesn't show.
             e.printStackTrace();
         }
-        
         return summary;
     }
 
-    
-    
     private void setDate(Calendar calendar) {
         Log.v("DATE", "setDate(" + anotherYearDateFormat.format(new Date(calendar.getTimeInMillis())));
         centerCalendar = calendar;
@@ -266,12 +266,13 @@ public class ReadingsActivity extends FragmentActivity implements OnDateSetListe
         LayoutInflater inflater = LayoutInflater.from(this);
         View view = inflater.inflate(R.layout.dialog_whatsnew, null);
         Builder builder = new AlertDialog.Builder(this);
-        builder.setView(view).setTitle(getString(R.string.whats_new)).setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
+        builder.setView(view).setTitle(getString(R.string.whats_new))
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
         builder.create().show();
     }
 
