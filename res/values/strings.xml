@@ -31,8 +31,15 @@ Some assets (e.g. icons) were created using the Android Asset Studio</string>
     <string name="today">Today</string>
     <string name="tomorrow">Tomorrow</string>
     <string name="loading">"Loading&#8230;"</string>
-    <string name="show_summary">Show Summary</string>
+    <string name="pref_title_show_summary">Show chapter summary</string>
     <string name="sorry_no_summary_available_yet">Sorry, no summary available, yet.</string>
     <string name="whats_new">What\'s New</string>
+    <string name="pref_summary_show_summary">Show passage summaries if available</string>
+    <string name="pref_title_general">General</string>
+    <string name="pref_title_connect">Connect</string>
+    <string name="pref_title_rate">Rate this app</string>
+    <string name="pref_summary_rate">If you find this app helpful, please consider rating it and clicking +1</string>
+    <string name="pref_title_feedback">Feedback</string>
+    <string name="pref_summary_feedback">Vote for ideas and submit new ideas</string>
 
 </resources>
