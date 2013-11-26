@@ -1,6 +1,10 @@
 # Download Binary #
 
-Install released version from play store at [https://play.google.com/store/apps/details?id=uk.co.tekkies.readings](http://goo.gl/0buPLO)
+Try it out!
+
+<a href="http://goo.gl/dHdjhS">
+<img class="alignright" alt="Get it on Google Play" src="https://developer.android.com/images/brand/en_generic_rgb_wo_45.png" width="129" height="45" />
+</a>
 
 # Build #
 
@@ -10,10 +14,6 @@ Build using [Eclipse/ADT](http://developer.android.com/sdk/installing/installing
 [](http://developer.android.com/sdk/installing/installing-adt.html "Eclipse/ADT")
 
 # ToDo #
-
-## Priority ##
-- Move into GitHub
- - Submodule Summaries
 
 ## Passage Activity ##
 - Remove summary action bar icon
@@ -32,15 +32,10 @@ Build using [Eclipse/ADT](http://developer.android.com/sdk/installing/installing
   - http://stackoverflow.com/questions/2651360/how-to-provide-animation-when-calling-another-activity-in-android
 ## Future ##
 - Chain MP3 playing
-- Autoscroll
-- TTS
+  - Autoscroll?
+  - TTS announce 
 - NIV
- - Get install stats for leverge for content provider
+ - Get install stats for leverge for content provider?
 - Customise passage list icons
  - Checkbox for read
   - Sync
-
-# Testing #
-- v2.xx -> v3.xx upgrade
- - Enable summary then upgrade
- - Disable summary then upgrade

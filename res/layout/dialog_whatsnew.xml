@@ -28,18 +28,17 @@
 			    android:layout_height="wrap_content"
 			    android:src="@drawable/ic_whats_new_icon_change" />
             
-
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="Version 2.90.0"
+                android:text="Version 3.0.0"
                 android:textStyle="bold" />
 
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="ICS Build" />
+                android:text="- Light theme" />
 
             
             
@@ -53,7 +52,7 @@
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="Swipe left/right to go to previous or future dates" />
+                android:text="- Swipe left/right to go to previous or future dates" />
 
             <TextView
                 android:layout_width="fill_parent"
