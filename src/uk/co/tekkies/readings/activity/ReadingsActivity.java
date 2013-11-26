@@ -73,6 +73,7 @@ public class ReadingsActivity extends FragmentActivity implements OnDateSetListe
     ViewPager viewPager;
     Boolean today = true;
     static ReadingsActivity readingsActivity;
+    static Boolean toastAttempted=false; //Static so toast won't show if already exists in RAM.
 
     @SuppressLint("SimpleDateFormat") //We don't actually want local formatting.  It's too cluttered.
     @Override
@@ -89,7 +90,11 @@ public class ReadingsActivity extends FragmentActivity implements OnDateSetListe
         if (!loadInstanceState(savedInstanceState)) {
             setDate(Calendar.getInstance());
         }
-        showNewsToast();
+        if(!toastAttempted){
+            toastAttempted = true;
+            showNewsToast();    
+        }
+        
     }
 
     private static Handler newsToastHandler = new Handler() {
