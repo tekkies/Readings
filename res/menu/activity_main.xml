@@ -1,6 +1,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
+        android:id="@+id/menu_brightness"
+        android:icon="@drawable/ic_action_brightness"
+        android:orderInCategory="60"
+        android:showAsAction="always"
+        android:title="@string/menu_brightness"/>
+    
+    <item
         android:id="@+id/menu_summary"
         android:icon="@drawable/ic_action_summary"
         android:orderInCategory="80"

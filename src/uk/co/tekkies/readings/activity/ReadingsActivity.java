@@ -37,7 +37,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -49,7 +48,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
-import android.view.WindowManager;
 import android.widget.DatePicker;
 
 public class ReadingsActivity extends BaseActivity implements OnDateSetListener, OnClickListener {
@@ -214,6 +212,9 @@ public class ReadingsActivity extends BaseActivity implements OnDateSetListener,
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+        case R.id.menu_brightness:
+            doDayNightToggle();
+            return true;
         case R.id.menu_date:
             doPickDate();
             return true;
