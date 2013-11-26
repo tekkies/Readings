@@ -6,24 +6,25 @@
         android:orderInCategory="60"
         android:showAsAction="always"
         android:title="@string/menu_brightness"/>
+
+    <item
+        android:id="@+id/menu_date"
+        android:icon="@drawable/ic_action_date"
+        android:orderInCategory="80"
+        android:showAsAction="ifRoom"
+        android:title="@string/menu_date"/>
     
     <item
         android:id="@+id/menu_summary"
         android:icon="@drawable/ic_action_summary"
-        android:orderInCategory="80"
-        android:showAsAction="always"
-        android:title="@string/menu_summary"/>
-    <item
-        android:id="@+id/menu_date"
-        android:icon="@drawable/ic_action_date"
         android:orderInCategory="100"
-        android:showAsAction="always"
-        android:title="@string/menu_date"/>
+        android:showAsAction="ifRoom"
+        android:title="@string/menu_summary"/>
     <item
         android:id="@+id/menu_settings"
         android:icon="@drawable/ic_action_settings"
         android:orderInCategory="120"
-        android:showAsAction="always"
+        android:showAsAction="ifRoom"
         android:title="@string/menu_settings"/>
 
     <!--
