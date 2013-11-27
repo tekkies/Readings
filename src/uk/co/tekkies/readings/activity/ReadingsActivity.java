@@ -299,6 +299,9 @@ public class ReadingsActivity extends FragmentActivity implements OnDateSetListe
         case R.id.menu_settings:
             doShowSettings();
             return true;
+        case R.id.menu_about:
+            doShowAboutDialog();
+            return true;
         default:
             return super.onOptionsItemSelected(item);
         }
@@ -307,6 +310,20 @@ public class ReadingsActivity extends FragmentActivity implements OnDateSetListe
     private void doShowSettings() {
         Intent intent = new Intent(this, SettingsActivity.class);
         startActivity(intent);
+    }
+    
+    private void doShowAboutDialog() {
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View view = inflater.inflate(R.layout.dialog_about, null);
+        Builder builder = new AlertDialog.Builder(this);
+        builder.setView(view).setTitle(getString(R.string.about_readings))
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        builder.create().show();
     }
 
     private void doFeedback() {

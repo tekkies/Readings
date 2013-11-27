@@ -1,10 +1,18 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
+    
+        <item
+        android:id="@+id/menu_about"
+        android:icon="@drawable/ic_action_action_about"
+        android:orderInCategory="70"
+        android:showAsAction="never"
+        android:title="@string/about_readings"/>
+    
     <item
         android:id="@+id/menu_summary"
         android:icon="@drawable/ic_action_summary"
         android:orderInCategory="80"
-        android:showAsAction="always"
+        android:showAsAction="ifRoom"
         android:title="@string/menu_summary"/>
     <item
         android:id="@+id/menu_date"
@@ -18,7 +26,7 @@
         android:orderInCategory="120"
         android:showAsAction="always"
         android:title="@string/menu_settings"/>
-
+    
     <!--
          <item android:id="@+id/menu_feedback"
         android:title="@string/menu_feedback"
