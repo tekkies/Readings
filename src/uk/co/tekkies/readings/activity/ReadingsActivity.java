@@ -85,7 +85,9 @@ public class ReadingsActivity extends FragmentActivity implements OnDateSetListe
         anotherYearDateFormat = new SimpleDateFormat("E d MMM yy");
         ReadingsApplication.checkForMP3(this);
         setContentView(R.layout.readings_activity);
-        initialiseWhatsNew();
+        if(checkForUpgrade()) {
+            showWhatsNewDialog();
+        }            
         setupPager();
         if (!loadInstanceState(savedInstanceState)) {
             setDate(Calendar.getInstance());
@@ -252,7 +254,7 @@ public class ReadingsActivity extends FragmentActivity implements OnDateSetListe
 
     }
 
-    private void initialiseWhatsNew() {
+    private Boolean checkForUpgrade() {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         int currentVersionNumber = 0;
         int savedVersionNumber = sharedPref.getInt(VERSION_KEY, 0);
@@ -262,11 +264,18 @@ public class ReadingsActivity extends FragmentActivity implements OnDateSetListe
         } catch (Exception e) {
         }
         if (currentVersionNumber > savedVersionNumber) {
-            showWhatsNewDialog();
             Editor editor = sharedPref.edit();
             editor.putInt(VERSION_KEY, currentVersionNumber);
             editor.commit();
         }
+        return (currentVersionNumber > savedVersionNumber);
+    }
+
+   
+    private void initialiseWhatsNew() {
+        if(checkForUpgrade()) {
+            showWhatsNewDialog();
+        }            
     }
 
     private void showWhatsNewDialog() {
@@ -300,8 +309,13 @@ public class ReadingsActivity extends FragmentActivity implements OnDateSetListe
             doShowSettings();
             return true;
         case R.id.menu_about:
-            doShowAboutDialog();
+            showAboutDialog();
             return true;
+        case R.id.menu_whats_new:
+            showWhatsNewDialog();
+            return true;
+
+        
         default:
             return super.onOptionsItemSelected(item);
         }
@@ -312,7 +326,7 @@ public class ReadingsActivity extends FragmentActivity implements OnDateSetListe
         startActivity(intent);
     }
     
-    private void doShowAboutDialog() {
+    private void showAboutDialog() {
         LayoutInflater inflater = LayoutInflater.from(this);
         View view = inflater.inflate(R.layout.dialog_about, null);
         Builder builder = new AlertDialog.Builder(this);

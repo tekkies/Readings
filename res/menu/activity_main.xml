@@ -1,13 +1,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    
-        <item
+    <item
         android:id="@+id/menu_about"
         android:icon="@drawable/ic_action_action_about"
-        android:orderInCategory="70"
+        android:orderInCategory="130"
         android:showAsAction="never"
         android:title="@string/about_readings"/>
-    
     <item
         android:id="@+id/menu_summary"
         android:icon="@drawable/ic_action_summary"
@@ -26,12 +24,9 @@
         android:orderInCategory="120"
         android:showAsAction="always"
         android:title="@string/menu_settings"/>
-    
-    <!--
-         <item android:id="@+id/menu_feedback"
-        android:title="@string/menu_feedback"
-        android:orderInCategory="120"
-        android:showAsAction="always"
-        android:icon="@drawable/ic_action_feedback" />    -->
-
-</menu>
+    <item
+        android:id="@+id/menu_whats_new"
+        android:orderInCategory="140"
+        android:showAsAction="never"
+        android:title="@string/whats_new"/>
+</menu>
