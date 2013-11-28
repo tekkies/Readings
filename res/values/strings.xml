@@ -3,7 +3,8 @@
 
     <string name="app_name">Readings</string>
     <string name="copyright">Copyright 2013 Andrew Joiner</string>
-    <string name="about">Copyright 2013 Andrew Joiner
+    <string name="about_app_text">
+\nCopyright 2013 Andrew Joiner
 \n
 \nLicensed under the Apache License, Version 2.0 (the "License");
 \nyou may not use this file except in compliance with the License.
@@ -17,7 +18,9 @@
 \nSee the License for the specific language governing permissions and
 \nlimitations under the License.
 \n
-\nSome assets (e.g. icons) were created using the Android Asset Studio</string>
+\nSome assets (e.g. icons) were created using the Android Asset Studio
+\n
+</string>
     <string name="menu_feedback">Feedback</string>
     <string name="menu_date">Date</string>
     <string name="menu_summary">Summary</string>
@@ -42,5 +45,9 @@
     <string name="pref_title_feedback">Feedback</string>
     <string name="pref_summary_feedback">Vote for ideas and submit new ideas</string>
     <string name="about_readings">About Readings</string>
+    <string name="about_content_text">\n                Reading plan sourced from The Bible Companion reading plan as published by The Christadelphian (http://www.thechristadelphian.com).\n                \n                Chapter summaries based on Thomas Scott Bible Commentary, 1866</string>
+    <string name="about_content_title">Content</string>
+    <string name="about_source_text">App source code available at https://github.com/tekkies/readings</string>
+    <string name="about_app_title">App</string>
 
 </resources>
