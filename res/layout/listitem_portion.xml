@@ -10,7 +10,7 @@
 
         <TextView
             android:id="@+id/passage_title"
-            android:layout_width="wrap_content"
+            android:layout_width="0dip"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
@@ -26,7 +26,8 @@
             android:padding="10dp"
             android:src="@drawable/ic_action_listen"
             android:tag="listen"
-            android:visibility="invisible" />
+            android:visibility="invisible"
+            android:contentDescription="@string/listen" />
 
         <ImageView
             android:id="@+id/imageViewReadOffline"
@@ -34,7 +35,7 @@
             android:layout_height="wrap_content"
             android:padding="10dp"
             android:src="@drawable/ic_action_read_offline"
-            android:tag="offline" />
+            android:tag="offline" android:contentDescription="@string/read_offlice"/>
 
         <ImageView
             android:id="@+id/imageViewReadOnline"

@@ -20,19 +20,14 @@ import uk.co.tekkies.readings.R;
 import uk.co.tekkies.readings.ReadingsApplication;
 import uk.co.tekkies.readings.fragment.PassageFragment;
 import uk.co.tekkies.readings.model.ParcelableReadings;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 
 public class PassageActivity extends BaseActivity {

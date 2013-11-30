@@ -269,14 +269,7 @@ public class ReadingsActivity extends BaseActivity implements OnDateSetListener,
         }
         return (currentVersionNumber > savedVersionNumber);
     }
-
    
-    private void initialiseWhatsNew() {
-        if(checkForUpgrade()) {
-            showWhatsNewDialog();
-        }            
-    }
-
     private void showWhatsNewDialog() {
         LayoutInflater inflater = LayoutInflater.from(this);
         View view = inflater.inflate(R.layout.dialog_whatsnew, null);

@@ -53,5 +53,8 @@
     <string name="title_install">Install</string>
     <string name="install_kjv_bible_plugin">Install KJV Bible Plugin?</string>
     <string name="ok">OK</string>
+    <string name="listen">Listen</string>
+    <string name="read_offlice">Read offline</string>
+    <string name="read_online">Read online</string>
 
 </resources>
