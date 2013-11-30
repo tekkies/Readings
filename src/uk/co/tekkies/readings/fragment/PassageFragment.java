@@ -107,10 +107,7 @@ public class PassageFragment extends Fragment {
        Log.v("ZOOM", "scaleFactor="+detector.getScaleFactor());
        scale *= detector.getScaleFactor();
        Log.v("ZOOM", "scale="+scale);
-       
-       
-       textView.setScaleX((float) scale);
-       textView.setScaleY((float) scale);
+       textView.setTextSize((float) (scale * 10.0));
     return true;
    }
 
