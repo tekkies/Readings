@@ -43,7 +43,7 @@
             android:layout_height="wrap_content"
             android:padding="10dp"
             android:src="@drawable/ic_action_read_online"
-            android:tag="online" />
+            android:tag="online" android:contentDescription="@string/read_online"/>
     </LinearLayout>
 
     <TextView
