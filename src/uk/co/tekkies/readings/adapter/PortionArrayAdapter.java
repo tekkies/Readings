@@ -28,10 +28,14 @@ import uk.co.tekkies.readings.model.ParcelableReadings;
 import uk.co.tekkies.readings.model.Passage;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.preference.PreferenceManager;
@@ -58,7 +62,7 @@ public class PortionArrayAdapter extends ArrayAdapter<Passage> implements OnClic
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         ViewGroup view = (ViewGroup) inflater.inflate(R.layout.listitem_portion, parent, false);
-        TextView textViewPassageTitle = (TextView) view.findViewById(R.id.passage);
+        TextView textViewPassageTitle = (TextView) view.findViewById(R.id.passage_title);
         TextView textViewSummary = (TextView) view.findViewById(R.id.textViewSummary);
         textViewPassageTitle.setText(passages.get(position).getTitle());
         view.setTag(passages.get(position).getTitle());
@@ -85,11 +89,9 @@ public class PortionArrayAdapter extends ArrayAdapter<Passage> implements OnClic
 
     public void onClick(View v) {
         switch (v.getId()) {
-
-        case R.id.passage:
-            openIntegratedReader(((View) v.getParent().getParent()).getTag().toString());
+        case R.id.passage_title:
+            tryOpenIntegratedReader(v);
             break;
-        
         case R.id.imageViewReadOffline:
             openOfflineBible(((View) v.getParent().getParent()).getTag().toString());
             break;
@@ -101,6 +103,48 @@ public class PortionArrayAdapter extends ArrayAdapter<Passage> implements OnClic
             // openIntegratedReader(((View)v.getParent().getParent()).getTag().toString());
             break;
         }
+    }
+
+    private void tryOpenIntegratedReader(View v) {
+        PackageInfo packageInfo = getOfflineKgvPackageInfo();
+        if(packageInfo == null){
+            askUserToInstallKjvPlugin();
+        } else {
+            if(packageInfo.versionCode < 103030000) {
+                enableKjvPluginBeta();
+            } else {
+                openIntegratedReader(((View) v.getParent().getParent()).getTag().toString());
+            }
+        }
+    }
+
+    private void enableKjvPluginBeta() {
+        AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(activity);
+        dlgAlert.setMessage("Please enable the KJV Plugin Beta");
+        dlgAlert.setTitle("Beta");
+        dlgAlert.setPositiveButton(R.string.ok, null);
+        dlgAlert.setCancelable(true);
+        dlgAlert.setPositiveButton("Ok",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        String url = "http://goo.gl/N8IFhc";
+                        Intent webIntent = new Intent(Intent.ACTION_VIEW);
+                        Uri uri = Uri.parse(url);
+                        webIntent.setData(uri);
+                        activity.startActivity(webIntent);
+                    }
+                });
+        dlgAlert.create().show();
+    }
+
+    private PackageInfo getOfflineKgvPackageInfo() {
+        PackageInfo packageInfo=null;
+        try {
+            packageInfo = activity.getPackageManager().getPackageInfo("uk.co.tekkies.plugin.kjv", 0);
+        } catch (NameNotFoundException e) {
+            //Assume not installed
+        }
+        return packageInfo;
     }
 
     private void openOfflineBible(String passage) {
@@ -116,12 +160,27 @@ public class PortionArrayAdapter extends ArrayAdapter<Passage> implements OnClic
         } else {
             // install the off-line Bible
             Toast.makeText(activity, "The offline bible must be installed from Google Play.", Toast.LENGTH_LONG).show();
-            installBibleIfRequired();
+            installKjvPlugin();
         }
 
     }
+    
+    private void askUserToInstallKjvPlugin() {
+        AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(activity);
+        dlgAlert.setMessage(R.string.install_kjv_bible_plugin);
+        dlgAlert.setTitle(R.string.title_install);
+        dlgAlert.setPositiveButton(R.string.ok, null);
+        dlgAlert.setCancelable(true);
+        dlgAlert.setPositiveButton(R.string.ok,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        installKjvPlugin();
+                    }
+                });
+        dlgAlert.create().show();
+    }
 
-    private boolean installBibleIfRequired() {
+    private boolean installKjvPlugin() {
         boolean installed = false;
         Uri marketUri = Uri.parse("market://details?id=uk.co.tekkies.plugin.kjv");
         Intent marketIntent = new Intent(Intent.ACTION_VIEW).setData(marketUri);
@@ -163,8 +222,8 @@ public class PortionArrayAdapter extends ArrayAdapter<Passage> implements OnClic
             activity.startActivity(intent);
         } else {
             // install the off-line Bible
-            Toast.makeText(activity, "The offline bible must be installed from Google Play.", Toast.LENGTH_LONG).show();
-            installBibleIfRequired();
+            Toast.makeText(activity, "The MP3 plugin must be installed from Google Play.", Toast.LENGTH_LONG).show();
+            installKjvPlugin();
         }
     }
 }
