@@ -90,6 +90,7 @@ public class PortionArrayAdapter extends ArrayAdapter<Passage> implements OnClic
     public void onClick(View v) {
         switch (v.getId()) {
         case R.id.passage_title:
+        //case R.id.textViewSummary:
             tryOpenIntegratedReader(v);
             break;
         case R.id.imageViewReadOffline:

@@ -22,14 +22,21 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
+import android.view.ScaleGestureDetector.SimpleOnScaleGestureListener;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.widget.TextView;
 
 public class PassageFragment extends Fragment {
 
+    TextView textView;
+    ScaleGestureDetector scaleGestureDetector;
+    
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         Bundle args = getArguments();
@@ -41,12 +48,6 @@ public class PassageFragment extends Fragment {
     }
 
     protected String render(String html) {
-        html = html.replace("<v>", "<sup><font color=\"red\">");
-        html = html.replace("</v>", "</font></sup>");
-        return reRender(html);
-    }
-
-    protected String reRender(String html) {
         html = html.replace("<summary>", "<i><font color=\"blue\">");
         html = html.replace("</summary>", "</font></i>");
         html = html.replace("<v>", "<sup><font color=\"red\">");
@@ -63,7 +64,16 @@ public class PassageFragment extends Fragment {
     @Override
     public View onCreateView(android.view.LayoutInflater inflater, android.view.ViewGroup container,
             Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.passage_fragment, container, false);
+        View mainView = inflater.inflate(R.layout.passage_fragment, container, false);
+        textView  = (TextView)mainView.findViewById(R.id.textView1);
+        scaleGestureDetector = new ScaleGestureDetector(getActivity(), new TextViewOnScaleGestureListener());
+        textView.setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                scaleGestureDetector.onTouchEvent(event);
+                return true;            }
+        });
+        return mainView;
     }
 
     @Override
@@ -72,19 +82,6 @@ public class PassageFragment extends Fragment {
         inflater.inflate(R.menu.fragment_readings, menu);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-        case R.id.menu_summary:
-            // doToggleSummary();
-            return true;
-
-        default:
-            return false;
-        }
-    }
-
-    
     protected String getPassageXml(String passage) {
         String passageXml = "Error";
         String[] row = new String[] { "passage" };
@@ -99,4 +96,36 @@ public class PassageFragment extends Fragment {
         }
         return passageXml;
     }
+  
+    public class TextViewOnScaleGestureListener extends
+    SimpleOnScaleGestureListener {
+        
+    double scale = 1.0;
+
+   @Override
+   public boolean onScale(ScaleGestureDetector detector) {
+       Log.v("ZOOM", "scaleFactor="+detector.getScaleFactor());
+       scale *= detector.getScaleFactor();
+       Log.v("ZOOM", "scale="+scale);
+       
+       
+       textView.setScaleX((float) scale);
+       textView.setScaleY((float) scale);
+    return true;
+   }
+
+   @Override
+   public boolean onScaleBegin(ScaleGestureDetector detector) {
+       return true;
+   }
+
+   @Override
+   public void onScaleEnd(ScaleGestureDetector detector) {
+   }
+
+  }
+    
+    
+    
+    
 }
