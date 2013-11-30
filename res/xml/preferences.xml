@@ -1,9 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <CheckBoxPreference
-        android:key="@string/pref_key_show_summary"
-        android:summary="Show passage summaries if available"
-        android:title="@string/show_summary" />
+    <PreferenceCategory android:title="@string/pref_title_general" >
+        <CheckBoxPreference
+            android:summary="@string/pref_summary_show_summary"
+            android:title="@string/pref_title_show_summary" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_title_connect" >
+        <PreferenceScreen
+            android:summary="@string/pref_summary_rate"
+            android:title="@string/pref_title_rate" >
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="http://market.android.com/details?id=uk.co.tekkies.readings" />
+        </PreferenceScreen>
+        <PreferenceScreen
+            android:title="@string/pref_title_feedback" 
+            android:summary="@string/pref_summary_feedback">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="https://creadings.uservoice.com" />
+        </PreferenceScreen>
+    </PreferenceCategory>
 
+    
 </PreferenceScreen>

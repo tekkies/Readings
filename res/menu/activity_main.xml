@@ -1,37 +1,44 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <item
-        android:id="@+id/menu_brightness"
-        android:icon="@drawable/ic_action_brightness"
-        android:orderInCategory="60"
-        android:showAsAction="always"
-        android:title="@string/menu_brightness"/>
-
-    <item
-        android:id="@+id/menu_date"
-        android:icon="@drawable/ic_action_date"
-        android:orderInCategory="80"
-        android:showAsAction="ifRoom"
-        android:title="@string/menu_date"/>
-    
-    <item
-        android:id="@+id/menu_summary"
-        android:icon="@drawable/ic_action_summary"
-        android:orderInCategory="100"
-        android:showAsAction="ifRoom"
-        android:title="@string/menu_summary"/>
-    <item
-        android:id="@+id/menu_settings"
-        android:icon="@drawable/ic_action_settings"
-        android:orderInCategory="120"
-        android:showAsAction="ifRoom"
-        android:title="@string/menu_settings"/>
-
-    <!--
-         <item android:id="@+id/menu_feedback"
-        android:title="@string/menu_feedback"
-        android:orderInCategory="120"
-        android:showAsAction="always"
-        android:icon="@drawable/ic_action_feedback" />    -->
-
+        <item
+            android:id="@+id/menu_summary"
+            android:icon="@drawable/ic_action_summary"
+            android:orderInCategory="80"
+            android:showAsAction="ifRoom"
+            android:title="@string/menu_brightness"/>
+        <item
+            android:id="@+id/menu_date"
+            android:icon="@drawable/ic_action_date"
+            android:orderInCategory="80"
+            android:showAsAction="ifRoom"
+            android:title="@string/menu_date"/>
+        <item
+            android:id="@+id/menu_settings"
+            android:icon="@drawable/ic_action_settings"
+            android:orderInCategory="120"
+            android:showAsAction="ifRoom"
+            android:title="@string/menu_settings"/>
+        <item
+            android:id="@+id/menu_about"
+            android:icon="@drawable/ic_action_action_about"
+            android:orderInCategory="130"
+            android:showAsAction="never"
+            android:title="@string/about_readings"/>
+        <item
+            android:id="@+id/menu_whats_new"
+            android:orderInCategory="140"
+            android:showAsAction="never"
+            android:title="@string/whats_new"/>
+        <item
+            android:id="@+id/menu_brightness_overflow"
+            android:orderInCategory="150"
+            android:showAsAction="never"
+            android:title="@string/action_day_night"/>
+		<item
+	        android:id="@+id/menu_brightness"
+	        android:title="@string/menu_brightness"
+	        android:icon="@drawable/ic_action_brightness"
+	        android:showAsAction="always"
+	        android:orderInCategory="200"/>
+     
 </menu>

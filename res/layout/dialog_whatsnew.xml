@@ -38,7 +38,8 @@
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="- Light theme" />
+                android:text="- Light theme 
+        					\n- See new button at top of screen" />
 
             
             

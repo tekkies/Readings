@@ -3,21 +3,24 @@
 
     <string name="app_name">Readings</string>
     <string name="copyright">Copyright 2013 Andrew Joiner</string>
-    <string name="about">Copyright 2013 Andrew Joiner
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-
-Some assets (e.g. icons) were created using the Android Asset Studio</string>
+    <string name="about_app_text">
+\nCopyright 2013 Andrew Joiner
+\n
+\nLicensed under the Apache License, Version 2.0 (the "License");
+\nyou may not use this file except in compliance with the License.
+\nYou may obtain a copy of the License at
+\n
+\n    http://www.apache.org/licenses/LICENSE-2.0
+\n
+\nUnless required by applicable law or agreed to in writing, software
+\ndistributed under the License is distributed on an "AS IS" BASIS,
+\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+\nSee the License for the specific language governing permissions and
+\nlimitations under the License.
+\n
+\nSome assets (e.g. icons) were created using the Android Asset Studio
+\n
+</string>
     <string name="menu_feedback">Feedback</string>
     <string name="menu_date">Date</string>
     <string name="menu_summary">Summary</string>
@@ -31,8 +34,21 @@ Some assets (e.g. icons) were created using the Android Asset Studio</string>
     <string name="today">Today</string>
     <string name="tomorrow">Tomorrow</string>
     <string name="loading">"Loading&#8230;"</string>
-    <string name="show_summary">Show Summary</string>
+    <string name="pref_title_show_summary">Show chapter summary</string>
     <string name="sorry_no_summary_available_yet">Sorry, no summary available, yet.</string>
     <string name="whats_new">What\'s New</string>
+    <string name="pref_summary_show_summary">Show passage summaries if available</string>
+    <string name="pref_title_general">General</string>
+    <string name="pref_title_connect">Connect</string>
+    <string name="pref_title_rate">Rate this app</string>
+    <string name="pref_summary_rate">If you find this app helpful, please consider rating it and clicking +1</string>
+    <string name="pref_title_feedback">Feedback</string>
+    <string name="pref_summary_feedback">Vote for ideas and submit new ideas</string>
+    <string name="about_readings">About Readings</string>
+    <string name="about_content_text">\n                Reading plan sourced from The Bible Companion reading plan as published by The Christadelphian (http://www.thechristadelphian.com).\n                \n                Chapter summaries based on Thomas Scott Bible Commentary, 1866</string>
+    <string name="about_content_title">Content</string>
+    <string name="about_source_text">App source code available at https://github.com/tekkies/readings</string>
+    <string name="about_app_title">App</string>
+    <string name="action_day_night">Day/Night</string>
 
 </resources>

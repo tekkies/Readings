@@ -72,6 +72,7 @@ public class ReadingsActivity extends BaseActivity implements OnDateSetListener,
     ViewPager viewPager;
     Boolean today = true;
     static ReadingsActivity readingsActivity;
+    static Boolean toastAttempted=false; //Static so toast won't show if already exists in RAM.
 
     @SuppressLint("SimpleDateFormat") //We don't actually want local formatting.  It's too cluttered.
     @Override
@@ -83,12 +84,18 @@ public class ReadingsActivity extends BaseActivity implements OnDateSetListener,
         anotherYearDateFormat = new SimpleDateFormat("E d MMM yy");
         ReadingsApplication.checkForMP3(this);
         setContentView(R.layout.readings_activity);
-        initialiseWhatsNew();
+        if(checkForUpgrade()) {
+            showWhatsNewDialog();
+        }            
         setupPager();
         if (!loadInstanceState(savedInstanceState)) {
             setDate(Calendar.getInstance());
         }
-        showNewsToast();
+        if(!toastAttempted){
+            toastAttempted = true;
+            showNewsToast();    
+        }
+        
     }
 
     private static Handler newsToastHandler = new Handler() {
@@ -246,7 +253,7 @@ public class ReadingsActivity extends BaseActivity implements OnDateSetListener,
 
     }
 
-    private void initialiseWhatsNew() {
+    private Boolean checkForUpgrade() {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         int currentVersionNumber = 0;
         int savedVersionNumber = sharedPref.getInt(VERSION_KEY, 0);
@@ -256,11 +263,18 @@ public class ReadingsActivity extends BaseActivity implements OnDateSetListener,
         } catch (Exception e) {
         }
         if (currentVersionNumber > savedVersionNumber) {
-            showWhatsNewDialog();
             Editor editor = sharedPref.edit();
             editor.putInt(VERSION_KEY, currentVersionNumber);
             editor.commit();
         }
+        return (currentVersionNumber > savedVersionNumber);
+    }
+
+   
+    private void initialiseWhatsNew() {
+        if(checkForUpgrade()) {
+            showWhatsNewDialog();
+        }            
     }
 
     private void showWhatsNewDialog() {
@@ -288,6 +302,7 @@ public class ReadingsActivity extends BaseActivity implements OnDateSetListener,
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
         case R.id.menu_brightness:
+        case R.id.menu_brightness_overflow:
             doDayNightToggle();
             return true;
         case R.id.menu_date:
@@ -296,6 +311,14 @@ public class ReadingsActivity extends BaseActivity implements OnDateSetListener,
         case R.id.menu_settings:
             doShowSettings();
             return true;
+        case R.id.menu_about:
+            showAboutDialog();
+            return true;
+        case R.id.menu_whats_new:
+            showWhatsNewDialog();
+            return true;
+
+        
         default:
             return super.onOptionsItemSelected(item);
         }
@@ -304,6 +327,20 @@ public class ReadingsActivity extends BaseActivity implements OnDateSetListener,
     private void doShowSettings() {
         Intent intent = new Intent(this, SettingsActivity.class);
         startActivity(intent);
+    }
+    
+    private void showAboutDialog() {
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View view = inflater.inflate(R.layout.dialog_about, null);
+        Builder builder = new AlertDialog.Builder(this);
+        builder.setView(view).setTitle(getString(R.string.about_readings))
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        builder.create().show();
     }
 
     private void doFeedback() {
