@@ -58,5 +58,7 @@
     <string name="read_online">Read online</string>
     <string name="unknown">Unknown</string>
     <string name="about_content">About Content</string>
+    <string name="larger_text">Larger Text</string>
+    <string name="smaller_text">Smaller Text</string>
 
 </resources>

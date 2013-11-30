@@ -38,7 +38,8 @@ public class PassageFragment extends Fragment {
 
     TextView textView;
     ScaleGestureDetector scaleGestureDetector;
-    
+    float defaultTextSize;
+   
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         Bundle args = getArguments();
@@ -68,6 +69,7 @@ public class PassageFragment extends Fragment {
             Bundle savedInstanceState) {
         View mainView = inflater.inflate(R.layout.passage_fragment, container, false);
         textView  = (TextView)mainView.findViewById(R.id.textView1);
+        defaultTextSize = textView.getTextSize();
         scaleGestureDetector = new ScaleGestureDetector(getActivity(), new TextViewOnScaleGestureListener());
         ScrollView rootView = (ScrollView)mainView.findViewById(R.id.scrollView1);
         rootView.setOnTouchListener(new OnTouchListener() {
@@ -104,14 +106,14 @@ public class PassageFragment extends Fragment {
     public class TextViewOnScaleGestureListener extends
     SimpleOnScaleGestureListener {
         
-    double scale = 1.0;
-
+    double textScale = 1.0;
+ 
    @Override
    public boolean onScale(ScaleGestureDetector detector) {
        Log.v("ZOOM", "scaleFactor="+detector.getScaleFactor());
-       scale *= detector.getScaleFactor();
-       Log.v("ZOOM", "scale="+scale);
-       textView.setTextSize((float) (scale * 10.0));
+       textScale *= detector.getScaleFactor();
+       Log.v("ZOOM", "scale="+textScale);
+       textView.setTextSize((float) (textScale * defaultTextSize));
     return true;
    }
 
