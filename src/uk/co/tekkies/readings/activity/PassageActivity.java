@@ -36,7 +36,7 @@ import android.view.ViewGroup;
 public class PassageActivity extends BaseActivity {
 
     PagerAdapter pagerAdapter;
-    public ViewPager viewPager;
+    ViewPager viewPager;
     ParcelableReadings passableReadings;
 
     @Override
@@ -140,6 +140,10 @@ public class PassageActivity extends BaseActivity {
             notices = cursor.getString(cursor.getColumnIndex("about"));
         }
         return notices;
+    }
+
+    public void requestViewPagerDisallowInterceptTouchEvent(boolean disallowIntercept) {
+        viewPager.requestDisallowInterceptTouchEvent(disallowIntercept);
     }
 
 }

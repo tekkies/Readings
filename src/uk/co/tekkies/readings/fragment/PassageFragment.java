@@ -31,6 +31,7 @@ import android.view.ScaleGestureDetector;
 import android.view.ScaleGestureDetector.SimpleOnScaleGestureListener;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 public class PassageFragment extends Fragment {
@@ -68,12 +69,13 @@ public class PassageFragment extends Fragment {
         View mainView = inflater.inflate(R.layout.passage_fragment, container, false);
         textView  = (TextView)mainView.findViewById(R.id.textView1);
         scaleGestureDetector = new ScaleGestureDetector(getActivity(), new TextViewOnScaleGestureListener());
-        
-        textView.setOnTouchListener(new OnTouchListener() {
+        ScrollView rootView = (ScrollView)mainView.findViewById(R.id.scrollView1);
+        rootView.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 scaleGestureDetector.onTouchEvent(event);
-                return true;            }
+                return scaleGestureDetector.isInProgress();
+            }
         });
         return mainView;
     }
@@ -115,17 +117,13 @@ public class PassageFragment extends Fragment {
 
    @Override
    public boolean onScaleBegin(ScaleGestureDetector detector) {
-       
-       //textView.getParent().requestDisallowInterceptTouchEvent(true);
-       ((PassageActivity)getActivity()).viewPager.requestDisallowInterceptTouchEvent(true);
-       
+       ((PassageActivity)getActivity()).requestViewPagerDisallowInterceptTouchEvent(true);
        return true;
    }
 
    @Override
    public void onScaleEnd(ScaleGestureDetector detector) {
        //((PassageActivity)getActivity()).viewPager.requestDisallowInterceptTouchEvent(false);
-
    }
 
   }
