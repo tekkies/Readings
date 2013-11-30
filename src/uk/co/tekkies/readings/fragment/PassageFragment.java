@@ -17,6 +17,7 @@ limitations under the License.
 package uk.co.tekkies.readings.fragment;
 
 import uk.co.tekkies.readings.R;
+import uk.co.tekkies.readings.activity.PassageActivity;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -67,6 +68,7 @@ public class PassageFragment extends Fragment {
         View mainView = inflater.inflate(R.layout.passage_fragment, container, false);
         textView  = (TextView)mainView.findViewById(R.id.textView1);
         scaleGestureDetector = new ScaleGestureDetector(getActivity(), new TextViewOnScaleGestureListener());
+        
         textView.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -113,11 +115,17 @@ public class PassageFragment extends Fragment {
 
    @Override
    public boolean onScaleBegin(ScaleGestureDetector detector) {
+       
+       //textView.getParent().requestDisallowInterceptTouchEvent(true);
+       ((PassageActivity)getActivity()).viewPager.requestDisallowInterceptTouchEvent(true);
+       
        return true;
    }
 
    @Override
    public void onScaleEnd(ScaleGestureDetector detector) {
+       //((PassageActivity)getActivity()).viewPager.requestDisallowInterceptTouchEvent(false);
+
    }
 
   }

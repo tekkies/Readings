@@ -36,7 +36,7 @@ import android.view.ViewGroup;
 public class PassageActivity extends BaseActivity {
 
     PagerAdapter pagerAdapter;
-    ViewPager viewPager;
+    public ViewPager viewPager;
     ParcelableReadings passableReadings;
 
     @Override
