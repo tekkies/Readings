@@ -20,6 +20,9 @@ import uk.co.tekkies.readings.R;
 import uk.co.tekkies.readings.ReadingsApplication;
 import uk.co.tekkies.readings.fragment.PassageFragment;
 import uk.co.tekkies.readings.model.ParcelableReadings;
+import android.app.AlertDialog;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -35,7 +38,7 @@ public class PassageActivity extends BaseActivity {
     PagerAdapter pagerAdapter;
     ViewPager viewPager;
     ParcelableReadings passableReadings;
-    
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         setChosenTheme();
@@ -49,14 +52,13 @@ public class PassageActivity extends BaseActivity {
     }
 
     private void gotoPage(String selected) {
-        for(int page=0;page<passableReadings.passages.size();page++){
-            if(passableReadings.passages.get(page).getTitle().equalsIgnoreCase(selected)){
+        for (int page = 0; page < passableReadings.passages.size(); page++) {
+            if (passableReadings.passages.get(page).getTitle().equalsIgnoreCase(selected)) {
                 viewPager.setCurrentItem(page);
                 break;
             }
         }
     }
-
 
     private void setupPager() {
         pagerAdapter = new PagerAdapter(getSupportFragmentManager());
@@ -106,18 +108,38 @@ public class PassageActivity extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-        // case R.id.menu_feedback:
-        // doFeedback();
-        // return true;
+
         case R.id.menu_brightness:
             doDayNightToggle();
             return true;
-        case R.id.menu_date:
-            // doPickDate();
+
+        case R.id.menu_about_content:
+            showAboutContentDialog();
             return true;
+
         default:
             return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void showAboutContentDialog() {
+        AlertDialog.Builder dlgAlert = new AlertDialog.Builder(this);
+        dlgAlert.setMessage(getContentNotices());
+        dlgAlert.setTitle(R.string.about_content);
+        dlgAlert.setPositiveButton(R.string.ok, null);
+        dlgAlert.setCancelable(true);
+        dlgAlert.create().show();
+    }
+
+    protected String getContentNotices() {
+        String notices = getString(R.string.unknown);
+        String[] row = new String[] { "version" };
+        Cursor cursor = getContentResolver().query(Uri.parse("content://uk.co.tekkies.plugin.bible.kjv/about"), row,
+                "", row, "");
+        if (cursor.moveToFirst()) {
+            notices = cursor.getString(cursor.getColumnIndex("about"));
+        }
+        return notices;
     }
 
 }

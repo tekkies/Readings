@@ -27,7 +27,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class PassageFragment extends Fragment {
 
@@ -85,41 +84,18 @@ public class PassageFragment extends Fragment {
         }
     }
 
+    
     protected String getPassageXml(String passage) {
         String passageXml = "Error";
-        String[] row = new String[] { "version" };
+        String[] row = new String[] { "passage" };
         Cursor cursor = getActivity().getContentResolver().query(
-                Uri.parse("content://uk.co.tekkies.plugin.bible.kjv/about"), row, // The
-                                                                                  // columns
-                                                                                  // to
-                                                                                  // return
-                                                                                  // for
-                                                                                  // each
-                                                                                  // row
-                "", // Selection criteria
-                row, // Selection criteria
-                "");
-        if (cursor.moveToFirst()) {
-            String aboutText = cursor.getString(cursor.getColumnIndex("about"));
-            Toast.makeText(getActivity(), aboutText, Toast.LENGTH_LONG).show();
-        }
-        // Content
-        row = new String[] { "passage" };
-        cursor = getActivity().getContentResolver().query(
-                Uri.parse("content://uk.co.tekkies.plugin.bible.kjv/passage/" + passage), row, // The
-                                                                                               // columns
-                                                                                               // to
-                                                                                               // return
-                                                                                               // for
-                                                                                               // each
-                                                                                               // row
-                "", // Selection criteria
-                row, // Selection criteria
+                Uri.parse("content://uk.co.tekkies.plugin.bible.kjv/passage/" + passage), 
+                row, 
+                "", 
+                row,
                 "");
         if (cursor.moveToFirst()) {
             passageXml = cursor.getString(cursor.getColumnIndex("passage"));
-            // Toast.makeText(getActivity(), passageXml,
-            // Toast.LENGTH_LONG).show();
         }
         return passageXml;
     }

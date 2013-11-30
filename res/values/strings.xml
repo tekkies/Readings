@@ -56,5 +56,7 @@
     <string name="listen">Listen</string>
     <string name="read_offlice">Read offline</string>
     <string name="read_online">Read online</string>
+    <string name="unknown">Unknown</string>
+    <string name="about_content">About Content</string>
 
 </resources>

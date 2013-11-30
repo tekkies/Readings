@@ -122,9 +122,8 @@ public class PortionArrayAdapter extends ArrayAdapter<Passage> implements OnClic
         AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(activity);
         dlgAlert.setMessage("Please enable the KJV Plugin Beta");
         dlgAlert.setTitle("Beta");
-        dlgAlert.setPositiveButton(R.string.ok, null);
         dlgAlert.setCancelable(true);
-        dlgAlert.setPositiveButton("Ok",
+        dlgAlert.setPositiveButton(R.string.ok,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         String url = "http://goo.gl/N8IFhc";
@@ -169,7 +168,6 @@ public class PortionArrayAdapter extends ArrayAdapter<Passage> implements OnClic
         AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(activity);
         dlgAlert.setMessage(R.string.install_kjv_bible_plugin);
         dlgAlert.setTitle(R.string.title_install);
-        dlgAlert.setPositiveButton(R.string.ok, null);
         dlgAlert.setCancelable(true);
         dlgAlert.setPositiveButton(R.string.ok,
                 new DialogInterface.OnClickListener() {
