@@ -7,10 +7,17 @@
         android:showAsAction="always"
         android:title="@string/menu_brightness"/>
 
+    <item
+            android:id="@+id/menu_brightness_overflow"
+            android:orderInCategory="150"
+            android:showAsAction="never"
+            android:title="@string/action_day_night"/>
+    
+    
 	<item
            android:id="@+id/menu_about_content"
            android:icon="@drawable/ic_action_action_about"
-           android:orderInCategory="130"
+           android:orderInCategory="200"
            android:showAsAction="never"
            android:title="@string/about_content"/>
 
