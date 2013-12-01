@@ -18,9 +18,11 @@ package uk.co.tekkies.readings.fragment;
 
 import uk.co.tekkies.readings.R;
 import uk.co.tekkies.readings.activity.PassageActivity;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.util.Log;
@@ -36,20 +38,35 @@ import android.widget.TextView;
 
 public class PassageFragment extends Fragment {
 
+    private static final String PREF_PASSAGE_TEXT_SIZE = "passageTextSize";
     TextView textView;
     ScaleGestureDetector scaleGestureDetector;
     float defaultTextSize;
+    double textSize;
+
    
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         Bundle args = getArguments();
         String passage = args.getString("passage");
-        TextView textView1 = (TextView) (view.findViewById(R.id.textView1));
         String html = render(getPassageXml(passage));
-        textView1.setText(Html.fromHtml(html));
+        textView.setText(Html.fromHtml(html));
         super.onViewCreated(view, savedInstanceState);
     }
 
+    private void loadTextSize() {
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        textSize= settings.getFloat(PREF_PASSAGE_TEXT_SIZE, 1);
+        textView.setTextSize((float) (textSize * defaultTextSize));
+    }
+
+    private void saveTextSize() {
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putFloat(PREF_PASSAGE_TEXT_SIZE, (float) textSize);
+        editor.commit();
+    }
+        
     protected String render(String html) {
         html = html.replace("<summary>", "<i><font color=\"blue\">");
         html = html.replace("</summary>", "</font></i>");
@@ -68,8 +85,9 @@ public class PassageFragment extends Fragment {
     public View onCreateView(android.view.LayoutInflater inflater, android.view.ViewGroup container,
             Bundle savedInstanceState) {
         View mainView = inflater.inflate(R.layout.passage_fragment, container, false);
-        textView  = (TextView)mainView.findViewById(R.id.textView1);
+        textView = (TextView) (mainView.findViewById(R.id.textView1));
         defaultTextSize = textView.getTextSize();
+        loadTextSize();
         scaleGestureDetector = new ScaleGestureDetector(getActivity(), new TextViewOnScaleGestureListener());
         ScrollView rootView = (ScrollView)mainView.findViewById(R.id.scrollView1);
         rootView.setOnTouchListener(new OnTouchListener() {
@@ -106,14 +124,11 @@ public class PassageFragment extends Fragment {
     public class TextViewOnScaleGestureListener extends
     SimpleOnScaleGestureListener {
         
-    double textScale = 1.0;
  
    @Override
    public boolean onScale(ScaleGestureDetector detector) {
-       Log.v("ZOOM", "scaleFactor="+detector.getScaleFactor());
-       textScale *= detector.getScaleFactor();
-       Log.v("ZOOM", "scale="+textScale);
-       textView.setTextSize((float) (textScale * defaultTextSize));
+       textSize *= detector.getScaleFactor();
+       textView.setTextSize((float) (textSize * defaultTextSize));
     return true;
    }
 
@@ -125,7 +140,7 @@ public class PassageFragment extends Fragment {
 
    @Override
    public void onScaleEnd(ScaleGestureDetector detector) {
-       //((PassageActivity)getActivity()).viewPager.requestDisallowInterceptTouchEvent(false);
+       saveTextSize();
    }
 
   }
