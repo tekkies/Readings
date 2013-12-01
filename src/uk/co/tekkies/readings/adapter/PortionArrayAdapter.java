@@ -99,8 +99,10 @@ public class PortionArrayAdapter extends ArrayAdapter<Passage> implements OnClic
     public void onClick(View v) {
         switch (v.getId()) {
         case R.id.passage_title:
-        //case R.id.textViewSummary:
-            tryOpenIntegratedReader(v);
+            tryOpenIntegratedReader(((View) v.getParent().getParent()).getTag().toString());
+            break;
+        case R.id.textViewSummary:
+            tryOpenIntegratedReader(((View) v.getParent()).getTag().toString());
             break;
         case R.id.imageViewReadOffline:
             openOfflineBible(((View) v.getParent().getParent()).getTag().toString());
@@ -115,7 +117,7 @@ public class PortionArrayAdapter extends ArrayAdapter<Passage> implements OnClic
         }
     }
 
-    private void tryOpenIntegratedReader(View v) {
+    private void tryOpenIntegratedReader(String passage) {
         PackageInfo packageInfo = getOfflineKgvPackageInfo();
         if(packageInfo == null){
             askUserToInstallKjvPlugin();
@@ -123,7 +125,7 @@ public class PortionArrayAdapter extends ArrayAdapter<Passage> implements OnClic
             if(packageInfo.versionCode < 103030000) {
                 enableKjvPluginBeta();
             } else {
-                openIntegratedReader(((View) v.getParent().getParent()).getTag().toString());
+                openIntegratedReader(passage);
             }
         }
     }

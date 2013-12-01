@@ -5,9 +5,9 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 public class Prefs {
-    
+
     public static final String PREF_PASSAGE_TEXT_SIZE = "passageTextSize";
-    
+
     SharedPreferences sharedPreferences;
 
     public Prefs(Context context) {
@@ -27,5 +27,5 @@ public class Prefs {
         editor.putFloat(PREF_PASSAGE_TEXT_SIZE, (float) textSize);
         editor.commit();
     }
-   
+
 }
