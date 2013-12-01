@@ -10,6 +10,7 @@ Try it out!
 
 Build using [Eclipse/ADT](http://developer.android.com/sdk/installing/installing-adt.html) - Just import the project into the Eclipse workspace.
 
+You do not need to clone the submodules.  It contains content I prefer not to share.  Without it, alternative sample content is shown (from the licensed folder).
 
 [](http://developer.android.com/sdk/installing/installing-adt.html "Eclipse/ADT")
 
