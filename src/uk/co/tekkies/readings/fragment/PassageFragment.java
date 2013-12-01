@@ -44,41 +44,13 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
     ScaleGestureDetector scaleGestureDetector;
     float defaultTextSize;
     double textSize;
-    String passage="Unknown";
-   
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        Bundle args = getArguments();
-        passage = args.getString("passage");
-        String html = render(getPassageXml(passage));
-        textView.setText(Html.fromHtml(html));
-        super.onViewCreated(view, savedInstanceState);
-    }
-
-    private void loadTextSize() {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        textSize= sharedPreferences.getFloat(PREF_PASSAGE_TEXT_SIZE, 1);
-        textView.setTextSize((float) (textSize * defaultTextSize));
-    }
-
-    private void saveTextSize() {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putFloat(PREF_PASSAGE_TEXT_SIZE, (float) textSize);
-        editor.commit();
-    }
-        
-    protected String render(String html) {
-        html = html.replace("<summary>", "<i><font color=\"blue\">");
-        html = html.replace("</summary>", "</font></i>");
-        html = html.replace("<v>", "<sup><font color=\"red\">");
-        html = html.replace("</v>", "</font></sup>");
-        return html;
-    }
+    String passage = "Unknown";
+    SharedPreferences sharedPreferences;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         setHasOptionsMenu(true);
     }
 
@@ -89,19 +61,32 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
         textView = (TextView) (mainView.findViewById(R.id.textView1));
         defaultTextSize = textView.getTextSize();
         loadTextSize();
-        
-        scaleGestureDetector = new ScaleGestureDetector(getActivity(), new TextViewOnScaleGestureListener());
-        ScrollView rootView = (ScrollView)mainView.findViewById(R.id.scrollView1);
-        rootView.setOnTouchListener(new OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                scaleGestureDetector.onTouchEvent(event);
-                return scaleGestureDetector.isInProgress();
-            }
-        });
+        registerGestureDetector(mainView);
         return mainView;
     }
 
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        Bundle args = getArguments();
+        passage = args.getString("passage");
+        String html = render(getPassageXml(passage));
+        textView.setText(Html.fromHtml(html));
+        super.onViewCreated(view, savedInstanceState);
+    }
+
+    @Override
+    public void onResume() {
+        Log.v("FRAG", "OnResume:" + passage);
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        Log.v("FRAG", "OnPause:" + passage);
+        sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
+        super.onPause();
+    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -109,66 +94,75 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
         inflater.inflate(R.menu.fragment_readings, menu);
     }
 
+    private void registerGestureDetector(View mainView) {
+        scaleGestureDetector = new ScaleGestureDetector(getActivity(), new TextViewOnScaleGestureListener());
+        ScrollView rootView = (ScrollView) mainView.findViewById(R.id.scrollView1);
+        rootView.setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                scaleGestureDetector.onTouchEvent(event);
+                return scaleGestureDetector.isInProgress();
+            }
+        });
+    }
+
     protected String getPassageXml(String passage) {
         String passageXml = "Error";
         String[] row = new String[] { "passage" };
         Cursor cursor = getActivity().getContentResolver().query(
-                Uri.parse("content://uk.co.tekkies.plugin.bible.kjv/passage/" + passage), 
-                row, 
-                "", 
-                row,
-                "");
+                Uri.parse("content://uk.co.tekkies.plugin.bible.kjv/passage/" + passage), row, "", row, "");
         if (cursor.moveToFirst()) {
             passageXml = cursor.getString(cursor.getColumnIndex("passage"));
         }
         return passageXml;
     }
-  
-    public class TextViewOnScaleGestureListener extends
-    SimpleOnScaleGestureListener {
-        
- 
-   @Override
-   public boolean onScale(ScaleGestureDetector detector) {
-       textSize *= detector.getScaleFactor();
-       textView.setTextSize((float) (textSize * defaultTextSize));
-    return true;
-   }
 
-   @Override
-   public boolean onScaleBegin(ScaleGestureDetector detector) {
-       ((PassageActivity)getActivity()).requestViewPagerDisallowInterceptTouchEvent(true);
-       return true;
-   }
-
-   @Override
-   public void onScaleEnd(ScaleGestureDetector detector) {
-       saveTextSize();
-   }
-
-  }
- 
- @Override
-public void onResume() {
-     Log.v("FRAG","OnResume:"+passage);
-     SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-     sharedPreferences.registerOnSharedPreferenceChangeListener(this);
-    super.onResume();
-}
-
- @Override
-public void onPause() {
-    Log.v("FRAG","OnPause:"+passage);
-    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-    sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
-    super.onPause();
-}
-
-@Override
-public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-    if(key.equals(PREF_PASSAGE_TEXT_SIZE)){
-        loadTextSize();
+    protected String render(String html) {
+        html = html.replace("<summary>", "<i><font color=\"blue\">");
+        html = html.replace("</summary>", "</font></i>");
+        html = html.replace("<v>", "<sup><font color=\"red\">");
+        html = html.replace("</v>", "</font></sup>");
+        return html;
     }
-}
-    
+
+    private void loadTextSize() {
+        textSize = sharedPreferences.getFloat(PREF_PASSAGE_TEXT_SIZE, 1);
+        textView.setTextSize((float) (textSize * defaultTextSize));
+    }
+
+    private void saveTextSize() {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putFloat(PREF_PASSAGE_TEXT_SIZE, (float) textSize);
+        editor.commit();
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key.equals(PREF_PASSAGE_TEXT_SIZE)) {
+            loadTextSize();
+        }
+    }
+
+    public class TextViewOnScaleGestureListener extends SimpleOnScaleGestureListener {
+
+        @Override
+        public boolean onScale(ScaleGestureDetector detector) {
+            textSize *= detector.getScaleFactor();
+            textView.setTextSize((float) (textSize * defaultTextSize));
+            return true;
+        }
+
+        @Override
+        public boolean onScaleBegin(ScaleGestureDetector detector) {
+            ((PassageActivity) getActivity()).requestViewPagerDisallowInterceptTouchEvent(true);
+            return true;
+        }
+
+        @Override
+        public void onScaleEnd(ScaleGestureDetector detector) {
+            saveTextSize();
+        }
+
+    }
+
 }
