@@ -19,6 +19,7 @@ package uk.co.tekkies.readings.fragment;
 import uk.co.tekkies.readings.R;
 import uk.co.tekkies.readings.activity.PassageActivity;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -36,33 +37,33 @@ import android.view.View.OnTouchListener;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-public class PassageFragment extends Fragment {
+public class PassageFragment extends Fragment implements OnSharedPreferenceChangeListener {
 
     private static final String PREF_PASSAGE_TEXT_SIZE = "passageTextSize";
     TextView textView;
     ScaleGestureDetector scaleGestureDetector;
     float defaultTextSize;
     double textSize;
-
+    String passage="Unknown";
    
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         Bundle args = getArguments();
-        String passage = args.getString("passage");
+        passage = args.getString("passage");
         String html = render(getPassageXml(passage));
         textView.setText(Html.fromHtml(html));
         super.onViewCreated(view, savedInstanceState);
     }
 
     private void loadTextSize() {
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        textSize= settings.getFloat(PREF_PASSAGE_TEXT_SIZE, 1);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        textSize= sharedPreferences.getFloat(PREF_PASSAGE_TEXT_SIZE, 1);
         textView.setTextSize((float) (textSize * defaultTextSize));
     }
 
     private void saveTextSize() {
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        SharedPreferences.Editor editor = settings.edit();
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putFloat(PREF_PASSAGE_TEXT_SIZE, (float) textSize);
         editor.commit();
     }
@@ -88,6 +89,7 @@ public class PassageFragment extends Fragment {
         textView = (TextView) (mainView.findViewById(R.id.textView1));
         defaultTextSize = textView.getTextSize();
         loadTextSize();
+        
         scaleGestureDetector = new ScaleGestureDetector(getActivity(), new TextViewOnScaleGestureListener());
         ScrollView rootView = (ScrollView)mainView.findViewById(R.id.scrollView1);
         rootView.setOnTouchListener(new OnTouchListener() {
@@ -99,6 +101,7 @@ public class PassageFragment extends Fragment {
         });
         return mainView;
     }
+
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -144,8 +147,28 @@ public class PassageFragment extends Fragment {
    }
 
   }
-    
-    
-    
+ 
+ @Override
+public void onResume() {
+     Log.v("FRAG","OnResume:"+passage);
+     SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+     sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+    super.onResume();
+}
+
+ @Override
+public void onPause() {
+    Log.v("FRAG","OnPause:"+passage);
+    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+    sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
+    super.onPause();
+}
+
+@Override
+public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+    if(key.equals(PREF_PASSAGE_TEXT_SIZE)){
+        loadTextSize();
+    }
+}
     
 }
