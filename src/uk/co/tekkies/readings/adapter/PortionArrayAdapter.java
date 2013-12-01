@@ -26,6 +26,7 @@ import uk.co.tekkies.readings.activity.ReadingsActivity;
 import uk.co.tekkies.readings.fragment.ReadingsFragment;
 import uk.co.tekkies.readings.model.ParcelableReadings;
 import uk.co.tekkies.readings.model.Passage;
+import uk.co.tekkies.readings.model.Prefs;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -51,19 +52,27 @@ public class PortionArrayAdapter extends ArrayAdapter<Passage> implements OnClic
 
     private ReadingsActivity activity;
     private ArrayList<Passage> passages;
+    float defaultTextSize=0;
+    Prefs prefs;
+    
 
     public PortionArrayAdapter(Activity activity, ArrayList<Passage> values) {
         super(activity, R.layout.listitem_portion, values);
         this.activity = (ReadingsActivity) activity;
         this.passages = values;
+        prefs = new Prefs(activity);
     }
-
+    
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         ViewGroup view = (ViewGroup) inflater.inflate(R.layout.listitem_portion, parent, false);
         TextView textViewPassageTitle = (TextView) view.findViewById(R.id.passage_title);
         TextView textViewSummary = (TextView) view.findViewById(R.id.textViewSummary);
+        if(defaultTextSize == 0) {
+            defaultTextSize = textViewSummary.getTextSize();
+        }
+        textViewSummary.setTextSize((float) (prefs.getPassageTextSize() * defaultTextSize));
         textViewPassageTitle.setText(passages.get(position).getTitle());
         view.setTag(passages.get(position).getTitle());
 

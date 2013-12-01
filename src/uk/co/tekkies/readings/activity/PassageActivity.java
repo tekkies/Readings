@@ -44,7 +44,7 @@ public class PassageActivity extends BaseActivity {
         setChosenTheme();
         super.onCreate(savedInstanceState);
         ReadingsApplication.checkForMP3(this);
-        getActionBar().setIcon(R.drawable.ic_action_listen);
+        //getActionBar().setIcon(R.drawable.ic_launcher);
         setContentView(R.layout.passage_activity);
         passableReadings = (ParcelableReadings) (getIntent().getParcelableExtra(ParcelableReadings.PARCEL_NAME));
         setupPager();

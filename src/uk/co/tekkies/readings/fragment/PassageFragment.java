@@ -18,6 +18,7 @@ package uk.co.tekkies.readings.fragment;
 
 import uk.co.tekkies.readings.R;
 import uk.co.tekkies.readings.activity.PassageActivity;
+import uk.co.tekkies.readings.model.Prefs;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.database.Cursor;
@@ -41,18 +42,18 @@ import android.widget.Toast;
 
 public class PassageFragment extends Fragment implements OnSharedPreferenceChangeListener {
 
-    private static final String PREF_PASSAGE_TEXT_SIZE = "passageTextSize";
+    
     TextView textView;
     ScaleGestureDetector scaleGestureDetector;
     float defaultTextSize;
     double textSize;
     String passage = "Unknown";
-    SharedPreferences sharedPreferences;
+    Prefs prefs;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        prefs = new Prefs(getActivity());
         setHasOptionsMenu(true);
     }
 
@@ -78,15 +79,13 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
 
     @Override
     public void onResume() {
-        Log.v("FRAG", "OnResume:" + passage);
-        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+        prefs.getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
         super.onResume();
     }
 
     @Override
     public void onPause() {
-        Log.v("FRAG", "OnPause:" + passage);
-        sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
+        prefs.getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
         super.onPause();
     }
 
@@ -149,19 +148,17 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
     }
 
     private void loadTextSize() {
-        textSize = sharedPreferences.getFloat(PREF_PASSAGE_TEXT_SIZE, 1);
+        textSize = prefs.getPassageTextSize();
         textView.setTextSize((float) (textSize * defaultTextSize));
     }
 
     private void saveTextSize() {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putFloat(PREF_PASSAGE_TEXT_SIZE, (float) textSize);
-        editor.commit();
+        prefs.setPassageTextSize(textSize);
     }
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key.equals(PREF_PASSAGE_TEXT_SIZE)) {
+        if (key.equals(Prefs.PREF_PASSAGE_TEXT_SIZE)) {
             loadTextSize();
         }
     }
