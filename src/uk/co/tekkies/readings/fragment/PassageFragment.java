@@ -29,6 +29,7 @@ import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.ScaleGestureDetector.SimpleOnScaleGestureListener;
@@ -36,6 +37,7 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class PassageFragment extends Fragment implements OnSharedPreferenceChangeListener {
 
@@ -92,6 +94,27 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.fragment_readings, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+
+        case R.id.menu_larger_text:
+            textSize *= 1.25;
+            saveTextSize();
+            Toast.makeText(getActivity(), R.string.you_can_also_pinch_to_zoom, Toast.LENGTH_SHORT).show();
+            return true;
+        
+        case R.id.menu_smaller_text:
+            textSize *= 0.8;
+            saveTextSize();
+            Toast.makeText(getActivity(), R.string.you_can_also_pinch_to_zoom, Toast.LENGTH_SHORT).show();
+            return true;
+        
+        default:
+            return super.onOptionsItemSelected(item);
+        }
     }
 
     private void registerGestureDetector(View mainView) {

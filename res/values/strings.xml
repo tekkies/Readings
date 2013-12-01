@@ -60,5 +60,6 @@
     <string name="about_content">About Content</string>
     <string name="larger_text">Larger Text</string>
     <string name="smaller_text">Smaller Text</string>
+    <string name="you_can_also_pinch_to_zoom">You can also pinch to zoom</string>
 
 </resources>
