@@ -21,17 +21,29 @@ import uk.co.tekkies.readings.ReadingsApplication;
 import uk.co.tekkies.readings.fragment.PassageFragment;
 import uk.co.tekkies.readings.model.ParcelableReadings;
 import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.PixelFormat;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
+import android.view.Window;
+import android.view.WindowManager;
 
 public class PassageActivity extends BaseActivity {
 
@@ -44,11 +56,48 @@ public class PassageActivity extends BaseActivity {
         setChosenTheme();
         super.onCreate(savedInstanceState);
         ReadingsApplication.checkForMP3(this);
-        //getActionBar().setIcon(R.drawable.ic_launcher);
+        // getActionBar().setIcon(R.drawable.ic_launcher);
         setContentView(R.layout.passage_activity);
+
+        showDimmerOverlay();
+
         passableReadings = (ParcelableReadings) (getIntent().getParcelableExtra(ParcelableReadings.PARCEL_NAME));
         setupPager();
         gotoPage(passableReadings.selected);
+    }
+
+    public class DimmerDialog extends Dialog {
+
+        public PassageActivity activity;
+
+        public DimmerDialog(Context context, int theme) {
+            super(context, theme);
+        }
+
+        @Override
+        public boolean dispatchTouchEvent(MotionEvent ev) {
+            // activity.dispatchTouchEvent(ev); Works (scroll, drag, actionbar
+            // icons) except for overflow menu.
+            return activity.dispatchTouchEvent(ev);
+        }
+    }
+
+    private void showDimmerOverlay() {
+
+        getWindow().getDecorView().setFilterTouchesWhenObscured(true);
+
+        DimmerDialog dimmerOverlay = new DimmerDialog(this, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+        dimmerOverlay.activity = this;
+        dimmerOverlay.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dimmerOverlay.getWindow().setBackgroundDrawable(new ColorDrawable(Color.argb(128, 0, 255, 0)));
+        dimmerOverlay.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+
+        // /FLAG_NOT_TOUCHABLE works except for overflow menu (same as
+        // overriding dispatchTouchEvent and forwarding to activity)
+        // dimmerOverlay.getWindow().addFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+
+        dimmerOverlay.setCancelable(false);
+        dimmerOverlay.show();
     }
 
     private void gotoPage(String selected) {
