@@ -2,7 +2,7 @@
 
     <item
         android:id="@+id/menu_brightness"
-        android:icon="@drawable/ic_action_brightness"
+        android:icon="?ic_action_device_access_brightness_medium"
         android:orderInCategory="10"
         android:showAsAction="always"
         android:title="@string/menu_brightness"/>
@@ -23,7 +23,7 @@
         android:title="@string/smaller_text"/>
     <item
         android:id="@+id/menu_about_content"
-        android:icon="@drawable/ic_action_action_about"
+        android:icon="?ic_action_action_about"
         android:orderInCategory="50"
         android:showAsAction="never"
         android:title="@string/about_content"/>

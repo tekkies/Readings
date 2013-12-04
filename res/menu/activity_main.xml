@@ -3,25 +3,25 @@
 
     <item
         android:id="@+id/menu_brightness"
-        android:icon="?ic_action_brightness"
+        android:icon="?ic_action_device_access_brightness_medium"
         android:orderInCategory="10"
         android:showAsAction="always"
         android:title="@string/menu_brightness"/>
     <item
         android:id="@+id/menu_summary"
-        android:icon="@drawable/ic_action_summary"
+        android:icon="?ic_action_social_chat"
         android:orderInCategory="20"
         android:showAsAction="ifRoom"
         android:title="@string/menu_brightness"/>
     <item
         android:id="@+id/menu_date"
-        android:icon="@drawable/ic_action_date"
+        android:icon="?ic_action_collections_go_to_today"
         android:orderInCategory="30"
         android:showAsAction="ifRoom"
         android:title="@string/menu_date"/>
     <item
         android:id="@+id/menu_settings"
-        android:icon="@drawable/ic_action_settings"
+        android:icon="?ic_action_action_settings"
         android:orderInCategory="40"
         android:showAsAction="ifRoom"
         android:title="@string/menu_settings"/>
@@ -37,7 +37,7 @@
         android:title="@string/whats_new"/>
     <item
         android:id="@+id/menu_about"
-        android:icon="@drawable/ic_action_action_about"
+        android:icon="?ic_action_action_about"
         android:orderInCategory="70"
         android:showAsAction="never"
         android:title="@string/about_readings"/>
