@@ -3,7 +3,7 @@
 
     <item
         android:id="@+id/menu_brightness"
-        android:icon="@drawable/ic_action_brightness"
+        android:icon="?ic_action_brightness"
         android:orderInCategory="10"
         android:showAsAction="always"
         android:title="@string/menu_brightness"/>

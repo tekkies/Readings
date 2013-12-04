@@ -3,6 +3,7 @@
 
     <!-- View styles -->
     <attr name="pagerBackground" format="reference" />
+    <attr name="ic_action_brightness" format="reference" />
 
     <!-- Attributes -->
     <attr name="pageMargin" format="reference|dimension" />

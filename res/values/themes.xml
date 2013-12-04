@@ -6,12 +6,14 @@
         <!-- <item name="android:windowTitleSize">20dip</item> -->
         <!-- <item name="pagerBackground">#33b5e5</item> -->
         <item name="pagerBackground">@android:color/holo_blue_light</item>
+        <item name="ic_action_brightness">@drawable/ic_action_brightness</item>
     </style>
 
     <style name="Night" parent="android:Theme.Holo">
 
         <!-- <item name="android:windowTitleSize">20dip</item> -->
         <item name="pagerBackground">@color/dark_grey</item>
+        <item name="ic_action_brightness">@drawable/ic_action_brightness_holo_dark</item>
     </style>
 
 </resources>
