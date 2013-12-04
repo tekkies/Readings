@@ -137,6 +137,7 @@ public class PassageActivity extends BaseActivity implements OnCancelListener, O
         switch (item.getItemId()) {
 
         case R.id.menu_brightness:
+        case R.id.menu_brightness_overflow:
             doDayNightToggle();
             return true;
 
