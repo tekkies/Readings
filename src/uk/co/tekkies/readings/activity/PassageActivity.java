@@ -110,6 +110,7 @@ public class PassageActivity extends BaseActivity {
         switch (item.getItemId()) {
 
         case R.id.menu_brightness:
+        case R.id.menu_brightness_overflow:
             doDayNightToggle();
             return true;
 
