@@ -105,7 +105,7 @@ public class PortionArrayAdapter extends ArrayAdapter<Passage> implements OnClic
             tryOpenIntegratedReader(((View) v.getParent()).getTag().toString());
             break;
         case R.id.imageViewReadOffline:
-            openOfflineBible(((View) v.getParent().getParent()).getTag().toString());
+            tryOpenIntegratedReader(((View) v.getParent().getParent()).getTag().toString());
             break;
         case R.id.imageListen:
             openMp3(((View) v.getParent().getParent()).getTag().toString());
@@ -123,28 +123,32 @@ public class PortionArrayAdapter extends ArrayAdapter<Passage> implements OnClic
             askUserToInstallKjvPlugin();
         } else {
             if(packageInfo.versionCode < 103030000) {
-                enableKjvPluginBeta();
+                openOfflineBible(passage);
+                //upgradeKjvBiblePlugin(passage);
             } else {
                 openIntegratedReader(passage);
             }
         }
     }
 
-    private void enableKjvPluginBeta() {
+    private void upgradeKjvBiblePlugin(String passage) {
+        final String finalPassage = passage;
         AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(activity);
-        dlgAlert.setMessage("Please enable the KJV Plugin Beta");
-        dlgAlert.setTitle("Beta");
+        dlgAlert.setMessage(activity.getString(R.string.please_upgrade_the_kjv_bible_plugin));
+        dlgAlert.setTitle(activity.getString(R.string.upgrade_plugin));
         dlgAlert.setCancelable(true);
         dlgAlert.setPositiveButton(R.string.ok,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        String url = "http://goo.gl/N8IFhc";
-                        Intent webIntent = new Intent(Intent.ACTION_VIEW);
-                        Uri uri = Uri.parse(url);
-                        webIntent.setData(uri);
-                        activity.startActivity(webIntent);
+                        installKjvPlugin();
                     }
                 });
+        dlgAlert.setOnCancelListener(new AlertDialog.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                openOfflineBible(finalPassage);
+            }
+        });
         dlgAlert.create().show();
     }
 
