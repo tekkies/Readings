@@ -61,7 +61,7 @@
     <string name="larger_text">Larger Text</string>
     <string name="smaller_text">Smaller Text</string>
     <string name="you_can_also_pinch_to_zoom">You can also pinch to zoom</string>
-    <string name="please_upgrade_the_kjv_bible_plugin">Please upgrade the KJV Bible plugin</string>
-    <string name="upgrade_plugin">Upgrade Plugin</string>
+    <string name="please_upgrade_the_kjv_bible_plugin">Please update your KJV Bible plugin for the latest features</string>
+    <string name="upgrade_plugin">Update Plugin</string>
 
 </resources>

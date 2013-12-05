@@ -123,8 +123,8 @@ public class PortionArrayAdapter extends ArrayAdapter<Passage> implements OnClic
             askUserToInstallKjvPlugin();
         } else {
             if(packageInfo.versionCode < 103030000) {
-                openOfflineBible(passage);
-                //upgradeKjvBiblePlugin(passage);
+                //openOfflineBible(passage);
+                upgradeKjvBiblePlugin(passage);
             } else {
                 openIntegratedReader(passage);
             }
@@ -137,18 +137,18 @@ public class PortionArrayAdapter extends ArrayAdapter<Passage> implements OnClic
         dlgAlert.setMessage(activity.getString(R.string.please_upgrade_the_kjv_bible_plugin));
         dlgAlert.setTitle(activity.getString(R.string.upgrade_plugin));
         dlgAlert.setCancelable(true);
-        dlgAlert.setPositiveButton(R.string.ok,
+        dlgAlert.setPositiveButton("Download update",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         installKjvPlugin();
                     }
                 });
-        dlgAlert.setOnCancelListener(new AlertDialog.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                openOfflineBible(finalPassage);
-            }
-        });
+        dlgAlert.setNegativeButton("Use old version",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        openOfflineBible(finalPassage);
+                    }
+                });
         dlgAlert.create().show();
     }
 
