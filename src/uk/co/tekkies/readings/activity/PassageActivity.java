@@ -17,17 +17,10 @@ limitations under the License.
 package uk.co.tekkies.readings.activity;
 
 import uk.co.tekkies.readings.R;
-import uk.co.tekkies.readings.ReadingsApplication;
 import uk.co.tekkies.readings.fragment.PassageFragment;
 import uk.co.tekkies.readings.model.ParcelableReadings;
-import android.app.ActionBar.OnMenuVisibilityListener;
 import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnCancelListener;
 import android.database.Cursor;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -39,43 +32,21 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 
-import android.view.Window;
-import android.view.WindowManager;
-
-public class PassageActivity extends BaseActivity implements OnCancelListener, OnMenuVisibilityListener {
+public class PassageActivity extends BaseActivity {
 
     PagerAdapter pagerAdapter;
     ViewPager viewPager;
     ParcelableReadings passableReadings;
-    Dialog dimmerOverlay;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         setChosenTheme();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.passage_activity);
-        createDimmerOverlay();
-        dimmerOverlay.show();
         passableReadings = (ParcelableReadings) (getIntent().getParcelableExtra(ParcelableReadings.PARCEL_NAME));
         setupPager();
         gotoPage(passableReadings.selected);
     }
-
-    private void createDimmerOverlay() {
-        dimmerOverlay = new Dialog(this, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
-        dimmerOverlay.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dimmerOverlay.getWindow().setBackgroundDrawable(new ColorDrawable(Color.argb(128, 0, 255, 0)));
-        dimmerOverlay.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-        dimmerOverlay.getWindow().addFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        dimmerOverlay.setOnCancelListener(this);
-        dimmerOverlay.setCancelable(true);
-    }
-    
-    @Override
-    public void onCancel(DialogInterface dialog) {
-        finish();
-    }
-
 
     private void gotoPage(String selected) {
         for (int page = 0; page < passableReadings.passages.size(); page++) {
@@ -121,14 +92,12 @@ public class PassageActivity extends BaseActivity implements OnCancelListener, O
         public void finishUpdate(ViewGroup container) {
             super.finishUpdate(container);
         }
-
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.activity_passage, menu);
-        getActionBar().addOnMenuVisibilityListener(this);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -174,31 +143,4 @@ public class PassageActivity extends BaseActivity implements OnCancelListener, O
         viewPager.requestDisallowInterceptTouchEvent(disallowIntercept);
     }
 
-    @Override
-    public void onMenuVisibilityChanged(boolean isVisible) {
-      if(dimmerOverlay != null) {
-          if(isVisible) {
-              if(dimmerOverlay.isShowing()) {
-                  dimmerOverlay.dismiss();
-              }
-          } else {
-              if(!dimmerOverlay.isShowing()) {
-                  dimmerOverlay.show();
-              }
-          }
-      }
-        
-    }
-    
-    @Override
-    protected void onPause() {
-        if(dimmerOverlay != null)
-        {
-            if(dimmerOverlay.isShowing()) {
-                dimmerOverlay.dismiss();
-            }
-        }
-        super.onPause();
-    }
- 
 }
