@@ -2,21 +2,18 @@
 <!-- Version Code (VersionScheme-1)(API-2)(A-2)(B-2)(C-2) -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="uk.co.tekkies.readings"
-      android:versionCode="114030005"
-      android:versionName="3.0.3"
+      android:versionCode="114030009"
+      android:versionName="3.0.9"
       android:installLocation="auto">
     <uses-sdk android:minSdkVersion="14" android:targetSdkVersion="14" />
     <supports-screens android:smallScreens="true"/>
 	<uses-permission android:name="android.permission.INTERNET"/>
 
-<!-- 	        android:theme="@style/Theme.Sherlock.Light"
- -->	
-	
 	<application android:icon="@drawable/ic_launcher"
 	    android:allowBackup="true" 
 	    android:allowClearUserData="true"
         android:label="@string/app_name"
-        android:theme="@style/Day"
+        android:theme="@style/Night"
         android:name="ReadingsApplication">
         <activity android:name="uk.co.tekkies.readings.activity.ReadingsActivity"
                   android:label="@string/app_name">
@@ -26,7 +23,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="uk.co.tekkies.readings.workinprogress.PassageActivity"
+        <activity android:name="uk.co.tekkies.readings.activity.PassageActivity"
                   android:label="@string/app_name">
         </activity>
         

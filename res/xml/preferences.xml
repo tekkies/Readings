@@ -3,6 +3,7 @@
 
     <PreferenceCategory android:title="@string/pref_title_general" >
         <CheckBoxPreference
+            android:key="@string/pref_key_show_summary"
             android:summary="@string/pref_summary_show_summary"
             android:title="@string/pref_title_show_summary" />
     </PreferenceCategory>

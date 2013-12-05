@@ -45,7 +45,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -60,7 +59,7 @@ import android.view.View.OnClickListener;
 import android.widget.DatePicker;
 import android.widget.Toast;
 
-public class ReadingsActivity extends FragmentActivity implements OnDateSetListener, OnClickListener {
+public class ReadingsActivity extends BaseActivity implements OnDateSetListener, OnClickListener {
 
     private static final String VERSION_KEY = "version_number";
     static final String NEWS_TOAST_URL = "http://tekkies.co.uk/readings/api/news-toast/";
@@ -270,14 +269,7 @@ public class ReadingsActivity extends FragmentActivity implements OnDateSetListe
         }
         return (currentVersionNumber > savedVersionNumber);
     }
-
    
-    private void initialiseWhatsNew() {
-        if(checkForUpgrade()) {
-            showWhatsNewDialog();
-        }            
-    }
-
     private void showWhatsNewDialog() {
         LayoutInflater inflater = LayoutInflater.from(this);
         View view = inflater.inflate(R.layout.dialog_whatsnew, null);
@@ -302,6 +294,10 @@ public class ReadingsActivity extends FragmentActivity implements OnDateSetListe
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+        case R.id.menu_brightness:
+        case R.id.menu_brightness_overflow:
+            doDayNightToggle();
+            return true;
         case R.id.menu_date:
             doPickDate();
             return true;

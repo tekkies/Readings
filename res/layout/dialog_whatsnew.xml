@@ -15,18 +15,47 @@
             android:layout_height="wrap_content"
             android:orientation="vertical" >
             
-            
             <TextView android:layout_width="fill_parent" android:layout_marginTop="10dp"
 				android:layout_height="wrap_content" android:text="Coming soon"
 				android:textStyle="bold" />
-			<TextView android:layout_width="fill_parent"
-				android:layout_height="wrap_content"
-				android:text="New icon" />
 			<ImageView
-			    android:id="@+id/imageView1"
 			    android:layout_width="wrap_content"
 			    android:layout_height="wrap_content"
 			    android:src="@drawable/ic_whats_new_icon_change" />
+			<TextView android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:text="- New icon coming soon" />
+						
+
+			
+			<TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Version 3.0.9"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="- Pinch zoom in the new reader." />
+			
+			
+						
+			
+			<TextView android:layout_width="fill_parent" android:layout_marginTop="10dp"
+				android:layout_height="wrap_content" android:text="Version 3.0.7"
+				android:textStyle="bold" />
+			<ImageView
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:src="@drawable/integrated_reader_instructions_cropped" />
+			<TextView android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:text="- Click the passage name instead of the passage icon
+							\n  - Swipe between passages of the day
+							\n- Day/night mode" />
+						
             
             <TextView
                 android:layout_width="fill_parent"

@@ -14,49 +14,50 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-package uk.co.tekkies.readings.workinprogress;
+package uk.co.tekkies.readings.activity;
 
 import uk.co.tekkies.readings.R;
 import uk.co.tekkies.readings.ReadingsApplication;
+import uk.co.tekkies.readings.fragment.PassageFragment;
 import uk.co.tekkies.readings.model.ParcelableReadings;
-import android.content.SharedPreferences;
+import android.app.AlertDialog;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 
-public class PassageActivity extends FragmentActivity implements OnClickListener {
+public class PassageActivity extends BaseActivity {
 
     PagerAdapter pagerAdapter;
     ViewPager viewPager;
     ParcelableReadings passableReadings;
-    SharedPreferences sharedPreferences;
-    Boolean nightMode;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         setChosenTheme();
         super.onCreate(savedInstanceState);
         ReadingsApplication.checkForMP3(this);
-        getActionBar().setIcon(R.drawable.ic_action_listen);
+        //getActionBar().setIcon(R.drawable.ic_launcher);
         setContentView(R.layout.passage_activity);
         passableReadings = (ParcelableReadings) (getIntent().getParcelableExtra(ParcelableReadings.PARCEL_NAME));
         setupPager();
+        gotoPage(passableReadings.selected);
     }
 
-    private void setChosenTheme() {
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        nightMode = sharedPreferences.getBoolean(getString(R.string.pref_key_night_mode), false);
-        setTheme(nightMode ? R.style.Night : R.style.Day);
+    private void gotoPage(String selected) {
+        for (int page = 0; page < passableReadings.passages.size(); page++) {
+            if (passableReadings.passages.get(page).getTitle().equalsIgnoreCase(selected)) {
+                viewPager.setCurrentItem(page);
+                break;
+            }
+        }
     }
 
     private void setupPager() {
@@ -107,29 +108,43 @@ public class PassageActivity extends FragmentActivity implements OnClickListener
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-        // case R.id.menu_feedback:
-        // doFeedback();
-        // return true;
+
         case R.id.menu_brightness:
+        case R.id.menu_brightness_overflow:
             doDayNightToggle();
             return true;
-        case R.id.menu_date:
-            // doPickDate();
+
+        case R.id.menu_about_content:
+            showAboutContentDialog();
             return true;
+
         default:
             return super.onOptionsItemSelected(item);
         }
     }
 
-    private void doDayNightToggle() {
-        nightMode = !nightMode;
-        sharedPreferences.edit().putBoolean(getString(R.string.pref_key_night_mode), nightMode).commit();
-        recreate();
+    private void showAboutContentDialog() {
+        AlertDialog.Builder dlgAlert = new AlertDialog.Builder(this);
+        dlgAlert.setMessage(getContentNotices());
+        dlgAlert.setTitle(R.string.about_content);
+        dlgAlert.setPositiveButton(R.string.ok, null);
+        dlgAlert.setCancelable(true);
+        dlgAlert.create().show();
     }
 
-    public void onClick(View v) {
-        switch (v.getId()) {
-
+    protected String getContentNotices() {
+        String notices = getString(R.string.unknown);
+        String[] row = new String[] { "version" };
+        Cursor cursor = getContentResolver().query(Uri.parse("content://uk.co.tekkies.plugin.bible.kjv/about"), row,
+                "", row, "");
+        if (cursor.moveToFirst()) {
+            notices = cursor.getString(cursor.getColumnIndex("about"));
         }
+        return notices;
     }
+
+    public void requestViewPagerDisallowInterceptTouchEvent(boolean disallowIntercept) {
+        viewPager.requestDisallowInterceptTouchEvent(disallowIntercept);
+    }
+
 }

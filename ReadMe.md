@@ -6,6 +6,9 @@ Try it out!
 <img class="alignright" alt="Get it on Google Play" src="https://developer.android.com/images/brand/en_generic_rgb_wo_45.png" width="129" height="45" />
 </a>
 
+
+Beta build available in the G+ community [(http://goo.gl/6yw8X9)](http://goo.gl/6yw8X9)
+
 # Build #
 
 Build using [Eclipse/ADT](http://developer.android.com/sdk/installing/installing-adt.html) - Just import the project into the Eclipse workspace.

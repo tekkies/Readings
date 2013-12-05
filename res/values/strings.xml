@@ -49,5 +49,19 @@
     <string name="about_content_title">Content</string>
     <string name="about_source_text">App source code available at https://github.com/tekkies/readings</string>
     <string name="about_app_title">App</string>
+    <string name="action_day_night">Day/Night</string>
+    <string name="title_install">Install</string>
+    <string name="install_kjv_bible_plugin">Install KJV Bible Plugin?</string>
+    <string name="ok">OK</string>
+    <string name="listen">Listen</string>
+    <string name="read_offlice">Read offline</string>
+    <string name="read_online">Read online</string>
+    <string name="unknown">Unknown</string>
+    <string name="about_content">About Content</string>
+    <string name="larger_text">Larger Text</string>
+    <string name="smaller_text">Smaller Text</string>
+    <string name="you_can_also_pinch_to_zoom">You can also pinch to zoom</string>
+    <string name="please_upgrade_the_kjv_bible_plugin">Please upgrade the KJV Bible plugin</string>
+    <string name="upgrade_plugin">Upgrade Plugin</string>
 
 </resources>
