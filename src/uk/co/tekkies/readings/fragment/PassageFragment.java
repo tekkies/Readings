@@ -144,6 +144,7 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
     }
 
     protected String render(String html) {
+        //html = html.replace("<br/>","&nbsp;");
         html = html.replace("<summary>", "<i><font color=\"blue\">");
         html = html.replace("</summary>", "</font></i>");
         html = html.replace("<v>", "<sup><font color=\"#000088\">");
