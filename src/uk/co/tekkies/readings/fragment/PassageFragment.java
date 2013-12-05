@@ -19,11 +19,14 @@ package uk.co.tekkies.readings.fragment;
 import uk.co.tekkies.readings.R;
 import uk.co.tekkies.readings.activity.PassageActivity;
 import uk.co.tekkies.readings.model.Prefs;
+import android.R.anim;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.view.Menu;
@@ -61,6 +64,9 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
         View mainView = inflater.inflate(R.layout.passage_fragment, container, false);
         textView = (TextView) (mainView.findViewById(R.id.textView1));
         defaultTextSize = textView.getTextSize();
+        if(PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean(getString(R.string.pref_key_night_mode), false)) {
+            textView.setTextColor(Color.GRAY);
+        }
         loadTextSize();
         registerGestureDetector(mainView);
         return mainView;
@@ -140,7 +146,7 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
     protected String render(String html) {
         html = html.replace("<summary>", "<i><font color=\"blue\">");
         html = html.replace("</summary>", "</font></i>");
-        html = html.replace("<v>", "<sup><font color=\"red\">");
+        html = html.replace("<v>", "<sup><font color=\"#000088\">");
         html = html.replace("</v>", "</font></sup>");
         return html;
     }
