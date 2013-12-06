@@ -146,8 +146,10 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
         //html = html.replace("<br/>","&nbsp;");
         html = html.replace("<summary>", "<i><font color=\"blue\">");
         html = html.replace("</summary>", "</font></i>");
-        html = html.replace("<v>", "<sup><font color=\"#000088\">");
-        html = html.replace("</v>", "</font></sup>");
+        html = html.replace("<v>", "<sup><b>");
+        html = html.replace("</v>", "</sup></b>");
+//        html = html.replace("<v>", "<sup><font color=\"#000088\">");
+//        html = html.replace("</v>", "</font></sup>");
         return html;
     }
 
