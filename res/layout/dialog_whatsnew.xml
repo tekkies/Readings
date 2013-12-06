@@ -26,52 +26,18 @@
 				android:layout_height="wrap_content"
 				android:text="- New icon coming soon" />
 						
-
-			
-			<TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="Version 3.0.9"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="- Pinch zoom in the new reader." />
-			
-			
-						
-			
 			<TextView android:layout_width="fill_parent" android:layout_marginTop="10dp"
-				android:layout_height="wrap_content" android:text="Version 3.0.7"
+				android:layout_height="wrap_content" android:text="Version 3.1.0"
 				android:textStyle="bold" />
 			<ImageView
 			    android:layout_width="wrap_content"
 			    android:layout_height="wrap_content"
-			    android:src="@drawable/integrated_reader_instructions_cropped" />
+			    android:src="@drawable/whats_new_swipe_between_readings" />
 			<TextView android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
-				android:text="- Click the passage name instead of the passage icon
-							\n  - Swipe between passages of the day
-							\n- Day/night mode" />
-						
-            
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="Version 3.0.0"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="- Light theme 
-        					\n- See new button at top of screen" />
-
-            
-            
+				android:text="- Swipe between passages of the day
+							\n- Pinch zoom for passage text size
+							\n- Day/night reading mode" />
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
