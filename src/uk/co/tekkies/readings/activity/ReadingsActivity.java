@@ -326,7 +326,12 @@ public class ReadingsActivity extends BaseActivity implements OnDateSetListener,
         LayoutInflater inflater = LayoutInflater.from(this);
         View view = inflater.inflate(R.layout.dialog_about, null);
         Builder builder = new AlertDialog.Builder(this);
-        builder.setView(view).setTitle(getString(R.string.about_readings))
+        String version="";
+        try {
+            version = " v"+getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+        } catch (NameNotFoundException e) {
+        }
+        builder.setView(view).setTitle(getString(R.string.app_name)+version)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
