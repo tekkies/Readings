@@ -8,6 +8,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.IBinder;
 import android.util.Log;
 
@@ -17,6 +19,7 @@ public class PlayerService extends Service {
     private static final String SERVICE_NAME = "uk.co.tekkies.readings.service.PlayerService";
     private static final String INTENT_STOP = "stop";
     PlayerBroadcastReceiver playerBroadcastReceiver;
+    MediaPlayer mediaPlayer;
 
     
     @Override
@@ -76,11 +79,15 @@ public class PlayerService extends Service {
 
     private void doStop() {
         Log.i(LOG_TAG, "Stop");
+        mediaPlayer.stop();
+        mediaPlayer.release();
         stopSelf();
     }
     
     private void doPlay() {
         Log.i(LOG_TAG, "Play");
+        mediaPlayer = MediaPlayer.create(this, Uri.parse("file:///storage/extSdCard/Podcasts/NLT Tree 97bD lame -B 48 -h -v -a/1 OT/01 Gen/Gen001.mp3"));
+        mediaPlayer.start();
     }
 
 
