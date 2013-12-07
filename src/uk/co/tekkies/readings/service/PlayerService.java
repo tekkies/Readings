@@ -2,7 +2,12 @@ package uk.co.tekkies.readings.service;
 
 import java.util.List;
 
+import uk.co.tekkies.readings.R;
+
 import android.app.ActivityManager;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -21,7 +26,6 @@ public class PlayerService extends Service {
     PlayerBroadcastReceiver playerBroadcastReceiver;
     MediaPlayer mediaPlayer;
 
-    
     @Override
     public IBinder onBind(Intent intent) {
         return null;
@@ -30,8 +34,20 @@ public class PlayerService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         registerPlayerBroadcastReceiver();
+        createOngoingNotification();
         doPlay();
         return super.onStartCommand(intent, flags, startId);
+    }
+
+    private void createOngoingNotification() {
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.cancelAll();
+        Intent returnIntent = getPackageManager().getLaunchIntentForPackage("uk.co.tekkies.readings");
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, returnIntent,
+                PendingIntent.FLAG_CANCEL_CURRENT);
+        Notification ongoingNotification = new Notification(R.drawable.ic_launcher, "Readings Player", 10000);
+        ongoingNotification.setLatestEventInfo(this, "ReaingsPlayer", "Sarted player", pendingIntent);
+        startForeground((int) Notification.FLAG_FOREGROUND_SERVICE, ongoingNotification);
     }
 
     private void registerPlayerBroadcastReceiver() {
@@ -52,7 +68,6 @@ public class PlayerService extends Service {
                 break;
             }
         }
-
         return serviceRunning;
     }
 
@@ -71,10 +86,7 @@ public class PlayerService extends Service {
             if (intent.getAction().equals(INTENT_STOP)) {
                 doStop();
             }
-            // TODO Auto-generated method stub
-
         }
-
     }
 
     private void doStop() {
@@ -83,24 +95,21 @@ public class PlayerService extends Service {
         mediaPlayer.release();
         stopSelf();
     }
-    
+
     private void doPlay() {
         Log.i(LOG_TAG, "Play");
-        mediaPlayer = MediaPlayer.create(this, Uri.parse("file:///storage/extSdCard/Podcasts/NLT Tree 97bD lame -B 48 -h -v -a/1 OT/01 Gen/Gen001.mp3"));
+        mediaPlayer = MediaPlayer.create(this, Uri
+                .parse("file:///storage/extSdCard/Podcasts/NLT Tree 97bD lame -B 48 -h -v -a/1 OT/01 Gen/Gen001.mp3"));
         mediaPlayer.start();
     }
-
-
 
     @Override
     public void onDestroy() {
         Log.i(LOG_TAG, "Service stopped");
-
         if (playerBroadcastReceiver != null) {
             unregisterReceiver(playerBroadcastReceiver);
             playerBroadcastReceiver = null;
         }
-
         super.onDestroy();
     }
 
