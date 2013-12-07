@@ -16,7 +16,7 @@
             android:orientation="vertical" >
             
             <TextView android:layout_width="fill_parent" android:layout_marginTop="10dp"
-				android:layout_height="wrap_content" android:text="Coming soon"
+				android:layout_height="wrap_content" android:text="Version 3.1.4"
 				android:textStyle="bold" />
 			<ImageView
 			    android:layout_width="wrap_content"
@@ -24,7 +24,7 @@
 			    android:src="@drawable/ic_whats_new_icon_change" />
 			<TextView android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
-				android:text="- New icon coming soon" />
+				android:text="- New icon" />
 						
 			<TextView android:layout_width="fill_parent" android:layout_marginTop="10dp"
 				android:layout_height="wrap_content" android:text="Version 3.1.0"
