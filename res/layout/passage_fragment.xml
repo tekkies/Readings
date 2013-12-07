@@ -9,6 +9,26 @@
         android:layout_height="match_parent"
         android:id="@id/scrollView1">"
 
+		<LinearLayout 
+		    android:layout_width="match_parent"
+        	android:layout_height="wrap_content" 
+        	android:orientation="vertical">
+
+		<LinearLayout 
+		    android:layout_width="match_parent"
+        	android:layout_height="wrap_content"
+		    android:orientation="horizontal">
+
+			<Button
+			    android:id="@+id/button_play_pause"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:text="Play" />
+
+			
+		</LinearLayout>
+
+
         <TextView
             android:id="@+id/textView1"
             android:layout_width="wrap_content"
@@ -16,6 +36,9 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:text="TextView" />
+        
+        </LinearLayout>
+        
     </ScrollView>
 
 </RelativeLayout>

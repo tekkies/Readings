@@ -35,6 +35,15 @@
 		       <category android:name="android.intent.category.DEFAULT" />
 		    </intent-filter>
 		</activity>
+		
+        <service
+		    android:name="uk.co.tekkies.readings.service.PlayerService"
+		    android:enabled="true"
+		    android:exported="true" >
+		    <intent-filter>
+		        <action android:name="uk.co.tekkies.readings.service.PlayerService" />
+		    </intent-filter>
+</service>
      
     </application>
 </manifest> 

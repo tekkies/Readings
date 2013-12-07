@@ -19,6 +19,7 @@ package uk.co.tekkies.readings.fragment;
 import uk.co.tekkies.readings.R;
 import uk.co.tekkies.readings.activity.PassageActivity;
 import uk.co.tekkies.readings.model.Prefs;
+import uk.co.tekkies.readings.service.PlayerService;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.database.Cursor;
@@ -35,20 +36,22 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.ScaleGestureDetector.SimpleOnScaleGestureListener;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.widget.Button;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class PassageFragment extends Fragment implements OnSharedPreferenceChangeListener {
+public class PassageFragment extends Fragment implements OnSharedPreferenceChangeListener, OnClickListener {
 
-    
     TextView textView;
     ScaleGestureDetector scaleGestureDetector;
     float defaultTextSize;
     double textSize;
     String passage = "Unknown";
     Prefs prefs;
+    Button playButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -63,9 +66,13 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
         View mainView = inflater.inflate(R.layout.passage_fragment, container, false);
         textView = (TextView) (mainView.findViewById(R.id.textView1));
         defaultTextSize = textView.getTextSize();
-        if(PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean(getString(R.string.pref_key_night_mode), false)) {
+        if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean(
+                getString(R.string.pref_key_night_mode), false)) {
             textView.setTextColor(Color.GRAY);
         }
+        playButton = (Button) mainView.findViewById(R.id.button_play_pause);
+        playButton.setText(PlayerService.isServiceRunning(getActivity()) ? "Pause" : "Play");
+        playButton.setOnClickListener(this);
         loadTextSize();
         registerGestureDetector(mainView);
         return mainView;
@@ -107,13 +114,13 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
             saveTextSize();
             Toast.makeText(getActivity(), R.string.you_can_also_pinch_to_zoom, Toast.LENGTH_SHORT).show();
             return true;
-        
+
         case R.id.menu_smaller_text:
             textSize *= 0.8;
             saveTextSize();
             Toast.makeText(getActivity(), R.string.you_can_also_pinch_to_zoom, Toast.LENGTH_SHORT).show();
             return true;
-        
+
         default:
             return super.onOptionsItemSelected(item);
         }
@@ -143,13 +150,13 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
     }
 
     protected String render(String html) {
-        //html = html.replace("<br/>","&nbsp;");
+        // html = html.replace("<br/>","&nbsp;");
         html = html.replace("<summary>", "<i><font color=\"blue\">");
         html = html.replace("</summary>", "</font></i>");
         html = html.replace("<v>", "<sup><b>");
         html = html.replace("</v>", "</sup></b>");
-//        html = html.replace("<v>", "<sup><font color=\"#000088\">");
-//        html = html.replace("</v>", "</font></sup>");
+        // html = html.replace("<v>", "<sup><font color=\"#000088\">");
+        // html = html.replace("</v>", "</font></sup>");
         return html;
     }
 
@@ -187,6 +194,25 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
         @Override
         public void onScaleEnd(ScaleGestureDetector detector) {
             saveTextSize();
+        }
+
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+        case R.id.button_play_pause:
+            doPlayPause();
+        }
+    }
+
+    private void doPlayPause() {
+        if (!PlayerService.isServiceRunning(getActivity())) {
+            PlayerService.requestPlay(getActivity());
+            playButton.setText("Stop");
+        } else {
+            PlayerService.requestStop(getActivity());
+            playButton.setText("Play");
         }
 
     }
