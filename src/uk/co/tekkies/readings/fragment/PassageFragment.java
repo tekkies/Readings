@@ -16,10 +16,12 @@ limitations under the License.
 
 package uk.co.tekkies.readings.fragment;
 
+import uk.co.tekkies.readings.LaridianNltMp3SearchActivity;
 import uk.co.tekkies.readings.R;
 import uk.co.tekkies.readings.activity.PassageActivity;
 import uk.co.tekkies.readings.model.Prefs;
 import uk.co.tekkies.readings.service.PlayerService;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.database.Cursor;
@@ -73,6 +75,9 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
         playButton = (Button) mainView.findViewById(R.id.button_play_pause);
         playButton.setText(PlayerService.isServiceRunning(getActivity()) ? "Pause" : "Play");
         playButton.setOnClickListener(this);
+        
+        mainView.findViewById(R.id.button_search).setOnClickListener(this);
+
         loadTextSize();
         registerGestureDetector(mainView);
         return mainView;
@@ -203,6 +208,10 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
         switch (v.getId()) {
         case R.id.button_play_pause:
             doPlayPause();
+            break;
+        case R.id.button_search:
+            doSearch();
+            break;
         }
     }
 
@@ -216,5 +225,10 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
         }
 
     }
-
+    
+    private void doSearch() {
+        Intent intent = new Intent(getActivity(), LaridianNltMp3SearchActivity.class);
+        startActivity(intent);
+        getActivity().finish();
+    }
 }

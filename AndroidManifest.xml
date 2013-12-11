@@ -36,6 +36,11 @@
 		    </intent-filter>
 		</activity>
 		
+        <activity
+            android:name="uk.co.tekkies.readings.LaridianNltMp3SearchActivity"
+            android:label="@string/mp3_search" >
+        </activity>
+		
         <service
 		    android:name="uk.co.tekkies.readings.service.PlayerService"
 		    android:enabled="true"
@@ -43,7 +48,7 @@
 		    <intent-filter>
 		        <action android:name="uk.co.tekkies.readings.service.PlayerService" />
 		    </intent-filter>
-</service>
+		</service>
      
     </application>
 </manifest> 

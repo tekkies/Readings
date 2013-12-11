@@ -65,4 +65,14 @@
     <string name="please_upgrade_the_kjv_bible_plugin">Please update your KJV Bible plugin for the latest features</string>
     <string name="upgrade_plugin">Update Plugin</string>
 
+    
+    <string name="search">Search Again</string>
+    <string name="searching">Searching...</string>
+    <string name="mp3_folder_not_found">MP3 folder not found</string>
+    <string name="mp3_folder">MP3 folder: %1$s</string>
+    <string name="test">Test</string>
+    <string name="mp3_search">MP3 Search</string>
+    
+    
+    
 </resources>
