@@ -20,6 +20,7 @@ import android.util.Log;
 
 public class PlayerService extends Service {
 
+    private static final String INTENT_EXTRA_FILE_PATH = "filePath";
     private static final String LOG_TAG = "PLAYER";
     private static final String SERVICE_NAME = "uk.co.tekkies.readings.service.PlayerService";
     private static final String INTENT_STOP = "stop";
@@ -35,7 +36,8 @@ public class PlayerService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         registerPlayerBroadcastReceiver();
         createOngoingNotification();
-        doPlay();
+        String filePath = intent.getExtras().getString(INTENT_EXTRA_FILE_PATH);
+        doPlay(filePath);
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -71,8 +73,10 @@ public class PlayerService extends Service {
         return serviceRunning;
     }
 
-    public static void requestPlay(Context context) {
-        context.startService(new Intent(PlayerService.SERVICE_NAME));
+    public static void requestPlay(Context context, String mp3File) {
+        Intent intent = new Intent(PlayerService.SERVICE_NAME);
+        intent.putExtra(INTENT_EXTRA_FILE_PATH, mp3File);
+        context.startService(intent);
     }
 
     public static void requestStop(Context context) {
@@ -96,10 +100,11 @@ public class PlayerService extends Service {
         stopSelf();
     }
 
-    private void doPlay() {
+    private void doPlay(String filePath) {
         Log.i(LOG_TAG, "Play");
         mediaPlayer = MediaPlayer.create(this, Uri
-                .parse("file:///storage/extSdCard/Podcasts/NLT Tree 97bD lame -B 48 -h -v -a/1 OT/01 Gen/Gen001.mp3"));
+                .parse(filePath));
+                //.parse("file:///storage/extSdCard/Podcasts/NLT Tree 97bD lame -B 48 -h -v -a/1 OT/01 Gen/Gen001.mp3"));
         mediaPlayer.start();
     }
 

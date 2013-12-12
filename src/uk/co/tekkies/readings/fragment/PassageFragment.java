@@ -222,8 +222,7 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
     private void doPlayPause() {
         if (!PlayerService.isServiceRunning(getActivity())) {
             String mp3File = LaridianNltMp3SearchActivity.getMp3Path(getActivity(), passageId);
-
-            PlayerService.requestPlay(getActivity());
+            PlayerService.requestPlay(getActivity(), mp3File);
             playButton.setText("Stop");
         } else {
             PlayerService.requestStop(getActivity());
