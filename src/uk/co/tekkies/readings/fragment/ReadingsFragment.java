@@ -90,7 +90,7 @@ public class ReadingsFragment extends Fragment {
                     Integer.toString(calendar.get(Calendar.DAY_OF_MONTH)) };
             Cursor cursor = db
                     .rawQuery(
-                            "                            SELECT Coalesce(book.Name || ' ' || override, book.Name || ' ' || passage.chapter) AS passage, summary.summary_text"
+                            "                            SELECT Coalesce(book.Name || ' ' || override, book.Name || ' ' || passage.chapter) AS passage, summary.summary_text, passage._id"
                                     + "                            FROM plan"
                                     + "                            LEFT JOIN passage ON passage._id = plan.passage_id"
                                     + "                            LEFT JOIN book ON book._id = passage.book_id"
@@ -99,7 +99,8 @@ public class ReadingsFragment extends Fragment {
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
                 listItems.add(new Passage(cursor.getString(0),
-                        cursor.isNull(1) ? getString(R.string.sorry_no_summary_available_yet) : cursor.getString(1)));
+                        cursor.isNull(1) ? getString(R.string.sorry_no_summary_available_yet) : cursor.getString(1),
+                        cursor.getInt(2)));
                 cursor.moveToNext();
             }
             adapter.notifyDataSetChanged();

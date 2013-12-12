@@ -3,6 +3,7 @@ package uk.co.tekkies.readings;
 import java.io.File;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -114,6 +115,14 @@ public class Mp3SearchActivity extends Activity implements OnClickListener {
         tryPlay();
     }
     
+    
+    public static String getMp3Path(Context context, int passageId) {
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
+        String basePath = settings.getString(SETTING_BASE_PATH, "");
+        String mp3Path = basePath + File.separator + getPassagePath(passageId);
+        return mp3Path;
+    }
+    
     private void setBasePath(String basePath) {
         // Store value
         this.basePath = basePath;
@@ -185,7 +194,7 @@ public class Mp3SearchActivity extends Activity implements OnClickListener {
     }
 
     
-    private String getPassagePath(int passageId)
+    private static String getPassagePath(int passageId)
     {
         switch (passageId)
         {
@@ -1386,25 +1395,6 @@ public class Mp3SearchActivity extends Activity implements OnClickListener {
         
     }
     
-    private String getPassagePath(String ref) {
-        String mp3SubPath = null;
-//        AppDataBaseHelper dbHelper = new AppDataBaseHelper(this);
-//        SQLiteDatabase db = dbHelper.getReadableDatabase();
-//        db = dbHelper.getReadableDatabase();
-//        try {
-//            String[] params = { ref };
-//            Cursor cursor = db.rawQuery("SELECT [Path] FROM [Passage] WHERE [Ref] = ?", params);
-//            cursor.moveToFirst();
-//            while (!cursor.isAfterLast()) {
-//                mp3SubPath = cursor.getString(0);
-//                cursor.moveToNext();
-//            }
-//        } finally {
-//            db.close();
-//        }
-        return mp3SubPath;
-    }
-
     private void doSearchForKeyFile() {
         if (searchButton != null) {
             searchButton.setEnabled(false);

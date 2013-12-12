@@ -17,11 +17,13 @@ limitations under the License.
 package uk.co.tekkies.readings.model;
 
 public class Passage {
+    private int passageId;
     private String title;
     private String summary;
 
-    public Passage(String title, String summary) {
+    public Passage(String title, String summary, int passageId) {
         this.title = title;
+        this.setPassageId(passageId);
         setSummary(summary);
     }
 
@@ -39,5 +41,13 @@ public class Passage {
 
     public String getTitle() {
         return title;
+    }
+
+    public int getPassageId() {
+        return passageId;
+    }
+
+    public void setPassageId(int passageId) {
+        this.passageId = passageId;
     }
 }

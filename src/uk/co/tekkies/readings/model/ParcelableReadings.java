@@ -36,6 +36,7 @@ public class ParcelableReadings implements Parcelable {
         for (Passage passage : passages) {
             out.writeString(passage.getTitle());
             out.writeString(passage.getSummary());
+            out.writeInt(passage.getPassageId());
         }
     }
 
@@ -49,7 +50,7 @@ public class ParcelableReadings implements Parcelable {
         selected = in.readString();
         passages = new ArrayList<Passage>();
         for (int index = 0; index < size; index++) {
-            passages.add(new Passage(in.readString(), in.readString()));
+            passages.add(new Passage(in.readString(), in.readString(), in.readInt()));
         }
     }
 

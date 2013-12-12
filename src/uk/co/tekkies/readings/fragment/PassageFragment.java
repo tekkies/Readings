@@ -16,6 +16,8 @@ limitations under the License.
 
 package uk.co.tekkies.readings.fragment;
 
+import java.io.File;
+
 import uk.co.tekkies.readings.LaridianNltMp3SearchActivity;
 import uk.co.tekkies.readings.R;
 import uk.co.tekkies.readings.activity.PassageActivity;
@@ -52,6 +54,7 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
     float defaultTextSize;
     double textSize;
     String passage = "Unknown";
+    int passageId = 0;
     Prefs prefs;
     Button playButton;
 
@@ -87,6 +90,7 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
     public void onViewCreated(View view, Bundle savedInstanceState) {
         Bundle args = getArguments();
         passage = args.getString("passage");
+        passageId = args.getInt("passageId");
         String html = render(getPassageXml(passage));
         textView.setText(Html.fromHtml(html));
         super.onViewCreated(view, savedInstanceState);
@@ -217,6 +221,8 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
 
     private void doPlayPause() {
         if (!PlayerService.isServiceRunning(getActivity())) {
+            String mp3File = LaridianNltMp3SearchActivity.getMp3Path(getActivity(), passageId);
+
             PlayerService.requestPlay(getActivity());
             playButton.setText("Stop");
         } else {
