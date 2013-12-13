@@ -8,6 +8,7 @@ import uk.co.tekkies.readings.model.content.LaridianNltMp3ContentLocator;
 import uk.co.tekkies.readings.model.content.Mp3ContentLocator;
 import uk.co.tekkies.readings.service.PlayerService;
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -81,11 +82,33 @@ public class ContentLocationActivity extends Activity implements OnClickListener
     ContentLocationActivity getActivity() {
         return this;
     }
+    
+    private class SearchTask extends AsyncTask<Mp3ContentLocator, String, Mp3ContentLocator> {
 
-    final Handler mHandler = new Handler();
-    final Runnable mUpdateResults = new Runnable() {
-        public void run() {
-            // Save
+        @Override
+        protected Mp3ContentLocator doInBackground(Mp3ContentLocator... locators) {
+            
+            Mp3ContentLocator foundMp3ContentLocator = null;            
+            
+            basePath = "";
+            String keyFileName = locators[0].getKeyFileName();
+            File root = new File("/");
+            File found = findFile(root, keyFileName);
+            if (found != null) {
+                foundMp3ContentLocator = locators[0];
+                basePath = foundMp3ContentLocator.getBaseFolder(found);
+            }
+            return foundMp3ContentLocator;
+        }
+        
+        @Override
+        protected void onProgressUpdate(String... values) {
+            // TODO Auto-generated method stub
+            super.onProgressUpdate(values);
+        }
+        
+        @Override
+        protected void onPostExecute(Mp3ContentLocator result) {
             Prefs prefs = new Prefs(getActivity());
             
             prefs.setMp3BasePath(basePath);
@@ -98,7 +121,8 @@ public class ContentLocationActivity extends Activity implements OnClickListener
             //Try playing mp3 again
             doTest();
         }
-    };
+    }
+    
 
     private void updateUi() {
         // re-enable Search button
@@ -124,23 +148,13 @@ public class ContentLocationActivity extends Activity implements OnClickListener
             searchButton.setEnabled(false);
         }
         
-        //TOFO: Add safety net for recursion.  Depth and breadth.
+        
+        //TODO: Add safety net for recursion.  Depth and breadth.
         //TODO: This should be an array of all possible contentLocators
         mp3ContentLocator = new LaridianNltMp3ContentLocator();
         
-        Thread t = new Thread() {
-            public void run() {
-                basePath = "";
-                String keyFileName = mp3ContentLocator.getKeyFileName();
-                File root = new File("/");
-                File found = findFile(root, keyFileName);
-                if (found != null) {
-                    basePath = mp3ContentLocator.getBaseFolder(found);
-                }
-                mHandler.post(mUpdateResults);
-            }
-        };
-        t.start();
+        SearchTask searchTask = new SearchTask();
+        searchTask.execute(mp3ContentLocator);
     }
 
     private File findFile(File aFile, String toFind) {
