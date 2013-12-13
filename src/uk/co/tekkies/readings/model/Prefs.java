@@ -8,6 +8,7 @@ public class Prefs {
 
     public static final String PREF_PASSAGE_TEXT_SIZE = "passageTextSize";
     public static final String PREF_MP3_BASE_PATH = "mp3BasePath";
+    private static final String PREF_MP3_PRODUCT = "mp3Product";
 
     SharedPreferences sharedPreferences;
 
@@ -47,7 +48,18 @@ public class Prefs {
     }
     
     public void setMp3BasePath(String mp3BasePath) {
-        putString(PREF_PASSAGE_TEXT_SIZE, mp3BasePath);
+        putString(PREF_MP3_BASE_PATH, mp3BasePath);
+    }
+
+    /**
+     * @return Empty string if no path set
+     */
+    public String getMp3Product() {
+        return sharedPreferences.getString(PREF_MP3_PRODUCT, "");
+    }
+
+    public void setMp3Product(Context context, String product) {
+        putString(PREF_MP3_PRODUCT, product);
     }
 
 }

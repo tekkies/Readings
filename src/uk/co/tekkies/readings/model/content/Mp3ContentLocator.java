@@ -5,8 +5,6 @@ import java.io.File;
 import uk.co.tekkies.readings.model.Prefs;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 
 public abstract class Mp3ContentLocator {
     
@@ -19,7 +17,6 @@ public abstract class Mp3ContentLocator {
     public abstract String getPassagePath(int passageId);
     
     public String getMp3Path(Context context, int passageId) {
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
         String basePath = new Prefs(context).getMp3BasePath(); 
         String mp3Path = basePath + File.separator + getPassagePath(passageId);
         return mp3Path;
@@ -38,12 +35,28 @@ public abstract class Mp3ContentLocator {
     }
     
     public static Mp3ContentLocator createChosenMp3ContentDescription(Context context) {
-        //TODO: Read chosen Mp3ContentDescriber from prefs, instantiate and confirm installation 
-        Mp3ContentLocator content = new LaridianNltMp3ContentLocator();
-        if(!content.confirmKeyFileFound(context)) {
-            content = null;
+        Mp3ContentLocator contentLocator=null;
+        String mp3Product = new Prefs(context).getMp3Product();
+        contentLocator = newContentLocator(mp3Product);
+        if(contentLocator != null) {
+            if(!contentLocator.confirmKeyFileFound(context)) {
+                contentLocator = null;
+            }
         }
-        return content;
+        return contentLocator;
+    }
+
+    /**
+     * Simply creates an instance of the named mp3Contentlocator
+     * @param mp3Product Name of the Mp3Contentlocator class to create 
+     * @return Null if no match
+     */
+    private static Mp3ContentLocator newContentLocator(String mp3Product) {
+        Mp3ContentLocator contentLocator = null;
+        if(LaridianNltMp3ContentLocator.class.getName().equalsIgnoreCase(mp3Product)) {
+            contentLocator = new LaridianNltMp3ContentLocator();    
+        }
+        return contentLocator;
     }
 
 }
