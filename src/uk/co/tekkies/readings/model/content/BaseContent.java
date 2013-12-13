@@ -37,5 +37,14 @@ public abstract class BaseContent {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
         return settings.getString(BaseContent.SETTING_BASE_PATH, null);
     }
+    
+    public static BaseContent getContent(Context context) {
+        //TODO: Read chosen content from prefs, instantiate and confirm 
+        BaseContent content = new LaridianNltMp3Content();
+        if(!content.confirmKeyFileFound(context)) {
+            content = null;
+        }
+        return content;
+    }
 
 }

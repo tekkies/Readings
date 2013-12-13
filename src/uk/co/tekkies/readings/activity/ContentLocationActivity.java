@@ -37,11 +37,8 @@ public class ContentLocationActivity extends Activity implements OnClickListener
         setupActivity();
         setupLayout();
 
-        baseContent = new LaridianNltMp3Content();
-        basePath = baseContent.getBasePath(this);
-        if (!baseContent.confirmKeyFileFound(this)) {
-            // Show the activity
-
+        baseContent = BaseContent.getContent(this); 
+        if (baseContent==null) {
             Toast.makeText(this, R.string.mp3_folder_not_found, Toast.LENGTH_SHORT).show();
             Toast.makeText(this, R.string.searching, Toast.LENGTH_SHORT).show();
             doSearchForKeyFile();
@@ -78,8 +75,11 @@ public class ContentLocationActivity extends Activity implements OnClickListener
     }
 
     private void doTest() {
-        String mp3File = new LaridianNltMp3Content().getMp3Path(this, 2); 
-        PlayerService.requestPlay(this, mp3File);
+            BaseContent content = BaseContent.getContent(this);
+            if(content != null) {
+                String mp3File = content.getMp3Path(this, 2); 
+                PlayerService.requestPlay(this, mp3File);
+            }
     }
     
     final Handler mHandler = new Handler();
