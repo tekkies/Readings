@@ -16,12 +16,11 @@ limitations under the License.
 
 package uk.co.tekkies.readings.fragment;
 
-import java.io.File;
-
-import uk.co.tekkies.readings.LaridianNltMp3SearchActivity;
 import uk.co.tekkies.readings.R;
+import uk.co.tekkies.readings.activity.ContentLocationActivity;
 import uk.co.tekkies.readings.activity.PassageActivity;
 import uk.co.tekkies.readings.model.Prefs;
+import uk.co.tekkies.readings.model.content.LaridianNltMp3Content;
 import uk.co.tekkies.readings.service.PlayerService;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -221,7 +220,7 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
 
     private void doPlayPause() {
         if (!PlayerService.isServiceRunning(getActivity())) {
-            String mp3File = LaridianNltMp3SearchActivity.getMp3Path(getActivity(), passageId);
+            String mp3File = new LaridianNltMp3Content().getMp3Path(getActivity(), passageId); 
             PlayerService.requestPlay(getActivity(), mp3File);
             playButton.setText("Stop");
         } else {
@@ -232,7 +231,7 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
     }
     
     private void doSearch() {
-        Intent intent = new Intent(getActivity(), LaridianNltMp3SearchActivity.class);
+        Intent intent = new Intent(getActivity(), ContentLocationActivity.class);
         startActivity(intent);
         getActivity().finish();
     }

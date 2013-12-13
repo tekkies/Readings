@@ -37,7 +37,7 @@
 		</activity>
 		
         <activity
-            android:name="uk.co.tekkies.readings.LaridianNltMp3SearchActivity"
+            android:name="uk.co.tekkies.readings.activity.ContentLocationActivity"
             android:label="@string/mp3_search" >
         </activity>
 		

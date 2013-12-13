@@ -1,200 +1,46 @@
-package uk.co.tekkies.readings;
+package uk.co.tekkies.readings.model.content;
 
 import java.io.File;
-import android.app.Activity;
-import android.content.ActivityNotFoundException;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.net.Uri;
-import android.os.Bundle;
-import android.os.Handler;
-import android.preference.PreferenceManager;
+
 import android.util.Log;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.webkit.WebView;
-import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
 
-
-public class Mp3SearchActivity extends Activity implements OnClickListener {
-
-    private static final String SETTING_BASE_PATH = "basePath";
-    protected static final String TAG = "MP3Bible";
-    private String basePath = "";
-    Button searchButton = null;
-    Button testButton = null;
-    TextView basePathTextView = null;
-    WebView webView1 = null;
+public class LaridianNltMp3Content extends BaseContent {
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        setupActivity();
-
-        if (!tryPlay()) {
-            // Show the activity
-            setupLayout();
-
-            // Begin a search for MP3 files if
-            if (basePath == "") {
-                Toast.makeText(this, R.string.mp3_folder_not_found, Toast.LENGTH_SHORT).show();
-                Toast.makeText(this, R.string.searching, Toast.LENGTH_SHORT).show();
-                doSearchForKeyFile();
-            }
-        }
+    public String getBaseFolder(File potentialKeyFile) {
+        File bookFolder = potentialKeyFile.getParentFile();
+        File testamentFolder = bookFolder.getParentFile();
+        return testamentFolder.getParent();
     }
-
-    private void setupActivity() {
-        setTitle(R.string.mp3_search);
-        copyDatabaseIfRequired();
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-        setBasePath(settings.getString(SETTING_BASE_PATH, ""));
-    }
-
-    private void setupLayout() {
-        setContentView(R.layout.mp3_search_activity);
-        searchButton = (Button) findViewById(R.id.button_search);
-        searchButton.setOnClickListener(this);
-        
-        testButton = (Button) findViewById(R.id.button_test);
-        testButton.setOnClickListener(this);
-
-        basePathTextView = (TextView) findViewById(R.id.textView_mp3location);
-        setBasePath(basePath);
-        
-        webView1 = (WebView) findViewById(R.id.webView1);
-        webView1.loadUrl("file:///android_asset/licensed/search_help.html");
-    }
-
-    private void copyDatabaseIfRequired() {
-//        AppDataBaseHelper helper = new AppDataBaseHelper(this);
-//        if (!helper.checkDataBase(getLiveDatabasePath())) {
-//            try {
-//                helper.createDataBase(getLiveDatabasePath());
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-    }
-
 
     @Override
-    public void onClick(View v) {
-        int id = v.getId();
-        if(id == R.id.button_search)
-        {
-            doSearchForKeyFile();
-        }
-        else if(id == R.id.button_test)
-        {
-            tryPlay("Genesis 1");
-        }
-    }
-    
-    final Handler mHandler = new Handler();
-    final Runnable mUpdateResults = new Runnable() {
-        public void run() {
-            updateUI();
-        }
-    };
+    public boolean confirmKeyFileFound(String baseFolder) {
+        Boolean confirmed = false;
 
-    protected void updateUI() {
-        // re-enable Search button
-        if (searchButton != null) {
-            searchButton.setEnabled(true);
-        }
-
-        // Save
-        setBasePath(basePath);
-
-        // Try playing mp3 again
-        tryPlay();
-    }
-    
-    
-    public static String getMp3Path(Context context, int passageId) {
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
-        String basePath = settings.getString(SETTING_BASE_PATH, "");
-        String mp3Path = basePath + File.separator + getPassagePath(passageId);
-        return mp3Path;
-    }
-    
-    private void setBasePath(String basePath) {
-        // Store value
-        this.basePath = basePath;
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putString(SETTING_BASE_PATH, basePath);
-        editor.commit();
-
-        // Build message
-        String basePathMessage;
-        if (basePath == "") {
-            basePathMessage = getResources().getString(R.string.mp3_folder_not_found);
-        } else {
-            basePathMessage = String.format(getResources().getString(R.string.mp3_folder), basePath);
-        }
-        // Set TextView (& toast if UI visible)
-        if (basePathTextView != null) {
-            Toast.makeText(this, basePathMessage, Toast.LENGTH_SHORT).show();
-            basePathTextView.setText(basePathMessage);
-        }
-    }
-
-    private Boolean tryPlay()
-    {
-        return tryPlay(null);
-    }
-    
-    private Boolean tryPlay(String passage) {
-        Boolean success = false;
-        if (basePath != "") {
-            if (confirmKeyFileFound(basePath)) {
-                if(passage == null)
-                {
-                    Intent intent = getIntent();
-                    passage = intent.getStringExtra("passage");
-                }
-
-                if (passage != null) {
-                    success = playPassage(basePath, passage);
-                }
-            } else {// MP3 files missing
-                setBasePath("");
+        File prov15 = new File(baseFolder + "/1 OT/20 Prov/Prov015.mp3");
+        if (prov15.exists()) {
+            Log.v(TAG, "confirmKeyFileFound: Found: Prov 15");
+            File james3 = new File(baseFolder + "/2 NT/59 Jas/Jas003.mp3");
+            if (james3.exists()) {
+                Log.v(TAG, "confirmKeyFileFound: Found: James 3");
+                confirmed = true;
             }
         }
-        return success;
+        return confirmed;
     }
 
-    private Boolean playPassage(String basePath, String passage) {
-        Boolean success = false;
-        String ref = passage.replace(" ", ""); // strip spaces
-        ref = ref.toLowerCase();
-
-        String mp3Path = basePath + File.separator + getPassagePath(15);
-
-        //Open in media player
-        if (mp3Path != null) {
-            Intent mediaIntent = new Intent(android.content.Intent.ACTION_VIEW);
-            Uri data = Uri.parse("file://" + mp3Path);
-            mediaIntent.setDataAndType(data, "audio/mp3");
-            try {
-                startActivity(mediaIntent);
-                finish();
-                success = true;
-            } catch (ActivityNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
-        return success;
+    @Override
+    public String getKeyFileName() {
+        return "Gen001.mp3";
     }
-
     
-    private static String getPassagePath(int passageId)
+    @Override
+    public String getLiveDatabasePath() {
+        return "/data/data/uk.co.tekkies.plugin.mp3bible.laridian.nlt/databases/";
+    }
+
+    @Override
+    public String getPassagePath(int passageId)
     {
         switch (passageId)
         {
@@ -1395,69 +1241,6 @@ public class Mp3SearchActivity extends Activity implements OnClickListener {
         }
         
     }
+
     
-    private void doSearchForKeyFile() {
-        if (searchButton != null) {
-            searchButton.setEnabled(false);
-        }
-        if (basePathTextView != null) {
-            basePathTextView.setText(R.string.searching);
-        }
-
-        Thread t = new Thread() {
-            public void run() {
-                basePath = "";
-                String keyFileName = getKeyFileName();
-                File root = new File("/");
-                File found = findFile(root, keyFileName);
-                if (found != null) {
-                    basePath = getBaseFolder(found);
-                }
-                mHandler.post(mUpdateResults);
-            }
-        };
-        t.start();
-    }
-
-    private File findFile(File aFile, String toFind) {
-        Log.v(TAG, "Find:" + aFile.getAbsolutePath());
-        if ((aFile.getAbsolutePath().indexOf("/proc") == 0) || (aFile.getAbsolutePath().indexOf("/sys") == 0)) {
-            return null;
-        }
-        if (aFile.isFile() && aFile.getName().contains(toFind)) {
-            return aFile;
-        } else if (aFile.isDirectory()) {
-            File[] fileList = aFile.listFiles();
-            if (fileList != null) {
-                for (File child : aFile.listFiles()) {
-                    File found = findFile(child, toFind);
-                    if (found != null) {
-                        Log.v(TAG, "confirmKeyFileFound: Potential Match:" + found.getAbsolutePath());
-                        if (confirmKeyFileFound(getBaseFolder(found))) {
-                            return found;
-                        }
-                    }
-                }
-            }
-
-        }
-        return null;
-    }
-    
-    public String getBaseFolder(File potentialKeyFile) {
-        return null; //Abstract
-        };
-
-    public boolean confirmKeyFileFound(String baseFolder) {
-        return false; //Abstract
-    }
-
-    public String getKeyFileName() {
-        return null; //Abstract
-    }
-
-    public String getLiveDatabasePath() {
-        return null; //abstract "/data/data/uk.co.tekkies.plugin.mp3bible.laridian.nlt/databases/";
-    }
-
 }
