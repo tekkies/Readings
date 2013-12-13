@@ -10,7 +10,6 @@ import uk.co.tekkies.readings.service.PlayerService;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -83,32 +82,26 @@ public class ContentLocationActivity extends Activity implements OnClickListener
         return this;
     }
     
-    private class SearchTask extends AsyncTask<Mp3ContentLocator, String, Mp3ContentLocator> {
+    private class SearchTask extends AsyncTask<Mp3ContentLocator, String, Mp3ContentLocator[]> {
 
         @Override
-        protected Mp3ContentLocator doInBackground(Mp3ContentLocator... locators) {
-            
-            Mp3ContentLocator foundMp3ContentLocator = null;            
-            
+        protected Mp3ContentLocator[] doInBackground(Mp3ContentLocator... locators) {
             basePath = "";
-            String keyFileName = locators[0].getKeyFileName();
             File root = new File("/");
-            File found = findFile(root, keyFileName);
+            File found = findFile(root, locators);
             if (found != null) {
-                foundMp3ContentLocator = locators[0];
-                basePath = foundMp3ContentLocator.getBaseFolder(found);
+                basePath = locators[0].getBaseFolder(found);
             }
-            return foundMp3ContentLocator;
+            return locators;
         }
         
         @Override
         protected void onProgressUpdate(String... values) {
-            // TODO Auto-generated method stub
-            super.onProgressUpdate(values);
+            basePathTextView.setText(values[0]);
         }
         
         @Override
-        protected void onPostExecute(Mp3ContentLocator result) {
+        protected void onPostExecute(Mp3ContentLocator[] result) {
             Prefs prefs = new Prefs(getActivity());
             
             prefs.setMp3BasePath(basePath);
@@ -120,6 +113,39 @@ public class ContentLocationActivity extends Activity implements OnClickListener
             updateUi();
             //Try playing mp3 again
             doTest();
+        }
+        
+        private File findFile(File aFile, Mp3ContentLocator[] locators) {
+            publishProgress(aFile.getAbsolutePath());
+            Log.v(TAG, "Find:" + aFile.getAbsolutePath());
+            if ((aFile.getAbsolutePath().indexOf("/proc") == 0) || (aFile.getAbsolutePath().indexOf("/sys") == 0)) {
+                return null;
+            }
+            if (aFile.isFile()) {
+                for(int i=0;i<locators.length;i++) {
+                    if(aFile.getName().contains(locators[i].getKeyFileName())) {
+                        return aFile;
+                    }
+                }
+            } else if (aFile.isDirectory()) {
+                File[] fileList = aFile.listFiles();
+                if (fileList != null) {
+                    for (File child : aFile.listFiles()) {
+                        File found = findFile(child, locators);
+                        if (found != null) {
+                            Log.v(TAG, "confirmKeyFileFound: Potential Match:" + found.getAbsolutePath());
+                            for(int i=0;i<locators.length;i++) {
+                                if (locators[i].confirmKeyFileFound(found.getAbsolutePath())) {
+                                    locators[i].setBasePath(found.getAbsolutePath());
+                                    return found;
+                                }
+                            }
+                        }
+                    }
+                }
+
+            }
+            return null;
         }
     }
     
@@ -148,38 +174,15 @@ public class ContentLocationActivity extends Activity implements OnClickListener
             searchButton.setEnabled(false);
         }
         
-        
         //TODO: Add safety net for recursion.  Depth and breadth.
-        //TODO: This should be an array of all possible contentLocators
-        mp3ContentLocator = new LaridianNltMp3ContentLocator();
+        Mp3ContentLocator[] mp3ContentLocators = { 
+           new LaridianNltMp3ContentLocator() 
+        };
         
         SearchTask searchTask = new SearchTask();
-        searchTask.execute(mp3ContentLocator);
+        searchTask.execute(mp3ContentLocators);
     }
 
-    private File findFile(File aFile, String toFind) {
-        Log.v(TAG, "Find:" + aFile.getAbsolutePath());
-        if ((aFile.getAbsolutePath().indexOf("/proc") == 0) || (aFile.getAbsolutePath().indexOf("/sys") == 0)) {
-            return null;
-        }
-        if (aFile.isFile() && aFile.getName().contains(toFind)) {
-            return aFile;
-        } else if (aFile.isDirectory()) {
-            File[] fileList = aFile.listFiles();
-            if (fileList != null) {
-                for (File child : aFile.listFiles()) {
-                    File found = findFile(child, toFind);
-                    if (found != null) {
-                        Log.v(TAG, "confirmKeyFileFound: Potential Match:" + found.getAbsolutePath());
-                        if (mp3ContentLocator.confirmKeyFileFound(mp3ContentLocator.getBaseFolder(found))) {
-                            return found;
-                        }
-                    }
-                }
-            }
 
-        }
-        return null;
-    }
 
 }

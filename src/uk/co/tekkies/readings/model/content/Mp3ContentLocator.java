@@ -9,6 +9,8 @@ import android.content.Context;
 public abstract class Mp3ContentLocator {
     
     protected final String TAG = "CONTENT_LOCATOR";
+    
+    private String basePath="";
 
     public abstract String getBaseFolder(File potentialKeyFile);
     public abstract boolean confirmKeyFileFound(String baseFolder);
@@ -23,15 +25,14 @@ public abstract class Mp3ContentLocator {
     }
     public boolean confirmKeyFileFound(Context context) {
         boolean confirmed = false;
-        String basePath = getBasePath(context);
-        if(basePath != null) {
-            confirmed = confirmKeyFileFound(basePath);
+        if(getBasePath() != null) {
+            confirmed = confirmKeyFileFound(getBasePath());
         }
         return confirmed;
     }
     
-    public String getBasePath(Context context) {
-        return new Prefs(context).getMp3BasePath();
+    public void loadBasePath(Context context) {
+        setBasePath(new Prefs(context).getMp3BasePath());
     }
     
     public static Mp3ContentLocator createChosenMp3ContentDescription(Context context) {
@@ -57,6 +58,12 @@ public abstract class Mp3ContentLocator {
             contentLocator = new LaridianNltMp3ContentLocator();    
         }
         return contentLocator;
+    }
+    public String getBasePath() {
+        return basePath;
+    }
+    public void setBasePath(String basePath) {
+        this.basePath = basePath;
     }
 
 }

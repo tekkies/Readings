@@ -6,6 +6,9 @@ import android.util.Log;
 
 public class LaridianNltMp3ContentLocator extends Mp3ContentLocator {
 
+    
+    
+    
     @Override
     public String getBaseFolder(File potentialKeyFile) {
         File bookFolder = potentialKeyFile.getParentFile();
