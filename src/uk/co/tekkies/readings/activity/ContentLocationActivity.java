@@ -3,8 +3,8 @@ package uk.co.tekkies.readings.activity;
 import java.io.File;
 
 import uk.co.tekkies.readings.R;
-import uk.co.tekkies.readings.model.content.Mp3ContentDescriber;
-import uk.co.tekkies.readings.model.content.LaridianNltMp3ContentDescriber;
+import uk.co.tekkies.readings.model.content.Mp3ContentLocator;
+import uk.co.tekkies.readings.model.content.LaridianNltMp3ContentLocator;
 import uk.co.tekkies.readings.service.PlayerService;
 import android.app.Activity;
 import android.content.SharedPreferences;
@@ -28,7 +28,7 @@ public class ContentLocationActivity extends Activity implements OnClickListener
     Button testButton = null;
     TextView basePathTextView = null;
     WebView webView1 = null;
-    Mp3ContentDescriber baseContent = null;
+    Mp3ContentLocator baseContent = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -37,7 +37,7 @@ public class ContentLocationActivity extends Activity implements OnClickListener
         setupActivity();
         setupLayout();
 
-        baseContent = Mp3ContentDescriber.createChosenMp3ContentDescription(this); 
+        baseContent = Mp3ContentLocator.createChosenMp3ContentDescription(this); 
         if (baseContent==null) {
             Toast.makeText(this, R.string.mp3_folder_not_found, Toast.LENGTH_SHORT).show();
             Toast.makeText(this, R.string.searching, Toast.LENGTH_SHORT).show();
@@ -48,7 +48,7 @@ public class ContentLocationActivity extends Activity implements OnClickListener
     private void setupActivity() {
         setTitle(R.string.mp3_search);
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-        setBasePath(settings.getString(Mp3ContentDescriber.SETTING_BASE_PATH, ""));
+        setBasePath(settings.getString(Mp3ContentLocator.SETTING_BASE_PATH, ""));
     }
 
     private void setupLayout() {
@@ -75,7 +75,7 @@ public class ContentLocationActivity extends Activity implements OnClickListener
     }
 
     private void doTest() {
-            Mp3ContentDescriber content = Mp3ContentDescriber.createChosenMp3ContentDescription(this);
+            Mp3ContentLocator content = Mp3ContentLocator.createChosenMp3ContentDescription(this);
             if(content != null) {
                 String mp3File = content.getMp3Path(this, 2); 
                 PlayerService.requestPlay(this, mp3File);
@@ -107,7 +107,7 @@ public class ContentLocationActivity extends Activity implements OnClickListener
         this.basePath = basePath;
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = settings.edit();
-        editor.putString(Mp3ContentDescriber.SETTING_BASE_PATH, basePath);
+        editor.putString(Mp3ContentLocator.SETTING_BASE_PATH, basePath);
         editor.commit();
 
         // Build message

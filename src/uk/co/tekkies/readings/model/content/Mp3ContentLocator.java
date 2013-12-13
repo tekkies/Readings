@@ -6,7 +6,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-public abstract class Mp3ContentDescriber {
+public abstract class Mp3ContentLocator {
     
     protected final String TAG = "CONTENT";
     public static final String SETTING_BASE_PATH = "basePath";
@@ -35,12 +35,12 @@ public abstract class Mp3ContentDescriber {
     
     public String getBasePath(Context context) {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
-        return settings.getString(Mp3ContentDescriber.SETTING_BASE_PATH, null);
+        return settings.getString(Mp3ContentLocator.SETTING_BASE_PATH, null);
     }
     
-    public static Mp3ContentDescriber createChosenMp3ContentDescription(Context context) {
+    public static Mp3ContentLocator createChosenMp3ContentDescription(Context context) {
         //TODO: Read chosen Mp3ContentDescriber from prefs, instantiate and confirm installation 
-        Mp3ContentDescriber content = new LaridianNltMp3ContentDescriber();
+        Mp3ContentLocator content = new LaridianNltMp3ContentLocator();
         if(!content.confirmKeyFileFound(context)) {
             content = null;
         }

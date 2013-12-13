@@ -4,7 +4,7 @@ import java.io.File;
 
 import android.util.Log;
 
-public class LaridianNltMp3ContentDescriber extends Mp3ContentDescriber {
+public class LaridianNltMp3ContentLocator extends Mp3ContentLocator {
 
     @Override
     public String getBaseFolder(File potentialKeyFile) {
