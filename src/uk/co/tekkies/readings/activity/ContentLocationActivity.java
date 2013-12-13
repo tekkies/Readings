@@ -3,6 +3,7 @@ package uk.co.tekkies.readings.activity;
 import java.io.File;
 
 import uk.co.tekkies.readings.R;
+import uk.co.tekkies.readings.model.Prefs;
 import uk.co.tekkies.readings.model.content.Mp3ContentLocator;
 import uk.co.tekkies.readings.model.content.LaridianNltMp3ContentLocator;
 import uk.co.tekkies.readings.service.PlayerService;
@@ -48,7 +49,7 @@ public class ContentLocationActivity extends Activity implements OnClickListener
     private void setupActivity() {
         setTitle(R.string.mp3_search);
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-        setBasePath(settings.getString(Mp3ContentLocator.SETTING_BASE_PATH, ""));
+        setBasePath(new Prefs(this).getMp3BasePath());
     }
 
     private void setupLayout() {
@@ -105,10 +106,7 @@ public class ContentLocationActivity extends Activity implements OnClickListener
     private void setBasePath(String basePath) {
         // Store value
         this.basePath = basePath;
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putString(Mp3ContentLocator.SETTING_BASE_PATH, basePath);
-        editor.commit();
+        new Prefs(this).setMp3BasePath(basePath);
 
         // Build message
         String basePathMessage;
