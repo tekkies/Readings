@@ -20,8 +20,8 @@ import uk.co.tekkies.readings.R;
 import uk.co.tekkies.readings.activity.ContentLocationActivity;
 import uk.co.tekkies.readings.activity.PassageActivity;
 import uk.co.tekkies.readings.model.Prefs;
-import uk.co.tekkies.readings.model.content.BaseContent;
-import uk.co.tekkies.readings.model.content.LaridianNltMp3Content;
+import uk.co.tekkies.readings.model.content.Mp3ContentDescriber;
+import uk.co.tekkies.readings.model.content.LaridianNltMp3ContentDescriber;
 import uk.co.tekkies.readings.service.PlayerService;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -230,7 +230,7 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
     }
 
     private void doPlay() {
-        BaseContent content = BaseContent.getContent(getActivity());
+        Mp3ContentDescriber content = Mp3ContentDescriber.createChosenMp3ContentDescription(getActivity());
         if(content != null) {
             String mp3File = content.getMp3Path(getActivity(), passageId); 
             PlayerService.requestPlay(getActivity(), mp3File);
