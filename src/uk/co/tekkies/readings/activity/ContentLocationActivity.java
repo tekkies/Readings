@@ -1,18 +1,14 @@
 package uk.co.tekkies.readings.activity;
 
 import java.io.File;
-import java.io.FileFilter;
-
 import uk.co.tekkies.readings.R;
 import uk.co.tekkies.readings.model.Prefs;
 import uk.co.tekkies.readings.model.content.LaridianNltMp3ContentLocator;
 import uk.co.tekkies.readings.model.content.LaridianNltMp3ContentLocator2;
 import uk.co.tekkies.readings.model.content.Mp3ContentLocator;
 import uk.co.tekkies.readings.service.PlayerService;
-import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.style.TextAppearanceSpan;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -22,7 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ContentLocationActivity extends Activity implements OnClickListener {
+public class ContentLocationActivity extends BaseActivity implements OnClickListener {
 
     protected static final String TAG = "MP3Bible";
     private String basePath = "";
@@ -34,6 +30,7 @@ public class ContentLocationActivity extends Activity implements OnClickListener
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        setChosenTheme();
         super.onCreate(savedInstanceState);
 
         setupActivity();
