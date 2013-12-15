@@ -6,16 +6,19 @@ import java.io.FileFilter;
 import uk.co.tekkies.readings.R;
 import uk.co.tekkies.readings.model.Prefs;
 import uk.co.tekkies.readings.model.content.LaridianNltMp3ContentLocator;
+import uk.co.tekkies.readings.model.content.LaridianNltMp3ContentLocator2;
 import uk.co.tekkies.readings.model.content.Mp3ContentLocator;
 import uk.co.tekkies.readings.service.PlayerService;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.style.TextAppearanceSpan;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.webkit.WebView;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,8 +59,6 @@ public class ContentLocationActivity extends Activity implements OnClickListener
         testButton = (Button) findViewById(R.id.button_test);
         testButton.setOnClickListener(this);
         basePathTextView = (TextView) findViewById(R.id.textView_mp3location);
-        webView1 = (WebView) findViewById(R.id.webView1);
-        webView1.loadUrl("file:///android_asset/licensed/search_help.html");
         updateUi();
     }
 
@@ -85,6 +86,7 @@ public class ContentLocationActivity extends Activity implements OnClickListener
     
     private class SearchTask extends AsyncTask<Mp3ContentLocator, String, Mp3ContentLocator[]> {
         
+        private static final boolean FIND_FIRST_ONLY = false;
         private boolean stop=false;
         
         @Override
@@ -113,11 +115,18 @@ public class ContentLocationActivity extends Activity implements OnClickListener
             String basePath = "";
             
             //See if we got any hits
+            LinearLayout container = (LinearLayout)findViewById(R.id.mp3_content_checkbox_holder);
+
             for (Mp3ContentLocator result : results) {
                 if(result.getBasePath() != "") {
                     basePath = result.getBasePath();
                     product = result.getClass().getName();
-                    break;
+                    
+                    TextView textView = new TextView(getBaseContext());
+                    textView.setText(product);
+                    
+                    container.addView(textView);
+                    
                 }
             }
             
@@ -126,7 +135,7 @@ public class ContentLocationActivity extends Activity implements OnClickListener
             
             updateUi();
             //Try playing mp3 again
-            doTest();
+            //doTest();
         }
         
         private File findFile(File folder, Mp3ContentLocator[] locators) {
@@ -148,7 +157,9 @@ public class ContentLocationActivity extends Activity implements OnClickListener
                                     // locator, in case we want all matches,
                                     // instead of the first matched mp3
                                     locator.setBasePath(baseFolder);
-                                    return child.getAbsoluteFile();
+                                    if(FIND_FIRST_ONLY) {
+                                        return child.getAbsoluteFile();
+                                    }
                                 }
                             }
                         }
@@ -167,8 +178,10 @@ public class ContentLocationActivity extends Activity implements OnClickListener
                             // searching for additional matches (e.g. if 2 mp3
                             // bibles are installed)
                             // if found, don't search any more folders
-                            if (found != null) {
-                                return found; // Pass a found result up the tree
+                            if(FIND_FIRST_ONLY) {
+                                if (found != null) {
+                                    return found; // Pass a found result up the tree
+                                }
                             }
                         }
                     }
@@ -206,7 +219,8 @@ public class ContentLocationActivity extends Activity implements OnClickListener
         
         //TODO: Add safety net for recursion.  Depth and breadth.
         Mp3ContentLocator[] mp3ContentLocators = { 
-           new LaridianNltMp3ContentLocator() 
+           new LaridianNltMp3ContentLocator(),
+           new LaridianNltMp3ContentLocator2()
         };
         
         SearchTask searchTask = new SearchTask();

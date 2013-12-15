@@ -58,6 +58,9 @@ public abstract class Mp3ContentLocator {
         if(LaridianNltMp3ContentLocator.class.getName().equalsIgnoreCase(mp3Product)) {
             contentLocator = new LaridianNltMp3ContentLocator();    
         }
+        if(LaridianNltMp3ContentLocator2.class.getName().equalsIgnoreCase(mp3Product)) {
+            contentLocator = new LaridianNltMp3ContentLocator2();    
+        }
         if(contentLocator != null) {
             contentLocator.loadBasePath(context);
         }
