@@ -1,7 +1,10 @@
 package uk.co.tekkies.readings.activity;
 
 import java.io.File;
+import java.util.ArrayList;
+
 import uk.co.tekkies.readings.R;
+import uk.co.tekkies.readings.adapter.Mp3ContentArrayAdapter;
 import uk.co.tekkies.readings.model.Prefs;
 import uk.co.tekkies.readings.model.content.LaridianNltMp3ContentLocator;
 import uk.co.tekkies.readings.model.content.LaridianNltMp3ContentLocator2;
@@ -15,6 +18,7 @@ import android.view.View.OnClickListener;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,6 +60,8 @@ public class ContentLocationActivity extends BaseActivity implements OnClickList
         testButton = (Button) findViewById(R.id.button_test);
         testButton.setOnClickListener(this);
         basePathTextView = (TextView) findViewById(R.id.textView_mp3location);
+        
+        //listView
         updateUi();
     }
 
@@ -113,9 +119,11 @@ public class ContentLocationActivity extends BaseActivity implements OnClickList
             
             //See if we got any hits
             LinearLayout container = (LinearLayout)findViewById(R.id.mp3_content_checkbox_holder);
+            ArrayList<Mp3ContentLocator> arrayList = new ArrayList<Mp3ContentLocator>();
 
             for (Mp3ContentLocator result : results) {
                 if(result.getBasePath() != "") {
+                    arrayList.add(result);
                     basePath = result.getBasePath();
                     product = result.getClass().getName();
                     
@@ -123,9 +131,14 @@ public class ContentLocationActivity extends BaseActivity implements OnClickList
                     textView.setText(product);
                     
                     container.addView(textView);
-                    
                 }
             }
+            
+            
+            ListView listView = (ListView) findViewById(R.id.list_view);
+            Mp3ContentArrayAdapter mp3ContentArrayAdapter = new Mp3ContentArrayAdapter(getActivity(), arrayList);
+            listView.setAdapter(mp3ContentArrayAdapter);
+
             
             prefs.setMp3BasePath(basePath);
             prefs.setMp3Product(product);
