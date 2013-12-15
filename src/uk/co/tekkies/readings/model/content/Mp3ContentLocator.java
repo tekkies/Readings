@@ -38,7 +38,7 @@ public abstract class Mp3ContentLocator {
     public static Mp3ContentLocator createChosenMp3ContentDescription(Context context) {
         Mp3ContentLocator contentLocator=null;
         String mp3Product = new Prefs(context).getMp3Product();
-        contentLocator = newContentLocator(mp3Product);
+        contentLocator = newContentLocator(context, mp3Product);
         if(contentLocator != null) {
             if(!contentLocator.confirmKeyFileFound(context)) {
                 contentLocator = null;
@@ -48,14 +48,18 @@ public abstract class Mp3ContentLocator {
     }
 
     /**
-     * Simply creates an instance of the named mp3Contentlocator
+     * Creates an instance of the named mp3Contentlocator and loads the base path
+     * @param context 
      * @param mp3Product Name of the Mp3Contentlocator class to create 
      * @return Null if no match
      */
-    private static Mp3ContentLocator newContentLocator(String mp3Product) {
+    private static Mp3ContentLocator newContentLocator(Context context, String mp3Product) {
         Mp3ContentLocator contentLocator = null;
         if(LaridianNltMp3ContentLocator.class.getName().equalsIgnoreCase(mp3Product)) {
             contentLocator = new LaridianNltMp3ContentLocator();    
+        }
+        if(contentLocator != null) {
+            contentLocator.loadBasePath(context);
         }
         return contentLocator;
     }

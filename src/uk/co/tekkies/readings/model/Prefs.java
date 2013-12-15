@@ -58,7 +58,7 @@ public class Prefs {
         return sharedPreferences.getString(PREF_MP3_PRODUCT, "");
     }
 
-    public void setMp3Product(Context context, String product) {
+    public void setMp3Product(String product) {
         putString(PREF_MP3_PRODUCT, product);
     }
 

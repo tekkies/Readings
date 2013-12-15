@@ -1,6 +1,7 @@
 package uk.co.tekkies.readings.activity;
 
 import java.io.File;
+import java.io.FileFilter;
 
 import uk.co.tekkies.readings.R;
 import uk.co.tekkies.readings.model.Prefs;
@@ -83,14 +84,18 @@ public class ContentLocationActivity extends Activity implements OnClickListener
     }
     
     private class SearchTask extends AsyncTask<Mp3ContentLocator, String, Mp3ContentLocator[]> {
-
+        
+        private boolean stop=false;
+        
         @Override
         protected Mp3ContentLocator[] doInBackground(Mp3ContentLocator... locators) {
-            basePath = "";
+            stop = false;
             File root = new File("/");
-            File found = findFile(root, locators);
-            if (found != null) {
-                basePath = locators[0].getBaseFolder(found);
+            try {
+                File found = findFile(root, locators);
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
             }
             return locators;
         }
@@ -101,54 +106,79 @@ public class ContentLocationActivity extends Activity implements OnClickListener
         }
         
         @Override
-        protected void onPostExecute(Mp3ContentLocator[] result) {
+        protected void onPostExecute(Mp3ContentLocator[] results) {
             Prefs prefs = new Prefs(getActivity());
+
+            String product = "";
+            String basePath = "";
+            
+            //See if we got any hits
+            for (Mp3ContentLocator result : results) {
+                if(result.getBasePath() != "") {
+                    basePath = result.getBasePath();
+                    product = result.getClass().getName();
+                    break;
+                }
+            }
             
             prefs.setMp3BasePath(basePath);
-            if(basePath == "") {
-                prefs.setMp3Product(getActivity(), "");
-            } else {
-                prefs.setMp3Product(getActivity(), mp3ContentLocator.getClass().getName());
-            }
+            prefs.setMp3Product(product);
+            
             updateUi();
             //Try playing mp3 again
             doTest();
         }
         
-        private File findFile(File aFile, Mp3ContentLocator[] locators) {
-            publishProgress(aFile.getAbsolutePath());
-            Log.v(TAG, "Find:" + aFile.getAbsolutePath());
-            if ((aFile.getAbsolutePath().indexOf("/proc") == 0) || (aFile.getAbsolutePath().indexOf("/sys") == 0)) {
-                return null;
-            }
-            if (aFile.isFile()) {
-                for(int i=0;i<locators.length;i++) {
-                    if(aFile.getName().contains(locators[i].getKeyFileName())) {
-                        return aFile;
-                    }
-                }
-            } else if (aFile.isDirectory()) {
-                File[] fileList = aFile.listFiles();
-                if (fileList != null) {
-                    for (File child : aFile.listFiles()) {
-                        File found = findFile(child, locators);
-                        if (found != null) {
-                            Log.v(TAG, "confirmKeyFileFound: Potential Match:" + found.getAbsolutePath());
-                            for(int i=0;i<locators.length;i++) {
-                                if (locators[i].confirmKeyFileFound(found.getAbsolutePath())) {
-                                    locators[i].setBasePath(found.getAbsolutePath());
-                                    return found;
+        private File findFile(File folder, Mp3ContentLocator[] locators) {
+            publishProgress(folder.getAbsolutePath());
+            Log.v(TAG, "Search:" + folder.getAbsolutePath());
+            // Check files in this folder
+            File[] files = folder.listFiles();
+            if (files != null) {
+                for (File child : files) {
+                    if (child.isFile()) {
+                        Log.v(TAG, "File:" + child);
+                        for (int i = 0; i < locators.length; i++) {
+                            Mp3ContentLocator locator = locators[i];
+                            if (child.getName().contains(locator.getKeyFileName())) {
+                                // Candidate found, now confirm
+                                String baseFolder = locator.getBaseFolder(child);
+                                if (locator.confirmKeyFileFound(baseFolder)) {
+                                    // Found! Store the base path in the
+                                    // locator, in case we want all matches,
+                                    // instead of the first matched mp3
+                                    locator.setBasePath(baseFolder);
+                                    return child.getAbsoluteFile();
                                 }
                             }
                         }
                     }
                 }
 
+                // Not found at this level. Recurse through the folders
+                for (File child : files) {
+                    if (child.isDirectory()) {
+                        // Do not traverse system folders
+                        if ((folder.getAbsolutePath().indexOf("/proc") != 0)
+                                && (folder.getAbsolutePath().indexOf("/sys") != 0)) {
+                            Log.v(TAG, "Directory:" + child);
+                            File found = findFile(child, locators);
+                            // TODO: Remove this return if you want to keep
+                            // searching for additional matches (e.g. if 2 mp3
+                            // bibles are installed)
+                            // if found, don't search any more folders
+                            if (found != null) {
+                                return found; // Pass a found result up the tree
+                            }
+                        }
+                    }
+                }
             }
+
+            // Not found in this folder. Caller will try next folder
             return null;
         }
     }
-    
 
     private void updateUi() {
         // re-enable Search button
