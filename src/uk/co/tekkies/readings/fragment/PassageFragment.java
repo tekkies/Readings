@@ -170,12 +170,12 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
     }
 
     private void loadTextSize() {
-        textSize = prefs.getPassageTextSize();
+        textSize = prefs.loadPassageTextSize();
         textView.setTextSize((float) (textSize * defaultTextSize));
     }
 
     private void saveTextSize() {
-        prefs.setPassageTextSize(textSize);
+        prefs.savePassageTextSize(textSize);
     }
 
     @Override

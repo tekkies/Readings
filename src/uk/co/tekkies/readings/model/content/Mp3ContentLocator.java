@@ -20,7 +20,7 @@ public abstract class Mp3ContentLocator {
     public abstract String getTitle();
     
     public String getMp3Path(Context context, int passageId) {
-        String basePath = new Prefs(context).getMp3BasePath(); 
+        String basePath = new Prefs(context).loadMp3BasePath(); 
         String mp3Path = basePath + File.separator + getPassagePath(passageId);
         return mp3Path;
     }
@@ -33,12 +33,12 @@ public abstract class Mp3ContentLocator {
     }
     
     public void loadBasePath(Context context) {
-        setBasePath(new Prefs(context).getMp3BasePath());
+        setBasePath(new Prefs(context).loadMp3BasePath());
     }
     
     public static Mp3ContentLocator createChosenMp3ContentDescription(Context context) {
         Mp3ContentLocator contentLocator=null;
-        String mp3Product = new Prefs(context).getMp3Product();
+        String mp3Product = new Prefs(context).loadMp3Product();
         contentLocator = newContentLocator(context, mp3Product);
         if(contentLocator != null) {
             if(!contentLocator.confirmKeyFileFound(context)) {

@@ -58,7 +58,7 @@ public class Mp3ContentArrayAdapter extends ArrayAdapter<Mp3ContentLocator> impl
         if(defaultTextSize == 0) {
             defaultTextSize = textViewSummary.getTextSize();
         }
-        textViewSummary.setTextSize((float) (prefs.getPassageTextSize() * defaultTextSize));
+        textViewSummary.setTextSize((float) (prefs.loadPassageTextSize() * defaultTextSize));
         textViewPassageTitle.setText(mp3ContentLocators.get(position).getTitle());
         view.setTag(mp3ContentLocators.get(position).getClass().getName());
 

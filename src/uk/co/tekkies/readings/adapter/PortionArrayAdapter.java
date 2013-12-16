@@ -72,7 +72,7 @@ public class PortionArrayAdapter extends ArrayAdapter<Passage> implements OnClic
         if(defaultTextSize == 0) {
             defaultTextSize = textViewSummary.getTextSize();
         }
-        textViewSummary.setTextSize((float) (prefs.getPassageTextSize() * defaultTextSize));
+        textViewSummary.setTextSize((float) (prefs.loadPassageTextSize() * defaultTextSize));
         textViewPassageTitle.setText(passages.get(position).getTitle());
         view.setTag(passages.get(position).getTitle());
 

@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import uk.co.tekkies.readings.R;
 import uk.co.tekkies.readings.adapter.Mp3ContentArrayAdapter;
 import uk.co.tekkies.readings.model.Prefs;
-import uk.co.tekkies.readings.model.content.KjvScourbyMp3ContentLocator;
-import uk.co.tekkies.readings.model.content.NltLaridianMp3ContentLocator;
 import uk.co.tekkies.readings.model.content.Mp3ContentLocator;
 import uk.co.tekkies.readings.service.PlayerService;
 import android.os.AsyncTask;
@@ -17,7 +15,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.webkit.WebView;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -50,7 +47,7 @@ public class ContentLocationActivity extends BaseActivity implements OnClickList
 
     private void setupActivity() {
         setTitle(R.string.mp3_search);
-        basePath = new Prefs(this).getMp3BasePath();
+        basePath = new Prefs(this).loadMp3BasePath();
     }
 
     private void setupLayout() {
@@ -90,16 +87,12 @@ public class ContentLocationActivity extends BaseActivity implements OnClickList
     private class SearchTask extends AsyncTask<Mp3ContentLocator, String, Mp3ContentLocator[]> {
         
         private static final boolean FIND_FIRST_ONLY = false;
-        private boolean stop=false;
-        
         @Override
         protected Mp3ContentLocator[] doInBackground(Mp3ContentLocator... locators) {
-            stop = false;
             File root = new File("/");
             try {
-                File found = findFile(root, locators);
+                findFile(root, locators);
             } catch (Exception e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
             return locators;
@@ -118,6 +111,7 @@ public class ContentLocationActivity extends BaseActivity implements OnClickList
             //See if we got any search hits
             ArrayList<Mp3ContentLocator> arrayList = new ArrayList<Mp3ContentLocator>();
             for (Mp3ContentLocator result : results) {
+                prefs.saveBasePath(result);
                 if(result.getBasePath() != "") {
                     arrayList.add(result);
                     basePath = result.getBasePath();
@@ -127,8 +121,8 @@ public class ContentLocationActivity extends BaseActivity implements OnClickList
             ListView listView = (ListView) findViewById(R.id.list_view);
             Mp3ContentArrayAdapter mp3ContentArrayAdapter = new Mp3ContentArrayAdapter(getActivity(), arrayList);
             listView.setAdapter(mp3ContentArrayAdapter);
-            prefs.setMp3BasePath(basePath);
-            prefs.setMp3Product(product);
+            prefs.saveMp3BasePath(basePath);
+            prefs.saveMp3Product(product);
             updateUi();
         }
         
