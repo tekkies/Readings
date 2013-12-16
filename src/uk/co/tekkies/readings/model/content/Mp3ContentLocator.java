@@ -57,7 +57,8 @@ public abstract class Mp3ContentLocator {
     }
 
     public static Mp3ContentLocator[] createSupportedMp3ContentLocators() {
-        Mp3ContentLocator[] mp3ContentLocators = { 
+        Mp3ContentLocator[] mp3ContentLocators = {
+                new KjvChristadelphianMp3ContentLocator(),
                 new NltLaridianMp3ContentLocator(),
                 new KjvScourbyMp3ContentLocator(),
                 new KjvListenersMp3ContentLocator()
@@ -73,6 +74,9 @@ public abstract class Mp3ContentLocator {
      */
     private static Mp3ContentLocator newContentLocator(Context context, String mp3Product) {
         Mp3ContentLocator contentLocator = null;
+        if(KjvChristadelphianMp3ContentLocator.class.getName().equalsIgnoreCase(mp3Product)) {
+            contentLocator = new KjvChristadelphianMp3ContentLocator();    
+        }
         if(KjvScourbyMp3ContentLocator.class.getName().equalsIgnoreCase(mp3Product)) {
             contentLocator = new KjvScourbyMp3ContentLocator();    
         }
