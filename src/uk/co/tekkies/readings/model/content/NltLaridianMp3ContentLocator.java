@@ -4,11 +4,14 @@ import java.io.File;
 
 import android.util.Log;
 
-public class LaridianNltMp3ContentLocator extends Mp3ContentLocator {
+public class NltLaridianMp3ContentLocator extends Mp3ContentLocator {
 
     
-    
-    
+    @Override
+    public String getTitle() {
+        return "Laridian NLT MP3";
+    }
+
     @Override
     public String getBaseFolder(File potentialKeyFile) {
         File bookFolder = potentialKeyFile.getParentFile();

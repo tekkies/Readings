@@ -21,7 +21,7 @@ import uk.co.tekkies.readings.activity.ContentLocationActivity;
 import uk.co.tekkies.readings.activity.PassageActivity;
 import uk.co.tekkies.readings.model.Prefs;
 import uk.co.tekkies.readings.model.content.Mp3ContentLocator;
-import uk.co.tekkies.readings.model.content.LaridianNltMp3ContentLocator;
+import uk.co.tekkies.readings.model.content.NltLaridianMp3ContentLocator;
 import uk.co.tekkies.readings.service.PlayerService;
 import android.content.Intent;
 import android.content.SharedPreferences;

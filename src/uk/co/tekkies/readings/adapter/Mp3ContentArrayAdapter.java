@@ -27,8 +27,6 @@ import uk.co.tekkies.readings.model.content.Mp3ContentLocator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,15 +38,14 @@ import android.widget.TextView;
 public class Mp3ContentArrayAdapter extends ArrayAdapter<Mp3ContentLocator> implements OnClickListener {
 
     private ContentLocationActivity activity;
-    private ArrayList<Mp3ContentLocator> passages;
+    private ArrayList<Mp3ContentLocator> mp3ContentLocators;
     float defaultTextSize=0;
     Prefs prefs;
     
-
     public Mp3ContentArrayAdapter(Activity activity, ArrayList<Mp3ContentLocator> values) {
         super(activity, R.layout.listitem_portion, values);
         this.activity = (ContentLocationActivity) activity;
-        this.passages = values;
+        this.mp3ContentLocators = values;
         prefs = new Prefs(activity);
     }
     
@@ -62,8 +59,8 @@ public class Mp3ContentArrayAdapter extends ArrayAdapter<Mp3ContentLocator> impl
             defaultTextSize = textViewSummary.getTextSize();
         }
         textViewSummary.setTextSize((float) (prefs.getPassageTextSize() * defaultTextSize));
-        textViewPassageTitle.setText(passages.get(position).getClass().getName());
-        view.setTag(passages.get(position).getClass().getName());
+        textViewPassageTitle.setText(mp3ContentLocators.get(position).getTitle());
+        view.setTag(mp3ContentLocators.get(position).getClass().getName());
 
         textViewPassageTitle.setOnClickListener(this);
         view.findViewById(R.id.imageViewReadOffline).setOnClickListener(this);
@@ -78,7 +75,7 @@ public class Mp3ContentArrayAdapter extends ArrayAdapter<Mp3ContentLocator> impl
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(activity);
         Boolean showSummary = settings.getBoolean(ReadingsFragment.PREFS_SHOW_SUMMARY, true);
         if (showSummary) {
-            textViewSummary.setText(passages.get(position).getBasePath());
+            textViewSummary.setText(mp3ContentLocators.get(position).getBasePath());
         } else {
             textViewSummary.setVisibility(View.GONE);
         }
@@ -105,19 +102,5 @@ public class Mp3ContentArrayAdapter extends ArrayAdapter<Mp3ContentLocator> impl
 //            break;
 //        }
     }
-
-
-    private PackageInfo getOfflineKgvPackageInfo() {
-        PackageInfo packageInfo=null;
-        try {
-            packageInfo = activity.getPackageManager().getPackageInfo("uk.co.tekkies.plugin.kjv", 0);
-        } catch (NameNotFoundException e) {
-            //Assume not installed
-        }
-        return packageInfo;
-    }
     
-
-
-
 }

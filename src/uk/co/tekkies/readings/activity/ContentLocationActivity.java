@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import uk.co.tekkies.readings.R;
 import uk.co.tekkies.readings.adapter.Mp3ContentArrayAdapter;
 import uk.co.tekkies.readings.model.Prefs;
-import uk.co.tekkies.readings.model.content.LaridianNltMp3ContentLocator;
-import uk.co.tekkies.readings.model.content.LaridianNltMp3ContentLocator2;
+import uk.co.tekkies.readings.model.content.KjvScourbyMp3ContentLocator;
+import uk.co.tekkies.readings.model.content.NltLaridianMp3ContentLocator;
 import uk.co.tekkies.readings.model.content.Mp3ContentLocator;
 import uk.co.tekkies.readings.service.PlayerService;
 import android.os.AsyncTask;
@@ -113,39 +113,23 @@ public class ContentLocationActivity extends BaseActivity implements OnClickList
         @Override
         protected void onPostExecute(Mp3ContentLocator[] results) {
             Prefs prefs = new Prefs(getActivity());
-
             String product = "";
             String basePath = "";
-            
-            //See if we got any hits
-            LinearLayout container = (LinearLayout)findViewById(R.id.mp3_content_checkbox_holder);
+            //See if we got any search hits
             ArrayList<Mp3ContentLocator> arrayList = new ArrayList<Mp3ContentLocator>();
-
             for (Mp3ContentLocator result : results) {
                 if(result.getBasePath() != "") {
                     arrayList.add(result);
                     basePath = result.getBasePath();
                     product = result.getClass().getName();
-                    
-                    TextView textView = new TextView(getBaseContext());
-                    textView.setText(product);
-                    
-                    container.addView(textView);
                 }
             }
-            
-            
             ListView listView = (ListView) findViewById(R.id.list_view);
             Mp3ContentArrayAdapter mp3ContentArrayAdapter = new Mp3ContentArrayAdapter(getActivity(), arrayList);
             listView.setAdapter(mp3ContentArrayAdapter);
-
-            
             prefs.setMp3BasePath(basePath);
             prefs.setMp3Product(product);
-            
             updateUi();
-            //Try playing mp3 again
-            //doTest();
         }
         
         private File findFile(File folder, Mp3ContentLocator[] locators) {
@@ -228,10 +212,7 @@ public class ContentLocationActivity extends BaseActivity implements OnClickList
         }
         
         //TODO: Add safety net for recursion.  Depth and breadth.
-        Mp3ContentLocator[] mp3ContentLocators = { 
-           new LaridianNltMp3ContentLocator(),
-           new LaridianNltMp3ContentLocator2()
-        };
+        Mp3ContentLocator[] mp3ContentLocators = Mp3ContentLocator.createSupportedMp3ContentLocators();
         
         SearchTask searchTask = new SearchTask();
         searchTask.execute(mp3ContentLocators);
