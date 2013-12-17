@@ -1,6 +1,7 @@
 package uk.co.tekkies.readings.model.content;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import uk.co.tekkies.readings.model.Prefs;
 
@@ -56,13 +57,12 @@ public abstract class Mp3ContentLocator {
         this.basePath = basePath;
     }
 
-    public static Mp3ContentLocator[] createSupportedMp3ContentLocators() {
-        Mp3ContentLocator[] mp3ContentLocators = {
-                new KjvChristadelphianMp3ContentLocator(),
-                new NltLaridianMp3ContentLocator(),
-                new KjvScourbyMp3ContentLocator(),
-                new KjvListenersMp3ContentLocator()
-             };
+    public static ArrayList<Mp3ContentLocator> createSupportedMp3ContentLocators() {
+        ArrayList<Mp3ContentLocator> mp3ContentLocators= new ArrayList<Mp3ContentLocator>();
+        mp3ContentLocators.add(new KjvChristadelphianMp3ContentLocator());
+        mp3ContentLocators.add(new NltLaridianMp3ContentLocator());
+        mp3ContentLocators.add(new KjvScourbyMp3ContentLocator());
+        mp3ContentLocators.add(new KjvListenersMp3ContentLocator());
         return mp3ContentLocators; 
     }
     
@@ -90,6 +90,12 @@ public abstract class Mp3ContentLocator {
             contentLocator.loadBasePath(context);
         }
         return contentLocator;
+    }
+
+    public static void resetBasePaths(ArrayList<Mp3ContentLocator> searchLocators) {
+        for (Mp3ContentLocator searchLocator : searchLocators) {
+            searchLocator.setBasePath("");
+        }
     }
     
 

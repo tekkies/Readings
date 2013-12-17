@@ -28,6 +28,9 @@ public class ContentLocationActivity extends BaseActivity implements OnClickList
     TextView basePathTextView = null;
     WebView webView1 = null;
     Mp3ContentLocator mp3ContentLocator = null;
+    ArrayList<Mp3ContentLocator> mp3ContentLocators;
+    Mp3ContentArrayAdapter mp3ContentArrayAdapter;
+    ListView listView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -57,6 +60,12 @@ public class ContentLocationActivity extends BaseActivity implements OnClickList
         testButton = (Button) findViewById(R.id.button_test);
         testButton.setOnClickListener(this);
         basePathTextView = (TextView) findViewById(R.id.textView_mp3location);
+
+        listView = (ListView) findViewById(R.id.list_view);
+        mp3ContentLocators = Mp3ContentLocator.createSupportedMp3ContentLocators();
+        mp3ContentArrayAdapter = new Mp3ContentArrayAdapter(getActivity(), mp3ContentLocators);
+        listView.setAdapter(mp3ContentArrayAdapter);
+
         
         //listView
         updateUi();
@@ -84,18 +93,20 @@ public class ContentLocationActivity extends BaseActivity implements OnClickList
         return this;
     }
     
-    private class SearchTask extends AsyncTask<Mp3ContentLocator, String, Mp3ContentLocator[]> {
+    private class SearchTask extends AsyncTask<String, String, ArrayList<Mp3ContentLocator>> {
         
         private static final boolean FIND_FIRST_ONLY = false;
         @Override
-        protected Mp3ContentLocator[] doInBackground(Mp3ContentLocator... locators) {
+        protected ArrayList<Mp3ContentLocator> doInBackground(String... unused) {
             File root = new File("/");
+            ArrayList<Mp3ContentLocator> searchLocators = Mp3ContentLocator.createSupportedMp3ContentLocators();
+            Mp3ContentLocator.resetBasePaths(searchLocators); //Start from nothing
             try {
-                findFile(root, locators);
+                findFile(root, searchLocators);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            return locators;
+            return searchLocators;
         }
         
         @Override
@@ -104,29 +115,15 @@ public class ContentLocationActivity extends BaseActivity implements OnClickList
         }
         
         @Override
-        protected void onPostExecute(Mp3ContentLocator[] results) {
-            Prefs prefs = new Prefs(getActivity());
-            String product = "";
-            String basePath = "";
-            //See if we got any search hits
-            ArrayList<Mp3ContentLocator> arrayList = new ArrayList<Mp3ContentLocator>();
-            for (Mp3ContentLocator result : results) {
-                prefs.saveBasePath(result);
-                if(result.getBasePath() != "") {
-                    arrayList.add(result);
-                    basePath = result.getBasePath();
-                    product = result.getClass().getName();
-                }
-            }
-            ListView listView = (ListView) findViewById(R.id.list_view);
-            Mp3ContentArrayAdapter mp3ContentArrayAdapter = new Mp3ContentArrayAdapter(getActivity(), arrayList);
+        protected void onPostExecute(ArrayList<Mp3ContentLocator> results) {
+
+            mp3ContentLocators = results;
+            mp3ContentArrayAdapter = new Mp3ContentArrayAdapter(getActivity(), mp3ContentLocators);
             listView.setAdapter(mp3ContentArrayAdapter);
-            prefs.saveMp3BasePath(basePath);
-            prefs.saveMp3Product(product);
             updateUi();
         }
         
-        private File findFile(File folder, Mp3ContentLocator[] locators) {
+        private File findFile(File folder, ArrayList<Mp3ContentLocator> locators) {
             publishProgress(folder.getAbsolutePath());
             Log.v(TAG, "Search:" + folder.getAbsolutePath());
             // Check files in this folder
@@ -135,8 +132,8 @@ public class ContentLocationActivity extends BaseActivity implements OnClickList
                 for (File child : files) {
                     if (child.isFile()) {
                         Log.v(TAG, "File:" + child);
-                        for (int i = 0; i < locators.length; i++) {
-                            Mp3ContentLocator locator = locators[i];
+                        for (int i = 0; i < locators.size(); i++) {
+                            Mp3ContentLocator locator = locators.get(i);
                             if (child.getName().contains(locator.getKeyFileName())) {
                                 // Candidate found, now confirm
                                 String baseFolder = locator.getBaseFolder(child);
@@ -204,14 +201,11 @@ public class ContentLocationActivity extends BaseActivity implements OnClickList
         if (searchButton != null) {
             searchButton.setEnabled(false);
         }
-        
-        //TODO: Add safety net for recursion.  Depth and breadth.
-        Mp3ContentLocator[] mp3ContentLocators = Mp3ContentLocator.createSupportedMp3ContentLocators();
-        
         SearchTask searchTask = new SearchTask();
-        searchTask.execute(mp3ContentLocators);
+        mp3ContentLocators.clear();
+        mp3ContentArrayAdapter.notifyDataSetChanged();        
+        
+        searchTask.execute("");
     }
-
-
 
 }
