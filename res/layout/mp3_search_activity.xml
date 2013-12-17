@@ -1,46 +1,31 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" 
-    android:orientation="vertical">
-    
-    <TextView
-        android:id="@+id/textView_mp3location"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="TextView" />
-
-    <LinearLayout android:layout_height="wrap_content"
-        android:layout_width="match_parent">
-    
-    <Button
-        android:id="@+id/button_test"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/test" />
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
 
     <Button
         android:id="@+id/button_search"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/search" />
-    
-    </LinearLayout>
-    
-    <LinearLayout 
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:id="@+id/mp3_content_checkbox_holder"
-    >
-    
-        
+
+    <TextView
+        android:id="@+id/textView_mp3location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="TextView" />
+
+    <LinearLayout
+        android:id="@+id/mp3_content_checkbox_holder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
     </LinearLayout>
 
-    <ListView android:id="@+id/list_view"
-        android:layout_height="wrap_content"
+    <ListView
+        android:id="@+id/list_view"
         android:layout_width="match_parent"
-         />
-        
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

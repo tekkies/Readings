@@ -20,11 +20,6 @@ public abstract class Mp3ContentLocator {
     public abstract String getPassagePath(int passageId);
     public abstract String getTitle();
     
-    public String getMp3Path(Context context, int passageId) {
-        String basePath = new Prefs(context).loadMp3BasePath(); 
-        String mp3Path = basePath + File.separator + getPassagePath(passageId);
-        return mp3Path;
-    }
     public boolean confirmKeyFileFound(Context context) {
         boolean confirmed = false;
         if(getBasePath() != null) {
@@ -33,9 +28,6 @@ public abstract class Mp3ContentLocator {
         return confirmed;
     }
     
-    public void loadBasePath(Context context) {
-        setBasePath(new Prefs(context).loadMp3BasePath());
-    }
     
     public static Mp3ContentLocator createChosenMp3ContentDescription(Context context) {
         Mp3ContentLocator contentLocator=null;
@@ -86,15 +78,25 @@ public abstract class Mp3ContentLocator {
         else if(KjvListenersMp3ContentLocator.class.getName().equalsIgnoreCase(mp3Product)) {
             contentLocator = new KjvListenersMp3ContentLocator();    
         }
-        if(contentLocator != null) {
-            contentLocator.loadBasePath(context);
-        }
         return contentLocator;
     }
 
-    public static void resetBasePaths(ArrayList<Mp3ContentLocator> searchLocators) {
-        for (Mp3ContentLocator searchLocator : searchLocators) {
-            searchLocator.setBasePath("");
+    public static void resetBasePaths(ArrayList<Mp3ContentLocator> mp3ContentLocators) {
+        for (Mp3ContentLocator mp3ContentLocator : mp3ContentLocators) {
+            mp3ContentLocator.setBasePath("");
+        }
+    }
+    public static void loadBasePaths(Context context, ArrayList<Mp3ContentLocator> mp3ContentLocators) {
+        Prefs prefs = new Prefs(context);
+        for (Mp3ContentLocator mp3ContentLocator : mp3ContentLocators) {
+            prefs.loadBasePath(mp3ContentLocator);
+        }
+        
+    }
+    public static void saveBasePaths(Context context, ArrayList<Mp3ContentLocator> mp3ContentLocators) {
+        Prefs prefs = new Prefs(context);
+        for (Mp3ContentLocator mp3ContentLocator : mp3ContentLocators) {
+            prefs.saveBasePath(mp3ContentLocator);
         }
     }
     

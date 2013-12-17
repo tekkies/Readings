@@ -52,7 +52,7 @@ public class Mp3ContentArrayAdapter extends ArrayAdapter<Mp3ContentLocator> impl
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        ViewGroup view = (ViewGroup) inflater.inflate(R.layout.listitem_portion, parent, false);
+        ViewGroup view = (ViewGroup) inflater.inflate(R.layout.listitem_mp3_content, parent, false);
         TextView textViewPassageTitle = (TextView) view.findViewById(R.id.passage_title);
         TextView textViewSummary = (TextView) view.findViewById(R.id.textViewSummary);
         if(defaultTextSize == 0) {

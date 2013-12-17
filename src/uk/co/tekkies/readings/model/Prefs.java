@@ -44,17 +44,6 @@ public class Prefs {
     /**
      * @return Empty string if no path set
      */
-    public String loadMp3BasePath() {
-        return sharedPreferences.getString(PREF_MP3_BASE_PATH, "");
-    }
-    
-    public void saveMp3BasePath(String mp3BasePath) {
-        saveString(PREF_MP3_BASE_PATH, mp3BasePath);
-    }
-
-    /**
-     * @return Empty string if no path set
-     */
     public String loadMp3Product() {
         return sharedPreferences.getString(PREF_MP3_PRODUCT, "");
     }
@@ -67,8 +56,8 @@ public class Prefs {
         saveString(mp3ContentLocator.getClass().getName(), mp3ContentLocator.getBasePath()); 
     }
     
-    public String loadBasePath(Mp3ContentLocator mp3ContentLocator) {
-        return sharedPreferences.getString(mp3ContentLocator.getClass().getName(), "");
+    public void loadBasePath(Mp3ContentLocator mp3ContentLocator) {
+        mp3ContentLocator.setBasePath(sharedPreferences.getString(mp3ContentLocator.getClass().getName(), ""));
     }
 
 }
