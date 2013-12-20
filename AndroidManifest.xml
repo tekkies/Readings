@@ -2,7 +2,7 @@
 <!-- Version Code (VersionScheme-1)(API-2)(A-2)(B-2)(C-2) -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="uk.co.tekkies.readings"
-      android:versionCode="114030200"
+      android:versionCode="114030150"
       android:versionName="3.1.50"
       android:installLocation="auto">
     <uses-sdk android:minSdkVersion="14" android:targetSdkVersion="14" />
