@@ -20,6 +20,7 @@ import uk.co.tekkies.readings.R;
 import uk.co.tekkies.readings.activity.ContentLocationActivity;
 import uk.co.tekkies.readings.activity.PassageActivity;
 import uk.co.tekkies.readings.model.Prefs;
+import uk.co.tekkies.readings.util.Analytics;
 import uk.co.tekkies.readings.model.content.Mp3ContentLocator;
 import uk.co.tekkies.readings.model.content.NltLaridianMp3ContentLocator;
 import uk.co.tekkies.readings.service.PlayerService;

@@ -27,6 +27,7 @@ import uk.co.tekkies.readings.fragment.ReadingsFragment;
 import uk.co.tekkies.readings.model.ParcelableReadings;
 import uk.co.tekkies.readings.model.Passage;
 import uk.co.tekkies.readings.model.Prefs;
+import uk.co.tekkies.readings.util.Analytics;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -99,20 +100,24 @@ public class PortionArrayAdapter extends ArrayAdapter<Passage> implements OnClic
     public void onClick(View v) {
         switch (v.getId()) {
         case R.id.passage_title:
+            Analytics.UIClick(activity, "passage_title");
             tryOpenIntegratedReader(((View) v.getParent().getParent()).getTag().toString());
             break;
         case R.id.textViewSummary:
+            Analytics.UIClick(activity, "passage_summay");
             tryOpenIntegratedReader(((View) v.getParent()).getTag().toString());
             break;
         case R.id.imageViewReadOffline:
+            Analytics.UIClick(activity, "passage_read_offline");
             tryOpenIntegratedReader(((View) v.getParent().getParent()).getTag().toString());
             break;
         case R.id.imageListen:
+            Analytics.UIClick(activity, "passage_listen");
             openMp3(((View) v.getParent().getParent()).getTag().toString());
             break;
         case R.id.imageViewReadOnline:
+            Analytics.UIClick(activity, "passage_read_online");
             openPositiveWord(((View) v.getParent().getParent()).getTag().toString());
-            // openIntegratedReader(((View)v.getParent().getParent()).getTag().toString());
             break;
         }
     }

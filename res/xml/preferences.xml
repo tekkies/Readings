@@ -5,8 +5,25 @@
         <CheckBoxPreference
             android:key="@string/pref_key_show_summary"
             android:summary="@string/pref_summary_show_summary"
-            android:title="@string/pref_title_show_summary" />
-    </PreferenceCategory>
+            android:title="@string/pref_title_show_summary"
+            android:defaultValue="true"
+             />
+        <CheckBoxPreference
+            android:key="@string/pref_key_enable_analytics"
+            android:summary="@string/pref_summary_enable_analytics"
+            android:title="@string/pref_title_enable_analytics"
+            android:defaultValue="true" 
+            />
+
+        </PreferenceCategory>
+        <PreferenceScreen
+            android:title="@string/pref_title_privacy_policy" 
+            android:summary="@string/pref_summary_privacy_policy">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="http://tekkies.co.uk/readings-privacy-policy/" />
+        </PreferenceScreen>
+    
     <PreferenceCategory android:title="@string/pref_title_connect" >
         <PreferenceScreen
             android:summary="@string/pref_summary_rate"
