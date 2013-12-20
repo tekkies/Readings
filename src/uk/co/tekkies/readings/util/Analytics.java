@@ -2,8 +2,10 @@ package uk.co.tekkies.readings.util;
 
 import uk.co.tekkies.readings.R;
 import uk.co.tekkies.readings.activity.BaseActivity;
+import uk.co.tekkies.readings.activity.ReadingsActivity;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.google.analytics.tracking.android.MapBuilder;
@@ -11,6 +13,7 @@ import com.google.analytics.tracking.android.MapBuilder;
 public class Analytics {
 
     private static final String CATEGORY_ACTION = "action";
+    private static final String CATEGORY_PREFS = "prefs";
 
     private static final String ACTION_BUTTON_PRESS = "button_press";
     private static final String ACTION_GENERAL = "action_general";
@@ -49,5 +52,34 @@ public class Analytics {
             EasyTracker easyTracker = EasyTracker.getInstance(context);
             easyTracker.send(MapBuilder.createEvent(category, action, label, value).build());
         }
+    }
+
+    public static void UIClick(Context context, String item) {
+        SendEvent(context, CATEGORY_ACTION, ACTION_GENERAL, item, 0);
+    }
+
+    public static void PrefsChange(Context context, String key) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        String value = "(unsupported)";
+        value = getPrefValue(key, prefs, value);
+        //Case for enable/disable analytics
+        if(key.equals(context.getString(R.string.pref_key_enable_analytics))) {
+            EasyTracker easyTracker = EasyTracker.getInstance(context);
+            easyTracker.send(MapBuilder.createEvent(CATEGORY_PREFS, key, value, (long)0).build());
+        } else {
+            SendEvent(context, CATEGORY_PREFS, key, value, 0);
+        }
+    }
+
+    private static String getPrefValue(String key, SharedPreferences prefs, String value) {
+        try {
+            value = prefs.getString(key, "default");
+        } catch (Exception e) {
+            try {
+                value = prefs.getBoolean(key, false) ? "true" : "false";
+            } catch (Exception e1) {
+            }
+        }
+        return value;
     }
 }
