@@ -19,6 +19,7 @@ package uk.co.tekkies.readings.fragment;
 import uk.co.tekkies.readings.R;
 import uk.co.tekkies.readings.activity.PassageActivity;
 import uk.co.tekkies.readings.model.Prefs;
+import uk.co.tekkies.readings.util.Analytics;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.database.Cursor;
@@ -159,6 +160,7 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
     }
 
     private void saveTextSize() {
+        Analytics.EventTextSize(getActivity(), textSize);
         prefs.setPassageTextSize(textSize);
     }
 

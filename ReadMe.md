@@ -15,6 +15,10 @@ Build using [Eclipse/ADT](http://developer.android.com/sdk/installing/installing
 
 You do not need to clone the submodules.  It contains content I prefer not to share.  Without it, alternative sample content is shown (from the licensed folder).
 
+## Libraries ##
+
+Add libGoogleAnalyticsServices.jar to libs folder.  [Download](https://developers.google.com/analytics/devguides/collection/android/resources)
+
 [](http://developer.android.com/sdk/installing/installing-adt.html "Eclipse/ADT")
 
 # ToDo #

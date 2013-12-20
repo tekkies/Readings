@@ -17,10 +17,9 @@ limitations under the License.
 package uk.co.tekkies.readings.activity;
 
 import uk.co.tekkies.readings.fragment.SettingsFragment;
-import android.app.Activity;
 import android.os.Bundle;
 
-public class SettingsActivity extends Activity {
+public class SettingsActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
