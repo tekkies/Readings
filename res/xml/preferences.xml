@@ -2,10 +2,17 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <PreferenceCategory android:title="@string/pref_title_general" >
+        
+        <PreferenceScreen
+        android:title="@string/pref_title_mp3" 
+        android:summary="@string/pref_summary_mp3">
+        <intent android:action=".activity.ContentLocationActivity"/>
+    </PreferenceScreen>
+        
         <CheckBoxPreference
             android:key="@string/pref_key_show_summary"
-            android:summary="@string/pref_summary_show_summary"
             android:title="@string/pref_title_show_summary"
+            android:summary="@string/pref_summary_show_summary"
             android:defaultValue="true"
              />
         <CheckBoxPreference

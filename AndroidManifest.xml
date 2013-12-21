@@ -2,8 +2,8 @@
 <!-- Version Code (VersionScheme-1)(API-2)(A-2)(B-2)(C-2) -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="uk.co.tekkies.readings"
-      android:versionCode="114030152"
-      android:versionName="3.1.52"
+      android:versionCode="114030153"
+      android:versionName="3.1.53"
       android:installLocation="auto">
     <uses-sdk android:minSdkVersion="14" android:targetSdkVersion="14" />
     <supports-screens android:smallScreens="true"/>
@@ -40,6 +40,10 @@
         <activity
             android:name="uk.co.tekkies.readings.activity.ContentLocationActivity"
             android:label="@string/mp3_search" >
+		    <intent-filter>
+           		<action android:name=".activity.ContentLocationActivity" />
+           		<category android:name="android.intent.category.DEFAULT" />
+       		</intent-filter>
         </activity>
 		
         <service

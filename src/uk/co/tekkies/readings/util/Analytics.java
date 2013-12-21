@@ -2,8 +2,6 @@ package uk.co.tekkies.readings.util;
 
 import uk.co.tekkies.readings.R;
 import uk.co.tekkies.readings.activity.BaseActivity;
-import uk.co.tekkies.readings.activity.ReadingsActivity;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
