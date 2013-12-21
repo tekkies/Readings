@@ -28,30 +28,28 @@
             android:padding="10dp"
             android:src="?ic_action_hardware_headphones"
             android:tag="listen"
-            android:visibility="invisible"
             android:contentDescription="@string/listen" />
-
-        <ImageView
-            android:id="@+id/imageViewReadOffline"
+        
+        <CheckBox
+            android:id="@+id/checkbox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:src="?ic_action_collections_view_as_list"
-            android:tag="offline" android:contentDescription="@string/read_offlice"/>
+            android:layout_gravity="center_vertical" />
 
-        <ImageView
-            android:id="@+id/imageViewReadOnline"
+        <RadioButton
+            android:id="@+id/radioButton1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:src="?ic_action_location_web_site"
-            android:tag="online" android:contentDescription="@string/read_online"/>
+            android:layout_gravity="center_vertical" 
+          />
+        
+        
     </LinearLayout>
 
     <TextView
         android:id="@+id/textViewSummary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/loading" />
+		android:text="@string/Lorem" />
 
 </LinearLayout>

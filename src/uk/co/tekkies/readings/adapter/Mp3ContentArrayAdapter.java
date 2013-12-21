@@ -61,24 +61,16 @@ public class Mp3ContentArrayAdapter extends ArrayAdapter<Mp3ContentLocator> impl
         textViewSummary.setTextSize((float) (prefs.loadPassageTextSize() * defaultTextSize));
         textViewPassageTitle.setText(mp3ContentLocators.get(position).getTitle());
         view.setTag(mp3ContentLocators.get(position).getClass().getName());
-
-        textViewPassageTitle.setOnClickListener(this);
-        view.findViewById(R.id.imageViewReadOffline).setOnClickListener(this);
-        view.findViewById(R.id.imageViewReadOnline).setOnClickListener(this);
-        textViewSummary.setOnClickListener(this);
-
-        if (ReadingsApplication.mp3Installed) {
+        
+        //textViewPassageTitle.setOnClickListener(this);
+        //textViewSummary.setOnClickListener(this);
+        
+        if (mp3ContentLocators.get(position).getBasePath().length() != 0) {
             View listenView = view.findViewById(R.id.imageListen);
             listenView.setVisibility(View.VISIBLE);
             listenView.setOnClickListener(this);
         }
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(activity);
-        Boolean showSummary = settings.getBoolean(ReadingsFragment.PREFS_SHOW_SUMMARY, true);
-        if (showSummary) {
-            textViewSummary.setText(mp3ContentLocators.get(position).getBasePath());
-        } else {
-            textViewSummary.setVisibility(View.GONE);
-        }
+        textViewSummary.setText(mp3ContentLocators.get(position).getBasePath());
         return view;
     }
 
