@@ -41,11 +41,6 @@ public class NltLaridianMp3ContentLocator extends Mp3ContentLocator {
     }
     
     @Override
-    public String getLiveDatabasePath() {
-        return "/data/data/uk.co.tekkies.plugin.mp3bible.laridian.nlt/databases/";
-    }
-
-    @Override
     public String getPassagePath(int passageId)
     {
         switch (passageId)

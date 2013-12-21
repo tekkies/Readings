@@ -36,12 +36,6 @@ public class KjvListenersMp3ContentLocator extends Mp3ContentLocator {
     public String getKeyFileName() {
         return "1_001_Genesis01_KJV.mp3";
     }
-    
-    @Override
-    public String getLiveDatabasePath() {
-        // TODO Auto-generated method stub
-        return "/data/data/uk.co.tekkies.plugin.mp3bible.listeners.kjv/databases/";
-    }
 
     @Override
     public String getPassagePath(int passageId) {

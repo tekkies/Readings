@@ -38,12 +38,6 @@ public class KjvChristadelphianMp3ContentLocator extends Mp3ContentLocator {
     }
     
     @Override
-    public String getLiveDatabasePath() {
-        // TODO Auto-generated method stub
-        return "/data/data/uk.co.tekkies.plugin.mp3bible.christadelphian.kjv/databases/";
-    }
-
-    @Override
     public String getPassagePath(int passageId) {
         switch (passageId)
         {

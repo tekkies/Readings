@@ -38,11 +38,6 @@ public class KjvScourbyMp3ContentLocator extends Mp3ContentLocator {
     }
     
     @Override
-    public String getLiveDatabasePath() {
-        return "/data/data/uk.co.tekkies.plugin.mp3bible.scourby.kjv/databases/";
-    }
-
-    @Override
     public String getPassagePath(int passageId) {
         switch (passageId)
         {

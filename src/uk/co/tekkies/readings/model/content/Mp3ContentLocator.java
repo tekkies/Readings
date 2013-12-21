@@ -16,7 +16,6 @@ public abstract class Mp3ContentLocator {
     public abstract String getBaseFolder(File potentialKeyFile);
     public abstract boolean confirmKeyFileFound(String baseFolder);
     public abstract String getKeyFileName();
-    public abstract String getLiveDatabasePath();
     public abstract String getPassagePath(int passageId);
     public abstract String getTitle();
     
@@ -27,8 +26,7 @@ public abstract class Mp3ContentLocator {
         }
         return confirmed;
     }
-    
-    
+
     public static Mp3ContentLocator createChosenMp3ContentDescription(Context context) {
         Mp3ContentLocator contentLocator=null;
         String mp3Product = new Prefs(context).loadMp3Product();
@@ -55,6 +53,7 @@ public abstract class Mp3ContentLocator {
         mp3ContentLocators.add(new NltLaridianMp3ContentLocator());
         mp3ContentLocators.add(new KjvScourbyMp3ContentLocator());
         mp3ContentLocators.add(new KjvListenersMp3ContentLocator());
+        mp3ContentLocators.add(new KjvFirefightersMp3ContentLocator());
         return mp3ContentLocators; 
     }
     
@@ -77,6 +76,9 @@ public abstract class Mp3ContentLocator {
         }
         else if(KjvListenersMp3ContentLocator.class.getName().equalsIgnoreCase(mp3Product)) {
             contentLocator = new KjvListenersMp3ContentLocator();    
+        }
+        else if(KjvFirefightersMp3ContentLocator.class.getName().equalsIgnoreCase(mp3Product)) {
+            contentLocator = new KjvFirefightersMp3ContentLocator();    
         }
         return contentLocator;
     }
