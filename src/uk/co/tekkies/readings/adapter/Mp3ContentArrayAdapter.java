@@ -64,9 +64,19 @@ public class Mp3ContentArrayAdapter extends ArrayAdapter<Mp3ContentLocator> impl
         listenView.setVisibility(contentFound ? View.VISIBLE : View.GONE);
         //Text
         ((TextView)view.findViewById(R.id.passage_title)).setText(mp3ContentLocators.get(position).getTitle());
-        ((TextView) view.findViewById(R.id.textViewSummary)).setText(mp3ContentLocators.get(position).getBasePath());
+        setPathText(position, view);
         return view;
     }
+
+	private void setPathText(int position, ViewGroup view) {
+		String basePathText=mp3ContentLocators.get(position).getBasePath();
+        if(basePathText == "") {
+        	basePathText = getContext().getString(R.string.not_found);
+        } else {
+        	basePathText = getContext().getString(R.string.found)+basePathText; 
+        }
+        ((TextView) view.findViewById(R.id.textViewSummary)).setText(basePathText);
+	}
 
     public void onClick(View v) {
         switch (v.getId()) {

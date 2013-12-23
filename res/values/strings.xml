@@ -78,6 +78,8 @@
     <string name="mp3_search">MP3 Search</string>
     <string name="pref_title_mp3">MP3 integration</string>
     <string name="pref_summary_mp3">Search for MP3 Bible installations to connect with</string>
+    <string name="not_found">Not found</string>
+    <string name="found">"Found: "</string>
     
     
     
