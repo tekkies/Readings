@@ -2,6 +2,8 @@ package uk.co.tekkies.readings.activity;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import uk.co.tekkies.readings.R;
 import uk.co.tekkies.readings.adapter.Mp3ContentArrayAdapter;
@@ -46,7 +48,7 @@ public class ContentLocationActivity extends BaseActivity implements OnClickList
         listView = (ListView) findViewById(R.id.list_view);
         mp3ContentLocators = Mp3ContentLocator.createSupportedMp3ContentLocators();
         Mp3ContentLocator.loadBasePaths(this, mp3ContentLocators);
-        
+        sortList(mp3ContentLocators);
         mp3ContentArrayAdapter = new Mp3ContentArrayAdapter(getActivity(), mp3ContentLocators);
         listView.setAdapter(mp3ContentArrayAdapter);
         // listView
@@ -119,6 +121,7 @@ public class ContentLocationActivity extends BaseActivity implements OnClickList
         @Override
         protected void onPostExecute(ArrayList<Mp3ContentLocator> results) {
             mp3ContentLocators = results;
+            sortList(mp3ContentLocators);
             Mp3ContentLocator.saveBasePaths(getActivity(), mp3ContentLocators);
             mp3ContentArrayAdapter = new Mp3ContentArrayAdapter(getActivity(), mp3ContentLocators);
             listView.setAdapter(mp3ContentArrayAdapter);
@@ -179,5 +182,20 @@ public class ContentLocationActivity extends BaseActivity implements OnClickList
             return null;
         }
     }
+
+	public void sortList(ArrayList<Mp3ContentLocator> mp3ContentLocators) {
+		Collections.sort(mp3ContentLocators, new Comparator<Mp3ContentLocator>() {
+	        @Override
+	        public int compare(Mp3ContentLocator li1, Mp3ContentLocator li2) {
+	        	//Primary: Available items to the top
+	        	int result = li2.getBasePath().length() - li1.getBasePath().length(); 
+        		//Secondary: Alphabetically
+	        	if(result == 0) {
+	        		li1.getTitle().compareToIgnoreCase(li2.getTitle());
+	        	}
+	            return result;
+	        }
+	    });
+	}
 
 }
