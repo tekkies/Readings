@@ -14,9 +14,7 @@ public class NltLaridianMp3ContentLocator extends Mp3ContentLocator {
 
     @Override
     public String getBaseFolder(File potentialKeyFile) {
-        File bookFolder = potentialKeyFile.getParentFile();
-        File testamentFolder = bookFolder.getParentFile();
-        return testamentFolder.getParent();
+        return potentialKeyFile.getParent();
     }
 
     @Override
