@@ -231,8 +231,8 @@ return passageXml;
     private void doPlay() {
         Mp3ContentLocator content = Mp3ContentLocator.createChosenMp3ContentDescription(getActivity());
         if(content != null) {
-//            String mp3File = content.getMp3Path(getActivity(), passageId); 
-//            PlayerService.requestPlay(getActivity(), mp3File);
+            String mp3File = content.getMp3Path(getActivity(), passageId); 
+            PlayerService.requestPlay(getActivity(), mp3File);
         }
         playButton.setText("Stop");
     }

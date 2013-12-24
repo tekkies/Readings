@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import uk.co.tekkies.readings.model.Prefs;
 
 import android.content.Context;
+import android.support.v4.app.FragmentActivity;
 
 public abstract class Mp3ContentLocator {
     
@@ -31,6 +32,7 @@ public abstract class Mp3ContentLocator {
         Mp3ContentLocator contentLocator=null;
         String mp3Product = new Prefs(context).loadMp3Product();
         contentLocator = newContentLocator(context, mp3Product);
+        new Prefs(context).loadBasePath(contentLocator);
         if(contentLocator != null) {
             if(!contentLocator.confirmKeyFileFound(context)) {
                 contentLocator = null;
@@ -104,6 +106,9 @@ public abstract class Mp3ContentLocator {
         for (Mp3ContentLocator mp3ContentLocator : mp3ContentLocators) {
             prefs.saveBasePath(mp3ContentLocator);
         }
+    }
+    public String getMp3Path(FragmentActivity activity, int passageId) {
+        return getBasePath()+"/"+getPassagePath(passageId);
     }
     
 
