@@ -2,6 +2,8 @@ package uk.co.tekkies.readings.activity;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import uk.co.tekkies.readings.R;
 import uk.co.tekkies.readings.adapter.Mp3ContentArrayAdapter;
@@ -14,13 +16,15 @@ import android.view.View.OnClickListener;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class ContentLocationActivity extends BaseActivity implements OnClickListener {
 
     protected static final String TAG = "MP3Bible";
     Button searchButton = null;
-    TextView basePathTextView = null;
+    TextView searchStatus = null;
+    ProgressBar progressBar = null;
     WebView webView1 = null;
     ArrayList<Mp3ContentLocator> mp3ContentLocators;
     Mp3ContentArrayAdapter mp3ContentArrayAdapter;
@@ -42,15 +46,16 @@ public class ContentLocationActivity extends BaseActivity implements OnClickList
         setContentView(R.layout.mp3_search_activity);
         searchButton = (Button) findViewById(R.id.button_search);
         searchButton.setOnClickListener(this);
-        basePathTextView = (TextView) findViewById(R.id.textView_mp3location);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar1);
+        searchStatus = (TextView) findViewById(R.id.textView_mp3location);
         listView = (ListView) findViewById(R.id.list_view);
         mp3ContentLocators = Mp3ContentLocator.createSupportedMp3ContentLocators();
         Mp3ContentLocator.loadBasePaths(this, mp3ContentLocators);
-        
+        sortList(mp3ContentLocators);
         mp3ContentArrayAdapter = new Mp3ContentArrayAdapter(getActivity(), mp3ContentLocators);
         listView.setAdapter(mp3ContentArrayAdapter);
         // listView
-        updateUi();
+        updateSearchViews(false);
     }
 
     @Override
@@ -73,18 +78,15 @@ public class ContentLocationActivity extends BaseActivity implements OnClickList
         return this;
     }
     
-    private void updateUi() {
-        // re-enable Search button
-        if (searchButton != null) {
-            searchButton.setEnabled(true);
-        }
+    private void updateSearchViews(boolean searching) {
+    	searchButton.setEnabled(!searching);
+    	searchStatus.setVisibility(searching ? View.VISIBLE : View.GONE);
+    	progressBar.setVisibility(searching ? View.VISIBLE : View.GONE);
     }
 
     private void doSearchForKeyFile() {
-        if (searchButton != null) {
-            searchButton.setEnabled(false);
-        }
         clearMainList();
+    	updateSearchViews(true);
         SearchTask searchTask = new SearchTask();
         searchTask.execute("");
     }
@@ -113,16 +115,17 @@ public class ContentLocationActivity extends BaseActivity implements OnClickList
 
         @Override
         protected void onProgressUpdate(String... values) {
-            basePathTextView.setText(values[0]);
+            searchStatus.setText(values[0]);
         }
 
         @Override
         protected void onPostExecute(ArrayList<Mp3ContentLocator> results) {
             mp3ContentLocators = results;
+            sortList(mp3ContentLocators);
             Mp3ContentLocator.saveBasePaths(getActivity(), mp3ContentLocators);
             mp3ContentArrayAdapter = new Mp3ContentArrayAdapter(getActivity(), mp3ContentLocators);
             listView.setAdapter(mp3ContentArrayAdapter);
-            updateUi();
+            updateSearchViews(false);
         }
 
         private File findFile(File folder, ArrayList<Mp3ContentLocator> locators) {
@@ -179,5 +182,20 @@ public class ContentLocationActivity extends BaseActivity implements OnClickList
             return null;
         }
     }
+
+	public void sortList(ArrayList<Mp3ContentLocator> mp3ContentLocators) {
+		Collections.sort(mp3ContentLocators, new Comparator<Mp3ContentLocator>() {
+	        @Override
+	        public int compare(Mp3ContentLocator li1, Mp3ContentLocator li2) {
+	        	//Primary: Available items to the top
+	        	int result = li2.getBasePath().length() - li1.getBasePath().length(); 
+        		//Secondary: Alphabetically
+	        	if(result == 0) {
+	        		li1.getTitle().compareToIgnoreCase(li2.getTitle());
+	        	}
+	            return result;
+	        }
+	    });
+	}
 
 }
