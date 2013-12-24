@@ -50,6 +50,7 @@ public abstract class Mp3ContentLocator {
     public static ArrayList<Mp3ContentLocator> createSupportedMp3ContentLocators() {
         ArrayList<Mp3ContentLocator> mp3ContentLocators= new ArrayList<Mp3ContentLocator>();
         mp3ContentLocators.add(new KjvChristadelphianMp3ContentLocator());
+        mp3ContentLocators.add(new NltLaridianTreeMp3ContentLocator());
         mp3ContentLocators.add(new NltLaridianMp3ContentLocator());
         mp3ContentLocators.add(new KjvScourbyMp3ContentLocator());
         mp3ContentLocators.add(new KjvListenersMp3ContentLocator());
@@ -70,6 +71,9 @@ public abstract class Mp3ContentLocator {
         }
         if(KjvScourbyMp3ContentLocator.class.getName().equalsIgnoreCase(mp3Product)) {
             contentLocator = new KjvScourbyMp3ContentLocator();    
+        }
+        else if(NltLaridianTreeMp3ContentLocator.class.getName().equalsIgnoreCase(mp3Product)) {
+            contentLocator = new NltLaridianTreeMp3ContentLocator();    
         }
         else if(NltLaridianMp3ContentLocator.class.getName().equalsIgnoreCase(mp3Product)) {
             contentLocator = new NltLaridianMp3ContentLocator();    

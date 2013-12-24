@@ -18,16 +18,12 @@ package uk.co.tekkies.readings.adapter;
 
 import java.util.ArrayList;
 import uk.co.tekkies.readings.R;
-import uk.co.tekkies.readings.ReadingsApplication;
 import uk.co.tekkies.readings.activity.ContentLocationActivity;
-import uk.co.tekkies.readings.fragment.ReadingsFragment;
 import uk.co.tekkies.readings.model.Prefs;
 import uk.co.tekkies.readings.model.content.Mp3ContentLocator;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;

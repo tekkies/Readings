@@ -20,9 +20,7 @@ import uk.co.tekkies.readings.R;
 import uk.co.tekkies.readings.activity.ContentLocationActivity;
 import uk.co.tekkies.readings.activity.PassageActivity;
 import uk.co.tekkies.readings.model.Prefs;
-import uk.co.tekkies.readings.util.Analytics;
 import uk.co.tekkies.readings.model.content.Mp3ContentLocator;
-import uk.co.tekkies.readings.model.content.NltLaridianMp3ContentLocator;
 import uk.co.tekkies.readings.service.PlayerService;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -149,14 +147,14 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
     }
 
     protected String getPassageXml(String passage) {
-        String passageXml = "Error";
-        String[] row = new String[] { "passage" };
-        Cursor cursor = getActivity().getContentResolver().query(
-                Uri.parse("content://uk.co.tekkies.plugin.bible.kjv/passage/" + passage), row, "", row, "");
-        if (cursor.moveToFirst()) {
-            passageXml = cursor.getString(cursor.getColumnIndex("passage"));
-        }
-        return passageXml;
+String passageXml = "Error";
+String[] row = new String[] { "passage" };
+Cursor cursor = getActivity().getContentResolver().query(
+        Uri.parse("content://uk.co.tekkies.plugin.bible.kjv/passage/" + passage), row, "", row, "");
+if (cursor.moveToFirst()) {
+    passageXml = cursor.getString(cursor.getColumnIndex("passage"));
+}
+return passageXml;
     }
 
     protected String render(String html) {
