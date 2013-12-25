@@ -130,11 +130,11 @@ public class PlayerService extends Service implements OnCompletionListener {
         mediaPlayer = MediaPlayer.create(this, Uri.parse(filePath));
         mediaPlayer.setOnCompletionListener(this);
         mediaPlayer.start();
-        extracted(passageId);
+        updateOngoingNotification("Passage:"+passageId);
     }
 
-    private void extracted(int passageId) {
-        notificationBuilder.setContentText("Passage:"+passageId);
+    private void updateOngoingNotification(String contentText) {
+        notificationBuilder.setContentText(contentText);
         ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).notify((int) Notification.FLAG_FOREGROUND_SERVICE, notificationBuilder.build());
     }
 
