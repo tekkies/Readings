@@ -104,7 +104,7 @@ public class ContentLocationActivity extends BaseActivity implements OnClickList
         protected ArrayList<Mp3ContentLocator> doInBackground(String... unused) {
             File root = new File("/");
             ArrayList<Mp3ContentLocator> searchLocators = Mp3ContentLocator.createSupportedMp3ContentLocators();
-            Mp3ContentLocator.resetBasePaths(searchLocators); // Start from nothing
+            Mp3ContentLocator.searchResetBasePaths(searchLocators); // Start from nothing
             try {
                 findFile(root, searchLocators);
             } catch (Exception e) {
@@ -122,7 +122,7 @@ public class ContentLocationActivity extends BaseActivity implements OnClickList
         protected void onPostExecute(ArrayList<Mp3ContentLocator> results) {
             mp3ContentLocators = results;
             sortList(mp3ContentLocators);
-            Mp3ContentLocator.saveBasePaths(getActivity(), mp3ContentLocators);
+            Mp3ContentLocator.searchSaveBasePaths(getActivity(), mp3ContentLocators);
             mp3ContentArrayAdapter = new Mp3ContentArrayAdapter(getActivity(), mp3ContentLocators);
             listView.setAdapter(mp3ContentArrayAdapter);
             updateSearchViews(false);
@@ -139,10 +139,10 @@ public class ContentLocationActivity extends BaseActivity implements OnClickList
                         Log.v(TAG, "File:" + child);
                         for (int i = 0; i < locators.size(); i++) {
                             Mp3ContentLocator locator = locators.get(i);
-                            if (child.getName().contains(locator.getKeyFileName())) {
+                            if (child.getName().contains(locator.searchGetKeyFileName())) {
                                 // Candidate found, now confirm
-                                String baseFolder = locator.getBaseFolder(child);
-                                if (locator.confirmKeyFileFound(baseFolder)) {
+                                String baseFolder = locator.searchGetBaseFolderFromKeyFile(child);
+                                if (locator.searchConfirmKeyFileFound(baseFolder)) {
                                     // Found! Store the base path in the
                                     // locator, in case we want all matches,
                                     // instead of the first matched mp3

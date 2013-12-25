@@ -4,9 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import uk.co.tekkies.readings.model.Prefs;
-
 import android.content.Context;
-import android.support.v4.app.FragmentActivity;
 
 public abstract class Mp3ContentLocator {
     
@@ -14,30 +12,18 @@ public abstract class Mp3ContentLocator {
     
     private String basePath="";
 
-    public abstract String getBaseFolder(File potentialKeyFile);
-    public abstract boolean confirmKeyFileFound(String baseFolder);
-    public abstract String getKeyFileName();
-    public abstract String getPassagePath(int passageId);
     public abstract String getTitle();
     
-    public boolean confirmKeyFileFound(Context context) {
-        boolean confirmed = false;
-        if(getBasePath() != null) {
-            confirmed = confirmKeyFileFound(getBasePath());
-        }
-        return confirmed;
-    }
-
-    public static Mp3ContentLocator createChosenMp3ContentDescription(Context context) {
+    protected abstract String getPassageSubPath(int passageId);
+    public abstract String searchGetBaseFolderFromKeyFile(File potentialKeyFile);
+    public abstract boolean searchConfirmKeyFileFound(String baseFolder);
+    public abstract String searchGetKeyFileName();
+    
+    public static Mp3ContentLocator createContentLocator(Context context) {
         Mp3ContentLocator contentLocator=null;
         String mp3Product = new Prefs(context).loadMp3Product();
         contentLocator = newContentLocator(context, mp3Product);
         new Prefs(context).loadBasePath(contentLocator);
-        if(contentLocator != null) {
-            if(!contentLocator.confirmKeyFileFound(context)) {
-                contentLocator = null;
-            }
-        }
         return contentLocator;
     }
 
@@ -50,6 +36,7 @@ public abstract class Mp3ContentLocator {
     }
 
     public static ArrayList<Mp3ContentLocator> createSupportedMp3ContentLocators() {
+        //TODO: Use reflection?
         ArrayList<Mp3ContentLocator> mp3ContentLocators= new ArrayList<Mp3ContentLocator>();
         mp3ContentLocators.add(new KjvChristadelphianMp3ContentLocator());
         mp3ContentLocators.add(new NltLaridianTreeMp3ContentLocator());
@@ -67,6 +54,7 @@ public abstract class Mp3ContentLocator {
      * @return Null if no match
      */
     private static Mp3ContentLocator newContentLocator(Context context, String mp3Product) {
+        //TODO: Use reflection?
         Mp3ContentLocator contentLocator = null;
         if(KjvChristadelphianMp3ContentLocator.class.getName().equalsIgnoreCase(mp3Product)) {
             contentLocator = new KjvChristadelphianMp3ContentLocator();    
@@ -89,27 +77,32 @@ public abstract class Mp3ContentLocator {
         return contentLocator;
     }
 
-    public static void resetBasePaths(ArrayList<Mp3ContentLocator> mp3ContentLocators) {
+    public static void searchResetBasePaths(ArrayList<Mp3ContentLocator> mp3ContentLocators) {
         for (Mp3ContentLocator mp3ContentLocator : mp3ContentLocators) {
             mp3ContentLocator.setBasePath("");
         }
     }
+
     public static void loadBasePaths(Context context, ArrayList<Mp3ContentLocator> mp3ContentLocators) {
         Prefs prefs = new Prefs(context);
         for (Mp3ContentLocator mp3ContentLocator : mp3ContentLocators) {
             prefs.loadBasePath(mp3ContentLocator);
         }
-        
     }
-    public static void saveBasePaths(Context context, ArrayList<Mp3ContentLocator> mp3ContentLocators) {
+    
+    public static void searchSaveBasePaths(Context context, ArrayList<Mp3ContentLocator> mp3ContentLocators) {
         Prefs prefs = new Prefs(context);
         for (Mp3ContentLocator mp3ContentLocator : mp3ContentLocators) {
             prefs.saveBasePath(mp3ContentLocator);
         }
     }
-    public String getMp3Path(FragmentActivity activity, int passageId) {
-        return getBasePath()+"/"+getPassagePath(passageId);
-    }
     
-
+    public static String getPassageFullPath(Context context, int passageId) {
+        String passageFullPath="";
+        Mp3ContentLocator content = Mp3ContentLocator.createContentLocator(context);
+        if(content != null) {
+            passageFullPath = content.getBasePath()+"/"+content.getPassageSubPath(passageId);
+        }
+        return passageFullPath;
+    }
 }

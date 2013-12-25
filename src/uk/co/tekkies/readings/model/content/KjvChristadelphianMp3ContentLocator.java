@@ -12,12 +12,12 @@ public class KjvChristadelphianMp3ContentLocator extends Mp3ContentLocator {
     }
 
     @Override
-    public String getBaseFolder(File potentialKeyFile) {
+    public String searchGetBaseFolderFromKeyFile(File potentialKeyFile) {
         return potentialKeyFile.getParent();
     }
 
     @Override
-    public boolean confirmKeyFileFound(String baseFolder) {
+    public boolean searchConfirmKeyFileFound(String baseFolder) {
         Boolean confirmed = false;
 
         File prov15 = new File(baseFolder + "/20015.mp3");
@@ -33,12 +33,12 @@ public class KjvChristadelphianMp3ContentLocator extends Mp3ContentLocator {
     }
 
     @Override
-    public String getKeyFileName() {
+    public String searchGetKeyFileName() {
         return "19119a.mp3";
     }
     
     @Override
-    public String getPassagePath(int passageId) {
+    protected String getPassageSubPath(int passageId) {
         switch (passageId)
         {
             case 1: return "01001.mp3";

@@ -13,14 +13,14 @@ public class NltLaridianTreeMp3ContentLocator extends Mp3ContentLocator {
     }
 
     @Override
-    public String getBaseFolder(File potentialKeyFile) {
+    public String searchGetBaseFolderFromKeyFile(File potentialKeyFile) {
         File bookFolder = potentialKeyFile.getParentFile();
         File testamentFolder = bookFolder.getParentFile();
         return testamentFolder.getParent();
     }
 
     @Override
-    public boolean confirmKeyFileFound(String baseFolder) {
+    public boolean searchConfirmKeyFileFound(String baseFolder) {
         Boolean confirmed = false;
 
         File prov15 = new File(baseFolder + "/1 OT/20 Prov/Prov015.mp3");
@@ -36,12 +36,12 @@ public class NltLaridianTreeMp3ContentLocator extends Mp3ContentLocator {
     }
 
     @Override
-    public String getKeyFileName() {
+    public String searchGetKeyFileName() {
         return "Gen001.mp3";
     }
     
     @Override
-    public String getPassagePath(int passageId)
+    protected String getPassageSubPath(int passageId)
     {
         switch (passageId)
         {

@@ -12,13 +12,13 @@ public class KjvFirefightersMp3ContentLocator extends Mp3ContentLocator {
     }
     
     @Override
-    public String getBaseFolder(File potentialKeyFile) {
+    public String searchGetBaseFolderFromKeyFile(File potentialKeyFile) {
         File bookFolder = potentialKeyFile.getParentFile();
         return bookFolder.getParent();
     }
 
     @Override
-    public boolean confirmKeyFileFound(String baseFolder) {
+    public boolean searchConfirmKeyFileFound(String baseFolder) {
         Boolean confirmed = false;
         File prov15 = new File(baseFolder + "/20_Pro/20Pro015.mp3");
         if (prov15.exists()) {
@@ -33,12 +33,12 @@ public class KjvFirefightersMp3ContentLocator extends Mp3ContentLocator {
     }
 
     @Override
-    public String getKeyFileName() {
+    public String searchGetKeyFileName() {
         return "01Gen001.mp3";
     }
     
     @Override
-    public String getPassagePath(int passageId) {
+    protected String getPassageSubPath(int passageId) {
         switch (passageId)
         {
 	        case 1: return "01_Gen/01Gen001.mp3";

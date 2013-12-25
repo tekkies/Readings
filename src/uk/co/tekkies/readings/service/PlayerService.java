@@ -5,6 +5,7 @@ import java.util.List;
 import uk.co.tekkies.readings.R;
 import uk.co.tekkies.readings.activity.PassageActivity;
 import uk.co.tekkies.readings.model.ParcelableReadings;
+import uk.co.tekkies.readings.model.content.Mp3ContentLocator;
 
 import android.app.ActivityManager;
 import android.app.Notification;
@@ -16,15 +17,16 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnCompletionListener;
 import android.net.Uri;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 
-public class PlayerService extends Service {
+public class PlayerService extends Service implements OnCompletionListener {
 
-    private static final String INTENT_EXTRA_FILE_PATH = "filePath";
+    private static final String INTENT_EXTRA_PASSAGE_ID = "passageId";
     private static final String LOG_TAG = "PLAYER";
     private static final String SERVICE_NAME = "uk.co.tekkies.readings.service.PlayerService";
     private static final String INTENT_STOP = "stop";
@@ -42,8 +44,8 @@ public class PlayerService extends Service {
         registerPlayerBroadcastReceiver();
         passableReadings = (ParcelableReadings) (intent.getParcelableExtra(ParcelableReadings.PARCEL_NAME));
         createOngoingNotification();
-        String filePath = intent.getExtras().getString(INTENT_EXTRA_FILE_PATH);
-        doPlay(filePath);
+        int passageId = intent.getExtras().getInt(INTENT_EXTRA_PASSAGE_ID);
+        doPlay(passageId);
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -84,9 +86,9 @@ public class PlayerService extends Service {
         return serviceRunning;
     }
 
-    public static void requestPlay(PassageActivity passageActivity, String mp3File) {
+    public static void requestPlay(PassageActivity passageActivity, int passageId) {
         Intent intent = new Intent(PlayerService.SERVICE_NAME);
-        intent.putExtra(INTENT_EXTRA_FILE_PATH, mp3File);
+        intent.putExtra(INTENT_EXTRA_PASSAGE_ID, passageId);
         intent.putExtra(ParcelableReadings.PARCEL_NAME, passageActivity.getPassableReadings());
         passageActivity.startService(intent);
     }
@@ -112,11 +114,11 @@ public class PlayerService extends Service {
         stopSelf();
     }
 
-    private void doPlay(String filePath) {
+    private void doPlay(int passageId) {
         Log.i(LOG_TAG, "Play");
-        mediaPlayer = MediaPlayer.create(this, Uri
-                .parse(filePath));
-                //.parse("file:///storage/extSdCard/Podcasts/NLT Tree 97bD lame -B 48 -h -v -a/1 OT/01 Gen/Gen001.mp3"));
+        String filePath = Mp3ContentLocator.getPassageFullPath(this, passageId);
+        mediaPlayer = MediaPlayer.create(this, Uri.parse(filePath));
+        mediaPlayer.setOnCompletionListener(this);
         mediaPlayer.start();
     }
 
@@ -130,4 +132,13 @@ public class PlayerService extends Service {
         super.onDestroy();
     }
 
+    @Override
+    public void onCompletion(MediaPlayer mp) {
+        mediaPlayer.release();
+        stopSelf();
+    }
+
+    
+    
+    
 }

@@ -20,7 +20,6 @@ import uk.co.tekkies.readings.R;
 import uk.co.tekkies.readings.activity.ContentLocationActivity;
 import uk.co.tekkies.readings.activity.PassageActivity;
 import uk.co.tekkies.readings.model.Prefs;
-import uk.co.tekkies.readings.model.content.Mp3ContentLocator;
 import uk.co.tekkies.readings.service.PlayerService;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -229,11 +228,7 @@ return passageXml;
     }
 
     private void doPlay() {
-        Mp3ContentLocator content = Mp3ContentLocator.createChosenMp3ContentDescription(getActivity());
-        if(content != null) {
-            String mp3File = content.getMp3Path(getActivity(), passageId); 
-            PlayerService.requestPlay((PassageActivity)getActivity(), mp3File);
-        }
+        PlayerService.requestPlay((PassageActivity)getActivity(), passageId);
         playButton.setText("Stop");
     }
     
