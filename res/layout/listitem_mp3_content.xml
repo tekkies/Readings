@@ -22,11 +22,11 @@
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <ImageView
-            android:id="@+id/imageListen"
+            android:id="@+id/imageAbout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="10dp"
-            android:src="?ic_action_hardware_headphones"
+            android:src="?ic_action_action_about"
             android:tag="listen"
             android:contentDescription="@string/listen" />
 
