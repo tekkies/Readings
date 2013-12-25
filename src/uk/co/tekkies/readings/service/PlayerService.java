@@ -9,6 +9,7 @@ import uk.co.tekkies.readings.model.content.Mp3ContentLocator;
 
 import android.app.ActivityManager;
 import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -34,6 +35,7 @@ public class PlayerService extends Service implements OnCompletionListener {
     MediaPlayer mediaPlayer;
     private ParcelableReadings passableReadings;
     Notification notification;
+    NotificationCompat.Builder notificationBuilder;
     int passageId=0;
     Boolean beep = false;
 
@@ -57,7 +59,7 @@ public class PlayerService extends Service implements OnCompletionListener {
                 .addParentStack(PassageActivity.class); //Read parents from manifest
         taskStackBuilder.addNextIntent(
                 new Intent(this, PassageActivity.class).putExtra(ParcelableReadings.PARCEL_NAME, passableReadings));
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(
+        notificationBuilder = new NotificationCompat.Builder(
             this)
             .setTicker("Ticker text")
             .setSmallIcon(R.drawable.ic_action_hardware_headphones_holo_dark)
@@ -66,8 +68,8 @@ public class PlayerService extends Service implements OnCompletionListener {
             .setContentText("ContentText")
             .setAutoCancel(true)
             .setContentIntent(taskStackBuilder.getPendingIntent(0, PendingIntent.FLAG_CANCEL_CURRENT));
-        notification = builder.build();
-        startForeground((int) Notification.FLAG_FOREGROUND_SERVICE, builder.build());
+        notification = notificationBuilder.build();
+        startForeground((int) Notification.FLAG_FOREGROUND_SERVICE, notification);
     }
 
     private void registerPlayerBroadcastReceiver() {
@@ -128,10 +130,17 @@ public class PlayerService extends Service implements OnCompletionListener {
         mediaPlayer = MediaPlayer.create(this, Uri.parse(filePath));
         mediaPlayer.setOnCompletionListener(this);
         mediaPlayer.start();
+        extracted(passageId);
+    }
+
+    private void extracted(int passageId) {
+        notificationBuilder.setContentText("Passage:"+passageId);
+        ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).notify((int) Notification.FLAG_FOREGROUND_SERVICE, notificationBuilder.build());
     }
 
     @Override
     public void onDestroy() {
+        
         Log.i(LOG_TAG, "Service stopped");
         if (playerBroadcastReceiver != null) {
             unregisterReceiver(playerBroadcastReceiver);
@@ -143,31 +152,35 @@ public class PlayerService extends Service implements OnCompletionListener {
     @Override
     public void onCompletion(MediaPlayer mp) {
         if(beep == false) {
-            beep = true;
-            mediaPlayer.stop();
-            mediaPlayer.release();
-            mediaPlayer = MediaPlayer.create(this, R.raw.beep);
-            mediaPlayer.setOnCompletionListener(this);
-            mediaPlayer.start();
+            doBeep();
         } else {
             beep = false;
-            for(int i=0;i< passableReadings.passages.size(); i++) {
-                if(passageId == passableReadings.passages.get(i).getPassageId()) {
-                    i++;
-                    if(i < passableReadings.passages.size()) {
-                        //Play next
-                        doPlay(passableReadings.passages.get(i).getPassageId());
-                    }else {
-                        //End
-                        doStop();
-                    }
-                    break;
+            advanceOrExit();
+        }
+    }
+
+    private void advanceOrExit() {
+        for(int i=0;i< passableReadings.passages.size(); i++) {
+            if(passageId == passableReadings.passages.get(i).getPassageId()) {
+                i++;
+                if(i < passableReadings.passages.size()) {
+                    //Play next
+                    doPlay(passableReadings.passages.get(i).getPassageId());
+                }else {
+                    //End
+                    doStop();
                 }
+                break;
             }
         }
     }
 
-    
-    
-    
+    private void doBeep() {
+        beep = true;
+        mediaPlayer.release();
+        mediaPlayer = MediaPlayer.create(this, R.raw.beep);
+        mediaPlayer.setOnCompletionListener(this);
+        mediaPlayer.start();
+    }
+
 }
