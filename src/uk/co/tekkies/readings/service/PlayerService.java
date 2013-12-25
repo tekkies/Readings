@@ -3,19 +3,23 @@ package uk.co.tekkies.readings.service;
 import java.util.List;
 
 import uk.co.tekkies.readings.R;
+import uk.co.tekkies.readings.activity.PassageActivity;
+import uk.co.tekkies.readings.model.ParcelableReadings;
 
 import android.app.ActivityManager;
 import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.IBinder;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 
 public class PlayerService extends Service {
@@ -26,6 +30,7 @@ public class PlayerService extends Service {
     private static final String INTENT_STOP = "stop";
     PlayerBroadcastReceiver playerBroadcastReceiver;
     MediaPlayer mediaPlayer;
+    private ParcelableReadings passableReadings;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -35,6 +40,7 @@ public class PlayerService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         registerPlayerBroadcastReceiver();
+        passableReadings = (ParcelableReadings) (intent.getParcelableExtra(ParcelableReadings.PARCEL_NAME));
         createOngoingNotification();
         String filePath = intent.getExtras().getString(INTENT_EXTRA_FILE_PATH);
         doPlay(filePath);
@@ -42,14 +48,20 @@ public class PlayerService extends Service {
     }
 
     private void createOngoingNotification() {
-        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.cancelAll();
-        Intent returnIntent = getPackageManager().getLaunchIntentForPackage("uk.co.tekkies.readings");
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, returnIntent,
-                PendingIntent.FLAG_CANCEL_CURRENT);
-        Notification ongoingNotification = new Notification(R.drawable.ic_launcher, "Readings Player", 10000);
-        ongoingNotification.setLatestEventInfo(this, "ReaingsPlayer", "Sarted player", pendingIntent);
-        startForeground((int) Notification.FLAG_FOREGROUND_SERVICE, ongoingNotification);
+        TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(this)
+                .addParentStack(PassageActivity.class); //Read parents from manifest
+        taskStackBuilder.addNextIntent(
+                new Intent(this, PassageActivity.class).putExtra(ParcelableReadings.PARCEL_NAME, passableReadings));
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(
+            this)
+            .setTicker("Ticker text")
+            .setSmallIcon(R.drawable.ic_action_hardware_headphones_holo_dark)
+            .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher))
+            .setContentTitle("Content Title")
+            .setContentText("ContentText")
+            .setAutoCancel(true)
+            .setContentIntent(taskStackBuilder.getPendingIntent(0, PendingIntent.FLAG_CANCEL_CURRENT));
+        startForeground((int) Notification.FLAG_FOREGROUND_SERVICE, builder.build());
     }
 
     private void registerPlayerBroadcastReceiver() {
@@ -63,7 +75,6 @@ public class PlayerService extends Service {
         Boolean serviceRunning = false;
         ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         List<ActivityManager.RunningServiceInfo> runningServices = activityManager.getRunningServices(50);
-
         for (ActivityManager.RunningServiceInfo runningServiceInfo : runningServices) {
             if (runningServiceInfo.service.getClassName().equals(SERVICE_NAME)) {
                 serviceRunning = true;
@@ -73,10 +84,11 @@ public class PlayerService extends Service {
         return serviceRunning;
     }
 
-    public static void requestPlay(Context context, String mp3File) {
+    public static void requestPlay(PassageActivity passageActivity, String mp3File) {
         Intent intent = new Intent(PlayerService.SERVICE_NAME);
         intent.putExtra(INTENT_EXTRA_FILE_PATH, mp3File);
-        context.startService(intent);
+        intent.putExtra(ParcelableReadings.PARCEL_NAME, passageActivity.getPassableReadings());
+        passageActivity.startService(intent);
     }
 
     public static void requestStop(Context context) {

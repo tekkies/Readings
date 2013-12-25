@@ -37,7 +37,7 @@ public class PassageActivity extends BaseActivity {
 
     PagerAdapter pagerAdapter;
     ViewPager viewPager;
-    ParcelableReadings passableReadings;
+    private ParcelableReadings passableReadings;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -46,13 +46,15 @@ public class PassageActivity extends BaseActivity {
         ReadingsApplication.checkForMP3(this);
         setContentView(R.layout.passage_activity);
         passableReadings = (ParcelableReadings) (getIntent().getParcelableExtra(ParcelableReadings.PARCEL_NAME));
-        setupPager();
-        gotoPage(passableReadings.selected);
+        if(getPassableReadings() != null) {
+            setupPager();
+            gotoPage(getPassableReadings().selected);
+        }
     }
 
     private void gotoPage(String selected) {
-        for (int page = 0; page < passableReadings.passages.size(); page++) {
-            if (passableReadings.passages.get(page).getTitle().equalsIgnoreCase(selected)) {
+        for (int page = 0; page < getPassableReadings().passages.size(); page++) {
+            if (getPassableReadings().passages.get(page).getTitle().equalsIgnoreCase(selected)) {
                 viewPager.setCurrentItem(page);
                 break;
             }
@@ -75,20 +77,20 @@ public class PassageActivity extends BaseActivity {
 
             Fragment fragment = new PassageFragment();
             Bundle args = new Bundle();
-            args.putString("passage", passableReadings.passages.get(i).getTitle());
-            args.putInt("passageId", passableReadings.passages.get(i).getPassageId());
+            args.putString("passage", getPassableReadings().passages.get(i).getTitle());
+            args.putInt("passageId", getPassableReadings().passages.get(i).getPassageId());
             fragment.setArguments(args);
             return fragment;
         }
 
         @Override
         public int getCount() {
-            return passableReadings.passages.size();
+            return getPassableReadings().passages.size();
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return passableReadings.passages.get(position).getTitle();
+            return getPassableReadings().passages.get(position).getTitle();
         }
 
         @Override
@@ -145,6 +147,10 @@ public class PassageActivity extends BaseActivity {
 
     public void requestViewPagerDisallowInterceptTouchEvent(boolean disallowIntercept) {
         viewPager.requestDisallowInterceptTouchEvent(disallowIntercept);
+    }
+
+    public ParcelableReadings getPassableReadings() {
+        return passableReadings;
     }
 
 }
