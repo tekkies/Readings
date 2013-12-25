@@ -35,6 +35,7 @@ public class PlayerService extends Service implements OnCompletionListener {
     private ParcelableReadings passableReadings;
     Notification notification;
     int passageId=0;
+    Boolean beep = false;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -121,7 +122,8 @@ public class PlayerService extends Service implements OnCompletionListener {
 
     private void doPlay(int passageId) {
         Log.i(LOG_TAG, "Play:"+passageId);
-        this.passageId= passageId; 
+        this.passageId= passageId;
+        beep = false;
         String filePath = Mp3ContentLocator.getPassageFullPath(this, passageId);
         mediaPlayer = MediaPlayer.create(this, Uri.parse(filePath));
         mediaPlayer.setOnCompletionListener(this);
@@ -140,17 +142,27 @@ public class PlayerService extends Service implements OnCompletionListener {
 
     @Override
     public void onCompletion(MediaPlayer mp) {
-        for(int i=0;i< passableReadings.passages.size(); i++) {
-            if(passageId == passableReadings.passages.get(i).getPassageId()) {
-                i++;
-                if(i < passableReadings.passages.size()) {
-                    //Play next
-                    doPlay(passableReadings.passages.get(i).getPassageId());
-                }else {
-                    //End
-                    doStop();
+        if(beep == false) {
+            beep = true;
+            mediaPlayer.stop();
+            mediaPlayer.release();
+            mediaPlayer = MediaPlayer.create(this, R.raw.beep);
+            mediaPlayer.setOnCompletionListener(this);
+            mediaPlayer.start();
+        } else {
+            beep = false;
+            for(int i=0;i< passableReadings.passages.size(); i++) {
+                if(passageId == passableReadings.passages.get(i).getPassageId()) {
+                    i++;
+                    if(i < passableReadings.passages.size()) {
+                        //Play next
+                        doPlay(passableReadings.passages.get(i).getPassageId());
+                    }else {
+                        //End
+                        doStop();
+                    }
+                    break;
                 }
-                break;
             }
         }
     }
