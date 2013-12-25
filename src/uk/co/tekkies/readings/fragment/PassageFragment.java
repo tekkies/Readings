@@ -31,6 +31,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.text.Html;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -41,6 +42,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -55,6 +57,7 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
     int passageId = 0;
     Prefs prefs;
     Button playButton;
+    ImageView playButton2;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -76,9 +79,7 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
         playButton = (Button) mainView.findViewById(R.id.button_play_pause);
         playButton.setText(PlayerService.isServiceRunning(getActivity()) ? "Pause" : "Play");
         playButton.setOnClickListener(this);
-        
-        mainView.findViewById(R.id.button_search).setOnClickListener(this);
-
+        playButton2 = (ImageView) mainView.findViewById(R.id.button_play_pause2);
         loadTextSize();
         registerGestureDetector(mainView);
         return mainView;
@@ -115,19 +116,16 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-
         case R.id.menu_larger_text:
             textSize *= 1.25;
             saveTextSize();
             Toast.makeText(getActivity(), R.string.you_can_also_pinch_to_zoom, Toast.LENGTH_SHORT).show();
             return true;
-
         case R.id.menu_smaller_text:
             textSize *= 0.8;
             saveTextSize();
             Toast.makeText(getActivity(), R.string.you_can_also_pinch_to_zoom, Toast.LENGTH_SHORT).show();
             return true;
-
         default:
             return super.onOptionsItemSelected(item);
         }
@@ -146,14 +144,14 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
     }
 
     protected String getPassageXml(String passage) {
-String passageXml = "Error";
-String[] row = new String[] { "passage" };
-Cursor cursor = getActivity().getContentResolver().query(
-        Uri.parse("content://uk.co.tekkies.plugin.bible.kjv/passage/" + passage), row, "", row, "");
-if (cursor.moveToFirst()) {
-    passageXml = cursor.getString(cursor.getColumnIndex("passage"));
-}
-return passageXml;
+        String passageXml = "Error";
+        String[] row = new String[] { "passage" };
+        Cursor cursor = getActivity().getContentResolver().query(
+                Uri.parse("content://uk.co.tekkies.plugin.bible.kjv/passage/" + passage), row, "", row, "");
+        if (cursor.moveToFirst()) {
+            passageXml = cursor.getString(cursor.getColumnIndex("passage"));
+        }
+        return passageXml;
     }
 
     protected String render(String html) {
@@ -209,27 +207,38 @@ return passageXml;
     public void onClick(View v) {
         switch (v.getId()) {
         case R.id.button_play_pause:
-            doPlayPause();
-            break;
-        case R.id.button_search:
-            doSearch();
+            doPlayPauseSearch();
             break;
         }
     }
 
-    private void doPlayPause() {
-        if (!PlayerService.isServiceRunning(getActivity())) {
-            doPlay();
+    private void doPlayPauseSearch() {
+        Prefs prefs = new Prefs(getActivity());
+        final String notSet = "not-set";
+        if(prefs.loadString(Prefs.PREF_MP3_PRODUCT, notSet).equals(notSet)){
+            prefs.saveMp3Product(""); //Only open settings once
+            doSearch();
         } else {
-            PlayerService.requestStop(getActivity());
-            playButton.setText("Play");
+            if (!PlayerService.isServiceRunning(getActivity())) {
+                doPlay();
+            } else {
+                PlayerService.requestStop(getActivity());
+                playButton.setText("Play");
+                playButton2.setImageResource(resolveThemeAttribute(R.attr.ic_action_av_play));
+            }
         }
+    }
 
+    private int resolveThemeAttribute(int attributeId) {
+        TypedValue outValue = new TypedValue(); 
+        getActivity().getTheme().resolveAttribute(attributeId, outValue, true);
+        return outValue.resourceId;
     }
 
     private void doPlay() {
         PlayerService.requestPlay((PassageActivity)getActivity(), passageId);
         playButton.setText("Stop");
+        playButton2.setImageResource(resolveThemeAttribute(R.attr.ic_action_av_pause));
     }
     
     private void doSearch() {

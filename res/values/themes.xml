@@ -15,8 +15,10 @@
 		<item name="ic_action_hardware_headphones">@drawable/ic_action_hardware_headphones_holo_light</item>
 		<item name="ic_action_location_web_site">@drawable/ic_action_location_web_site_holo_light</item>
 		<item name="ic_action_social_chat">@drawable/ic_action_social_chat_holo_light</item>
-        
-    </style>
+		<item name="ic_action_av_play">@drawable/ic_action_av_play_holo_light</item>
+		<item name="ic_action_av_pause">@drawable/ic_action_av_pause_holo_light</item>
+		
+		</style>
 
     <style name="Night" parent="android:Theme.Holo">
 
@@ -31,7 +33,9 @@
 		<item name="ic_action_hardware_headphones">@drawable/ic_action_hardware_headphones_holo_dark</item>
 		<item name="ic_action_location_web_site">@drawable/ic_action_location_web_site_holo_dark</item>
 		<item name="ic_action_social_chat">@drawable/ic_action_social_chat_holo_dark</item>
-        
+		<item name="ic_action_av_play">@drawable/ic_action_av_play_holo_dark</item>
+		<item name="ic_action_av_pause">@drawable/ic_action_av_pause_holo_dark</item>
+		
     </style>
 
 </resources>

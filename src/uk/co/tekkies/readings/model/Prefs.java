@@ -9,7 +9,7 @@ public class Prefs {
 
     public static final String PREF_PASSAGE_TEXT_SIZE = "passageTextSize";
     public static final String PREF_MP3_BASE_PATH = "mp3BasePath";
-    private static final String PREF_MP3_PRODUCT = "mp3Product";
+    public static final String PREF_MP3_PRODUCT = "mp3Product";
 
     SharedPreferences sharedPreferences;
 
@@ -33,6 +33,10 @@ public class Prefs {
         editor.commit();
     }
 
+    public String loadString(String key, String defaultValue) {
+        return sharedPreferences.getString(key, defaultValue);
+    }
+    
     public double loadPassageTextSize() {
         return sharedPreferences.getFloat(PREF_PASSAGE_TEXT_SIZE, 1);
     }
@@ -45,9 +49,9 @@ public class Prefs {
      * @return Empty string if no path set
      */
     public String loadMp3Product() {
-        return sharedPreferences.getString(PREF_MP3_PRODUCT, "");
+        return loadString(PREF_MP3_PRODUCT, "");
     }
-
+    
     public void saveMp3Product(String product) {
         saveString(PREF_MP3_PRODUCT, product);
     }

@@ -25,11 +25,20 @@
 			    android:layout_height="wrap_content"
 			    android:text="Play" />
 
-			<Button
-			    android:id="@+id/button_search"
-			    android:layout_width="wrap_content"
-			    android:layout_height="wrap_content"
-			    android:text="Search" />
+        <ImageView
+            android:id="@+id/button_play_pause2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:src="?ic_action_av_play"
+            android:contentDescription="@string/listen" />
+
+        <SeekBar
+            android:id="@+id/seekBar1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1" />
 						
 		</LinearLayout>
 
