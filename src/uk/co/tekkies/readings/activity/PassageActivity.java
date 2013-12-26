@@ -20,10 +20,16 @@ import uk.co.tekkies.readings.R;
 import uk.co.tekkies.readings.ReadingsApplication;
 import uk.co.tekkies.readings.fragment.PassageFragment;
 import uk.co.tekkies.readings.model.ParcelableReadings;
+import uk.co.tekkies.readings.service.PlayerService;
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ComponentName;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -32,12 +38,14 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
-public class PassageActivity extends BaseActivity {
+public class PassageActivity extends BaseActivity implements PlayerService.IPlayerServiceListenerInterface {
 
     PagerAdapter pagerAdapter;
     ViewPager viewPager;
     private ParcelableReadings passableReadings;
+    private PlayerService.IServiceInterface serviceInterface = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -152,5 +160,45 @@ public class PassageActivity extends BaseActivity {
     public ParcelableReadings getPassableReadings() {
         return passableReadings;
     }
+
+    public void bindService() {
+        if(PlayerService.isServiceRunning(this)) {
+            bindService(new Intent(this, PlayerService.class), serviceConnection, Activity.BIND_AUTO_CREATE);
+        }
+    }
+    
+    public PassageActivity getPassageActivity() {
+        return this;
+    }
+    
+    // The service connection to talk to the service
+    private ServiceConnection serviceConnection = new ServiceConnection() {
+          public void onServiceConnected(ComponentName className, IBinder binder) {
+              serviceInterface = (PlayerService.IServiceInterface) binder;
+
+              try {
+                  serviceInterface.registerActivity(PassageActivity.this, getPassageActivity());
+              } catch (Throwable t) {
+              }
+          }
+
+          public void onServiceDisconnected(ComponentName className) {
+              serviceInterface = null;
+          }
+      };
+
+                                      
+protected void onDestroy() {
+    super.onDestroy();
+    serviceInterface.unregisterActivity(this);
+    unbindService(serviceConnection);
+};                                      
+                         
+
+@Override
+public void setPassageId(int passageId) {
+    Toast.makeText(this, "PassageID="+passageId, Toast.LENGTH_SHORT).show();
+}
+
 
 }

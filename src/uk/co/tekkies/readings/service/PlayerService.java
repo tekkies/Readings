@@ -1,12 +1,15 @@
 package uk.co.tekkies.readings.service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import uk.co.tekkies.readings.R;
 import uk.co.tekkies.readings.activity.PassageActivity;
 import uk.co.tekkies.readings.model.ParcelableReadings;
 import uk.co.tekkies.readings.model.content.Mp3ContentLocator;
 
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -16,10 +19,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.net.Uri;
+import android.os.Binder;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
@@ -38,10 +43,26 @@ public class PlayerService extends Service implements OnCompletionListener {
     NotificationCompat.Builder notificationBuilder;
     int passageId=0;
     Boolean beep = false;
+    
+    private final Binder                      binder     = new LocalBinder();
+    private Map<Activity, IPlayerServiceListenerInterface> clients    = new ConcurrentHashMap<Activity, IPlayerServiceListenerInterface>();
+    
+    public interface IPlayerServiceListenerInterface {
+        void setPassageId(int passageId);
+    }
+    
+    public interface IServiceInterface {
+
+        void registerActivity(Activity activity, IPlayerServiceListenerInterface callback);
+
+        void unregisterActivity(Activity activity);
+
+        int getPlayerPosition();
+    }
 
     @Override
     public IBinder onBind(Intent intent) {
-        return null;
+        return binder;
     }
 
     @Override
@@ -131,6 +152,10 @@ public class PlayerService extends Service implements OnCompletionListener {
         mediaPlayer.setOnCompletionListener(this);
         mediaPlayer.start();
         updateOngoingNotification("Passage:"+passageId);
+        
+        for (Activity client : clients.keySet()) {
+            clients.get(client).setPassageId(passageId);
+        }
     }
 
     private void updateOngoingNotification(String contentText) {
@@ -183,4 +208,22 @@ public class PlayerService extends Service implements OnCompletionListener {
         mediaPlayer.start();
     }
 
+    
+    public class LocalBinder extends Binder implements IServiceInterface {
+
+        // Registers a Activity to receive updates
+        public void registerActivity(Activity activity, IPlayerServiceListenerInterface callback) {
+            clients.put(activity, callback);
+        }
+
+        public void unregisterActivity(Activity activity) {
+            clients.remove(activity);
+        }
+        
+        @Override
+        public int getPlayerPosition() {
+            return 50;
+        }
+    }
+    
 }
