@@ -7,7 +7,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@id/scrollView1">"
+        android:id="@id/scrollView1">
 
 		<LinearLayout 
 		    android:layout_width="match_parent"
@@ -19,26 +19,21 @@
         	android:layout_height="wrap_content"
 		    android:orientation="horizontal">
 
-			<Button
-			    android:id="@+id/button_play_pause"
-			    android:layout_width="wrap_content"
-			    android:layout_height="wrap_content"
-			    android:text="Play" />
-
         <ImageView
-            android:id="@+id/button_play_pause2"
+            android:id="@+id/button_play_pause"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:src="?ic_action_av_play"
-            android:contentDescription="@string/listen" />
+            android:contentDescription="@string/listen"
+            android:padding="20dp"
+            android:src="?ic_action_av_play" />
 
         <SeekBar
             android:id="@+id/seekBar1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:padding="20dp" />
 						
 		</LinearLayout>
 

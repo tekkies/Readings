@@ -41,7 +41,6 @@ import android.view.ScaleGestureDetector.SimpleOnScaleGestureListener;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -56,8 +55,7 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
     String passage = "Unknown";
     int passageId = 0;
     Prefs prefs;
-    Button playButton;
-    ImageView playButton2;
+    ImageView playPauseButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -76,10 +74,9 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
                 getString(R.string.pref_key_night_mode), false)) {
             textView.setTextColor(Color.GRAY);
         }
-        playButton = (Button) mainView.findViewById(R.id.button_play_pause);
-        playButton.setText(PlayerService.isServiceRunning(getActivity()) ? "Pause" : "Play");
-        playButton.setOnClickListener(this);
-        playButton2 = (ImageView) mainView.findViewById(R.id.button_play_pause2);
+        playPauseButton = (ImageView) mainView.findViewById(R.id.button_play_pause);
+        playPauseButton.setImageResource(resolveThemeAttribute(PlayerService.isServiceRunning(getActivity()) ? R.attr.ic_action_av_pause : R.attr.ic_action_av_play));
+        playPauseButton.setOnClickListener(this);
         loadTextSize();
         registerGestureDetector(mainView);
         return mainView;
@@ -223,8 +220,7 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
                 doPlay();
             } else {
                 PlayerService.requestStop(getActivity());
-                playButton.setText("Play");
-                playButton2.setImageResource(resolveThemeAttribute(R.attr.ic_action_av_play));
+                playPauseButton.setImageResource(resolveThemeAttribute(R.attr.ic_action_av_play));
             }
         }
     }
@@ -237,8 +233,7 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
 
     private void doPlay() {
         PlayerService.requestPlay((PassageActivity)getActivity(), passageId);
-        playButton.setText("Stop");
-        playButton2.setImageResource(resolveThemeAttribute(R.attr.ic_action_av_pause));
+        playPauseButton.setImageResource(resolveThemeAttribute(R.attr.ic_action_av_pause));
     }
     
     private void doSearch() {
