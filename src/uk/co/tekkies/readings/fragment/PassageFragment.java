@@ -43,6 +43,7 @@ import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.widget.ImageView;
 import android.widget.ScrollView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,6 +57,7 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
     int passageId = 0;
     Prefs prefs;
     ImageView playPauseButton;
+    SeekBar seekBar; 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -77,6 +79,8 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
         playPauseButton = (ImageView) mainView.findViewById(R.id.button_play_pause);
         playPauseButton.setImageResource(resolveThemeAttribute(PlayerService.isServiceRunning(getActivity()) ? R.attr.ic_action_av_pause : R.attr.ic_action_av_play));
         playPauseButton.setOnClickListener(this);
+        seekBar = (SeekBar) mainView.findViewById(R.id.seekBar1);
+        seekBar.setMax(1000);
         loadTextSize();
         registerGestureDetector(mainView);
         return mainView;
@@ -249,4 +253,7 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
         getActivity().finish();
     }
 
+    public void setProgress(int progress) {
+        seekBar.setProgress(progress);       
+    }
 }

@@ -55,6 +55,7 @@ public class PlayerService extends Service implements OnCompletionListener {
         void registerActivity(Activity activity, IClientInterface callback);
         void unregisterActivity(Activity activity);
         int getPassage();
+        int getProgress();
     }
 
     @Override
@@ -212,6 +213,10 @@ public class PlayerService extends Service implements OnCompletionListener {
         @Override
         public int getPassage() {
             return passageId;
+        }
+        @Override
+        public int getProgress() {
+            return (mediaPlayer.getCurrentPosition() * 1000) / mediaPlayer.getDuration();
         }
     }
 

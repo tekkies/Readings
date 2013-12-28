@@ -16,6 +16,8 @@ limitations under the License.
 
 package uk.co.tekkies.readings.activity;
 
+import java.util.WeakHashMap;
+
 import uk.co.tekkies.readings.R;
 import uk.co.tekkies.readings.ReadingsApplication;
 import uk.co.tekkies.readings.fragment.PassageFragment;
@@ -28,6 +30,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.Fragment;
@@ -46,6 +49,7 @@ public class PassageActivity extends BaseActivity implements PlayerService.IClie
     ViewPager viewPager;
     private ParcelableReadings passableReadings;
     private PlayerService.IServiceInterface serviceInterface = null;
+    private boolean serviceAvailable = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -76,14 +80,17 @@ public class PassageActivity extends BaseActivity implements PlayerService.IClie
     }
 
     public class PagerAdapter extends FragmentStatePagerAdapter {
+        
+        WeakHashMap<Integer, Fragment> fragments=new WeakHashMap<Integer, Fragment>();
+        
         public PagerAdapter(FragmentManager fm) {
             super(fm);
         }
-
+            
         @Override
         public Fragment getItem(int i) {
-
             Fragment fragment = new PassageFragment();
+            fragments.put(i, fragment);
             Bundle args = new Bundle();
             args.putString("passage", getPassableReadings().passages.get(i).getTitle());
             args.putInt("passageId", getPassableReadings().passages.get(i).getPassageId());
@@ -105,6 +112,11 @@ public class PassageActivity extends BaseActivity implements PlayerService.IClie
         public void finishUpdate(ViewGroup container) {
             super.finishUpdate(container);
         }
+        
+        public Fragment getFragment(int position) {
+            return fragments.get(position);
+        }
+        
     }
 
     @Override
@@ -162,7 +174,7 @@ public class PassageActivity extends BaseActivity implements PlayerService.IClie
 
     public void bindService() {
         if(PlayerService.isServiceRunning(this)) {
-            bindService(new Intent(this, PlayerService.class), serviceConnection, Activity.BIND_AUTO_CREATE);
+            bindService(new Intent(this, PlayerService.class), getServiceConnection(), Activity.BIND_AUTO_CREATE);
         }
     }
     
@@ -173,7 +185,7 @@ public class PassageActivity extends BaseActivity implements PlayerService.IClie
     protected void onDestroy() {
         super.onDestroy();
         getServiceInterface().unregisterActivity(this);
-        unbindService(serviceConnection);
+        unbindService(getServiceConnection());
     };                                      
     
     @Override
@@ -194,23 +206,63 @@ public class PassageActivity extends BaseActivity implements PlayerService.IClie
             setServiceInterface((PlayerService.IServiceInterface) binder);
             try {
                 getServiceInterface().registerActivity(PassageActivity.this, getPassageActivity());
+                serviceAvailable = true;
+                new ProgressUpdateTask().execute("");
                 Toast.makeText(getPassageActivity(), "PassageID="+getServiceInterface().getPassage(), Toast.LENGTH_SHORT).show();
             } catch (Throwable t) {
             }
         }
 
         public void onServiceDisconnected(ComponentName className) {
+            serviceAvailable = false;
             setServiceInterface(null);
         }
     };
 
     public void unbindPlayerService() {
-        unbindService(serviceConnection);
+        serviceAvailable = false;
+        unbindService(getServiceConnection());
     }
 
     @Override
     public void onEndAll() {
-        unbindService(serviceConnection);
+        unbindService(getServiceConnection());
     }
 
+    public boolean isServiceAvailable() {
+        return serviceAvailable;
+    }
+
+    public ServiceConnection getServiceConnection() {
+        return serviceConnection;
+    }
+
+    public void setServiceConnection(ServiceConnection serviceConnection) {
+        this.serviceConnection = serviceConnection;
+    }
+    
+    private class ProgressUpdateTask extends AsyncTask<String, Integer, Long> {
+        protected Long doInBackground(String... unused) {
+            while(isServiceAvailable()) {
+                try {
+                    publishProgress(getServiceInterface().getProgress());
+                    Thread.sleep(200);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            return 0L;
+        }
+
+        protected void onProgressUpdate(Integer... progress) {
+            PassageFragment passageFragment = (PassageFragment) pagerAdapter.getFragment(viewPager.getCurrentItem());
+            if(passageFragment != null) {
+                passageFragment.setProgress(progress[0]);
+            }
+        }
+
+        protected void onPostExecute(Long result) {
+            //showDialog("Downloaded " + result + " bytes");
+        }
+    }
 }
