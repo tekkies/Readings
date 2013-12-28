@@ -2,47 +2,46 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical" >
+    android:orientation="horizontal"
+    android:padding="10dp" >
+
+    <RadioButton
+        android:id="@+id/radioButton1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:paddingRight="20dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp" >
-        
-        <RadioButton
-            android:id="@+id/radioButton1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:paddingRight="20dp" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+         >
 
         <TextView
             android:id="@+id/passage_title"
-            android:layout_width="0dip"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
-            android:padding="5dp"
             android:tag="Text"
             android:text="@string/Lorem"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
-        <ImageView
-            android:id="@+id/imageAbout"
+        <TextView
+            android:id="@+id/textViewSummary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:src="?ic_action_action_about"
-            android:tag="listen"
-            android:contentDescription="@string/listen" />
-
+            android:text="@string/Lorem" />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/textViewSummary"
+    <ImageView
+        android:id="@+id/imageAbout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-		android:text="@string/Lorem" />
+        android:contentDescription="@string/listen"
+        android:padding="10dp"
+        android:src="?ic_action_action_about"
+        android:tag="listen" />
 
 </LinearLayout>
