@@ -40,7 +40,7 @@ import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-public class PassageActivity extends BaseActivity implements PlayerService.IPlayerServiceListenerInterface {
+public class PassageActivity extends BaseActivity implements PlayerService.IClientInterface {
 
     PagerAdapter pagerAdapter;
     ViewPager viewPager;
@@ -105,7 +105,6 @@ public class PassageActivity extends BaseActivity implements PlayerService.IPlay
         public void finishUpdate(ViewGroup container) {
             super.finishUpdate(container);
         }
-
     }
 
     @Override
@@ -171,34 +170,47 @@ public class PassageActivity extends BaseActivity implements PlayerService.IPlay
         return this;
     }
     
-    // The service connection to talk to the service
+    protected void onDestroy() {
+        super.onDestroy();
+        getServiceInterface().unregisterActivity(this);
+        unbindService(serviceConnection);
+    };                                      
+    
+    @Override
+    public void onPassageChange(int passageId) {
+        Toast.makeText(this, "PassageID="+passageId, Toast.LENGTH_SHORT).show();
+    }
+    
+    public PlayerService.IServiceInterface getServiceInterface() {
+        return serviceInterface;
+    }
+
+    public void setServiceInterface(PlayerService.IServiceInterface serviceInterface) {
+        this.serviceInterface = serviceInterface;
+    }
+
     private ServiceConnection serviceConnection = new ServiceConnection() {
-          public void onServiceConnected(ComponentName className, IBinder binder) {
-              serviceInterface = (PlayerService.IServiceInterface) binder;
+        public void onServiceConnected(ComponentName className, IBinder binder) {
+            setServiceInterface((PlayerService.IServiceInterface) binder);
+            try {
+                getServiceInterface().registerActivity(PassageActivity.this, getPassageActivity());
+                Toast.makeText(getPassageActivity(), "PassageID="+getServiceInterface().getPassage(), Toast.LENGTH_SHORT).show();
+            } catch (Throwable t) {
+            }
+        }
 
-              try {
-                  serviceInterface.registerActivity(PassageActivity.this, getPassageActivity());
-              } catch (Throwable t) {
-              }
-          }
+        public void onServiceDisconnected(ComponentName className) {
+            setServiceInterface(null);
+        }
+    };
 
-          public void onServiceDisconnected(ComponentName className) {
-              serviceInterface = null;
-          }
-      };
+    public void unbindPlayerService() {
+        unbindService(serviceConnection);
+    }
 
-                                      
-protected void onDestroy() {
-    super.onDestroy();
-    serviceInterface.unregisterActivity(this);
-    unbindService(serviceConnection);
-};                                      
-                         
-
-@Override
-public void setPassageId(int passageId) {
-    Toast.makeText(this, "PassageID="+passageId, Toast.LENGTH_SHORT).show();
-}
-
+    @Override
+    public void onEndAll() {
+        unbindService(serviceConnection);
+    }
 
 }

@@ -21,17 +21,13 @@ import uk.co.tekkies.readings.activity.ContentLocationActivity;
 import uk.co.tekkies.readings.activity.PassageActivity;
 import uk.co.tekkies.readings.model.Prefs;
 import uk.co.tekkies.readings.service.PlayerService;
-import android.app.Activity;
-import android.content.ComponentName;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.text.Html;
@@ -223,10 +219,15 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
             if (!PlayerService.isServiceRunning(getActivity())) {
                 doPlay();
             } else {
-                PlayerService.requestStop(getActivity());
-                playPauseButton.setImageResource(resolveThemeAttribute(R.attr.ic_action_av_play));
+                doPause();
             }
         }
+    }
+    
+    private void doPause() {
+        ((PassageActivity)getActivity()).unbindPlayerService();
+        PlayerService.requestStop(getActivity());
+        playPauseButton.setImageResource(resolveThemeAttribute(R.attr.ic_action_av_play));
     }
 
     private int resolveThemeAttribute(int attributeId) {
