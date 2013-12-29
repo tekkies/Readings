@@ -21,7 +21,6 @@ import uk.co.tekkies.readings.activity.ContentLocationActivity;
 import uk.co.tekkies.readings.activity.PassageActivity;
 import uk.co.tekkies.readings.model.Prefs;
 import uk.co.tekkies.readings.service.PlayerService;
-import uk.co.tekkies.readings.service.PlayerService.IServiceInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;

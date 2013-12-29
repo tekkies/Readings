@@ -190,7 +190,19 @@ public class PassageActivity extends BaseActivity implements PlayerService.IClie
     
     @Override
     public void onPassageChange(int passageId) {
+        viewPager.setCurrentItem(getPage(passageId));
         Toast.makeText(this, "PassageID="+passageId, Toast.LENGTH_SHORT).show();
+    }
+
+    private int getPage(int passageId) {
+        int page=0;
+        for(int passageIndex=0;passageIndex<passableReadings.passages.size();passageIndex++) {
+            if(passableReadings.passages.get(passageIndex).getPassageId() == passageId) {
+                page = passageIndex;
+                break;
+            }
+        }
+        return page;
     }
     
     public PlayerService.IServiceInterface getServiceInterface() {
