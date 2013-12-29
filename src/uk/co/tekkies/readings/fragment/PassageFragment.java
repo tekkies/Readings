@@ -21,6 +21,7 @@ import uk.co.tekkies.readings.activity.ContentLocationActivity;
 import uk.co.tekkies.readings.activity.PassageActivity;
 import uk.co.tekkies.readings.model.Prefs;
 import uk.co.tekkies.readings.service.PlayerService;
+import uk.co.tekkies.readings.service.PlayerService.IServiceInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -44,10 +45,11 @@ import android.view.View.OnTouchListener;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class PassageFragment extends Fragment implements OnSharedPreferenceChangeListener, OnClickListener {
+public class PassageFragment extends Fragment implements OnSharedPreferenceChangeListener, OnClickListener, OnSeekBarChangeListener {
 
     TextView textView;
     ScaleGestureDetector scaleGestureDetector;
@@ -80,6 +82,7 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
         playPauseButton.setImageResource(resolveThemeAttribute(PlayerService.isServiceRunning(getActivity()) ? R.attr.ic_action_av_pause : R.attr.ic_action_av_play));
         playPauseButton.setOnClickListener(this);
         seekBar = (SeekBar) mainView.findViewById(R.id.seekBar1);
+        seekBar.setOnSeekBarChangeListener(this);
         seekBar.setMax(1000);
         loadTextSize();
         registerGestureDetector(mainView);
@@ -255,5 +258,21 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
 
     public void setProgress(int progress) {
         seekBar.setProgress(progress);       
+    }
+
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+        PassageActivity passageActivity = (PassageActivity)getActivity();
+        if(passageActivity.isServiceAvailable()) {
+            ((PassageActivity)getActivity()).getServiceInterface().setPosition(seekBar.getProgress());
+        }
     }
 }

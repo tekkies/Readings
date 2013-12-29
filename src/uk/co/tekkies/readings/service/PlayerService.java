@@ -56,6 +56,7 @@ public class PlayerService extends Service implements OnCompletionListener {
         void unregisterActivity(Activity activity);
         int getPassage();
         int getProgress();
+        void setPosition(int progressAsThousandth);
     }
 
     @Override
@@ -214,9 +215,21 @@ public class PlayerService extends Service implements OnCompletionListener {
         public int getPassage() {
             return passageId;
         }
+
         @Override
         public int getProgress() {
-            return (mediaPlayer.getCurrentPosition() * 1000) / mediaPlayer.getDuration();
+            int progress=0;
+            if(beep) {
+                progress = 1000;
+            } else {
+                progress = (mediaPlayer.getCurrentPosition() * 1000) / mediaPlayer.getDuration();
+            }
+            return progress;
+        }
+        
+        @Override
+        public void setPosition(int progressAsThousandth) {
+            mediaPlayer.seekTo((mediaPlayer.getDuration() *  progressAsThousandth) / 1000);
         }
     }
 
