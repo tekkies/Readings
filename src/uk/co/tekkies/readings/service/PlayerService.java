@@ -47,8 +47,8 @@ public class PlayerService extends Service implements OnCompletionListener {
 
     public interface IClientInterface {
         void onPassageChange(int passageId);
-
         void onEndAll();
+        void onPassageEnding(int passageId);
     }
 
     public interface IServiceInterface {
@@ -170,6 +170,9 @@ public class PlayerService extends Service implements OnCompletionListener {
     @Override
     public void onCompletion(MediaPlayer mp) {
         if (beep == false) {
+            for (Activity client : clients.keySet()) {
+                clients.get(client).onPassageEnding(passageId);
+            }
             doBeep();
         } else {
             beep = false;

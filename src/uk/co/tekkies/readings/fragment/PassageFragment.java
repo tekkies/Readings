@@ -256,7 +256,8 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
     }
 
     public void setProgress(int progress) {
-        seekBar.setProgress(progress);       
+        seekBar.setProgress(progress);
+        
     }
 
     @Override

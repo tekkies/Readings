@@ -190,7 +190,6 @@ public class PassageActivity extends BaseActivity implements PlayerService.IClie
     
     @Override
     public void onPassageChange(int passageId) {
-        viewPager.setCurrentItem(getPage(passageId));
         Toast.makeText(this, "PassageID="+passageId, Toast.LENGTH_SHORT).show();
     }
 
@@ -274,7 +273,15 @@ public class PassageActivity extends BaseActivity implements PlayerService.IClie
         }
 
         protected void onPostExecute(Long result) {
-            //showDialog("Downloaded " + result + " bytes");
+        }
+    }
+
+    @Override
+    public void onPassageEnding(int passageId) {
+        //Advance viewPager when beep starts
+        int nextPage = getPage(passageId)+1;
+        if(nextPage < passableReadings.passages.size()) {
+            viewPager.setCurrentItem(nextPage);
         }
     }
 }
