@@ -32,6 +32,7 @@ import android.util.Log;
 public class PlayerService extends Service implements OnCompletionListener {
 
     private static final String INTENT_EXTRA_PASSAGE_ID = "passageId";
+    private static final String INTENT_EXTRA_POSITION = "position";
     private static final String LOG_TAG = "PLAYER";
     private static final String SERVICE_NAME = "uk.co.tekkies.readings.service.PlayerService";
     private static final String INTENT_STOP = "stop";
@@ -70,7 +71,8 @@ public class PlayerService extends Service implements OnCompletionListener {
         passableReadings = (ParcelableReadings) (intent.getParcelableExtra(ParcelableReadings.PARCEL_NAME));
         startWithOngoingNotification();
         int passageId = intent.getExtras().getInt(INTENT_EXTRA_PASSAGE_ID);
-        doPlay(passageId);
+        int positionAsThousandth = intent.getExtras().getInt(INTENT_EXTRA_POSITION);
+        doPlay(passageId, positionAsThousandth);
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -107,9 +109,10 @@ public class PlayerService extends Service implements OnCompletionListener {
         return serviceRunning;
     }
 
-    public static void requestPlay(PassageActivity passageActivity, int passageId) {
+    public static void requestPlay(PassageActivity passageActivity, int passageId, int positionAsThousandth) {
         Intent intent = new Intent(PlayerService.SERVICE_NAME);
         intent.putExtra(INTENT_EXTRA_PASSAGE_ID, passageId);
+        intent.putExtra(INTENT_EXTRA_POSITION, positionAsThousandth);
         intent.putExtra(ParcelableReadings.PARCEL_NAME, passageActivity.getPassableReadings());
         passageActivity.startService(intent);
     }
@@ -137,13 +140,14 @@ public class PlayerService extends Service implements OnCompletionListener {
         stopSelf();
     }
 
-    private void doPlay(int passageId) {
+    private void doPlay(int passageId, int positionAsThousandth) {
         Log.i(LOG_TAG, "Play:" + passageId);
         this.passageId = passageId;
         beep = false;
         String filePath = Mp3ContentLocator.getPassageFullPath(this, passageId);
         mediaPlayer = MediaPlayer.create(this, Uri.parse(filePath));
         mediaPlayer.setOnCompletionListener(this);
+        setPlayerPosition(positionAsThousandth);
         mediaPlayer.start();
         updateOngoingNotification("Passage:" + passageId);
         for (Activity client : clients.keySet()) {
@@ -186,7 +190,7 @@ public class PlayerService extends Service implements OnCompletionListener {
                 i++;
                 if (i < passableReadings.passages.size()) {
                     // Play next
-                    doPlay(passableReadings.passages.get(i).getPassageId());
+                    doPlay(passableReadings.passages.get(i).getPassageId(), 0);
                 } else {
                     // End
                     for (Activity client : clients.keySet()) {
@@ -223,7 +227,7 @@ public class PlayerService extends Service implements OnCompletionListener {
         public int getProgress() {
             int progress=0;
             if(beep) {
-                progress = 1000;
+                progress = 0;
             } else {
                 progress = (mediaPlayer.getCurrentPosition() * 1000) / mediaPlayer.getDuration();
             }
@@ -231,9 +235,13 @@ public class PlayerService extends Service implements OnCompletionListener {
         }
         
         @Override
-        public void setPosition(int progressAsThousandth) {
-            mediaPlayer.seekTo((mediaPlayer.getDuration() *  progressAsThousandth) / 1000);
+        public void setPosition(int positionAsThousandth) {
+            setPlayerPosition(positionAsThousandth);
         }
+    }
+    
+    private void setPlayerPosition(int positionAsThousandth) {
+        mediaPlayer.seekTo((mediaPlayer.getDuration() *  positionAsThousandth) / 1000);
     }
 
 }

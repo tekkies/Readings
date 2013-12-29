@@ -250,7 +250,7 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
 
     private void doPlay() {
         PassageActivity activity = (PassageActivity)getActivity();
-        PlayerService.requestPlay((PassageActivity)getActivity(), passageId);
+        PlayerService.requestPlay((PassageActivity)getActivity(), passageId, seekBar.getProgress());
         playPauseButton.setImageResource(resolveThemeAttribute(R.attr.ic_action_av_pause));
         activity.bindService();
     }
@@ -263,7 +263,6 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
 
     public void setProgress(int progress) {
         seekBar.setProgress(progress);
-        
     }
 
     @Override
