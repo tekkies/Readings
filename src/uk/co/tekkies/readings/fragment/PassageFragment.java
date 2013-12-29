@@ -78,7 +78,7 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
             textView.setTextColor(Color.GRAY);
         }
         playPauseButton = (ImageView) mainView.findViewById(R.id.button_play_pause);
-        playPauseButton.setImageResource(resolveThemeAttribute(PlayerService.isServiceRunning(getActivity()) ? R.attr.ic_action_av_pause : R.attr.ic_action_av_play));
+        setPlayPauseIcon();
         playPauseButton.setOnClickListener(this);
         seekBar = (SeekBar) mainView.findViewById(R.id.seekBar1);
         seekBar.setOnSeekBarChangeListener(this);
@@ -86,6 +86,12 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
         loadTextSize();
         registerGestureDetector(mainView);
         return mainView;
+    }
+
+    private void setPlayPauseIcon() {
+        if(playPauseButton != null) {
+            playPauseButton.setImageResource(resolveThemeAttribute(PlayerService.isServiceRunning(getActivity()) ? R.attr.ic_action_av_pause : R.attr.ic_action_av_play));
+        }
     }
 
     @Override
@@ -273,6 +279,14 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
         PassageActivity passageActivity = (PassageActivity)getActivity();
         if(passageActivity.isServiceAvailable()) {
             ((PassageActivity)getActivity()).getServiceInterface().setPosition(seekBar.getProgress());
+        }
+    }
+    
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if(isVisibleToUser) {
+            setPlayPauseIcon();
         }
     }
 }
