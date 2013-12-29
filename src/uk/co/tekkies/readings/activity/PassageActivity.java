@@ -237,6 +237,7 @@ public class PassageActivity extends BaseActivity implements PlayerService.IClie
 
     @Override
     public void onEndAll() {
+        serviceAvailable = false;
         unbindService(getServiceConnection());
     }
 

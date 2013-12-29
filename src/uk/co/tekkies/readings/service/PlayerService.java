@@ -229,7 +229,11 @@ public class PlayerService extends Service implements OnCompletionListener {
             if(beep) {
                 progress = 0;
             } else {
-                progress = (mediaPlayer.getCurrentPosition() * 1000) / mediaPlayer.getDuration();
+                try {
+                    progress = (mediaPlayer.getCurrentPosition() * 1000) / mediaPlayer.getDuration();
+                } catch (Exception e) {
+                    //must be the end or some complex race condition 
+                }
             }
             return progress;
         }
