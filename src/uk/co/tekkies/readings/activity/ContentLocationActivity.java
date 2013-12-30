@@ -112,6 +112,7 @@ public class ContentLocationActivity extends BaseActivity implements OnClickList
     private class SearchTask extends AsyncTask<String, String, ArrayList<Mp3ContentLocator>> {
 
         private static final boolean FIND_FIRST_ONLY = false;
+        private static final int MAX_DEPTH = 6;
 
         @Override
         protected ArrayList<Mp3ContentLocator> doInBackground(String... unused) {
@@ -119,7 +120,7 @@ public class ContentLocationActivity extends BaseActivity implements OnClickList
             ArrayList<Mp3ContentLocator> searchLocators = Mp3ContentLocator.createSupportedMp3ContentLocators();
             Mp3ContentLocator.searchResetBasePaths(searchLocators); // Start from nothing
             try {
-                findFile(root, searchLocators);
+                findFile(root, searchLocators, 0);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -142,7 +143,7 @@ public class ContentLocationActivity extends BaseActivity implements OnClickList
             updateSearchViews(false);
         }
 
-        private File findFile(File folder, ArrayList<Mp3ContentLocator> locators) {
+        private File findFile(File folder, ArrayList<Mp3ContentLocator> locators, int level) {
             //Log.v(TAG, "Search:" + folder.getAbsolutePath());
             // Check files in this folder
             File[] files = folder.listFiles();
@@ -170,22 +171,24 @@ public class ContentLocationActivity extends BaseActivity implements OnClickList
                 }
 
                 // Not found at this level. Recurse through the folders
-                for (File child : files) {
-                    publishProgress("Folder: "+child);
-                    if (child.isDirectory()) {
-                        // Do not traverse system folders
-                        if ((folder.getAbsolutePath().indexOf("/proc") != 0)
-                                && (folder.getAbsolutePath().indexOf("/sys") != 0)) {
-                            //Log.v(TAG, "Directory:" + child);
-                            File found = findFile(child, locators);
-                            // TODO: Remove this return if you want to keep
-                            // searching for additional matches (e.g. if 2 mp3
-                            // bibles are installed)
-                            // if found, don't search any more folders
-                            if (FIND_FIRST_ONLY) {
-                                if (found != null) {
-                                    return found; // Pass a found result up the
-                                                  // tree
+                if(level < MAX_DEPTH) {
+                    for (File child : files) {
+                        publishProgress("Folder: "+child);
+                        if (child.isDirectory()) {
+                            // Do not traverse system folders
+                            if ((folder.getAbsolutePath().indexOf("/proc") != 0)
+                                    && (folder.getAbsolutePath().indexOf("/sys") != 0)) {
+                                //Log.v(TAG, "Directory:" + child);
+                                File found = findFile(child, locators, level+1);
+                                // TODO: Remove this return if you want to keep
+                                // searching for additional matches (e.g. if 2 mp3
+                                // bibles are installed)
+                                // if found, don't search any more folders
+                                if (FIND_FIRST_ONLY) {
+                                    if (found != null) {
+                                        return found; // Pass a found result up the
+                                                      // tree
+                                    }
                                 }
                             }
                         }
