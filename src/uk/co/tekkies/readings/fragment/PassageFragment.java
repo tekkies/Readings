@@ -21,6 +21,7 @@ import uk.co.tekkies.readings.activity.ContentLocationActivity;
 import uk.co.tekkies.readings.activity.PassageActivity;
 import uk.co.tekkies.readings.model.Prefs;
 import uk.co.tekkies.readings.service.PlayerService;
+import uk.co.tekkies.readings.util.Analytics;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -88,9 +89,9 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
         return mainView;
     }
 
-    private void setPlayPauseIcon() {
+    public void setPlayPauseIcon() {
         if(playPauseButton != null) {
-            playPauseButton.setImageResource(resolveThemeAttribute(PlayerService.isServiceRunning(getActivity()) ? R.attr.ic_action_av_pause : R.attr.ic_action_av_play));
+            playPauseButton.setImageResource(resolveThemeAttribute(((PassageActivity)getActivity()).isServiceAvailable() ? R.attr.ic_action_av_pause : R.attr.ic_action_av_play));
         }
     }
 
@@ -237,6 +238,7 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
     }
     
     private void doPause() {
+        Analytics.UIClick(getActivity(), "Player-Pause");
         ((PassageActivity)getActivity()).unbindPlayerService();
         PlayerService.requestStop(getActivity());
         playPauseButton.setImageResource(resolveThemeAttribute(R.attr.ic_action_av_play));
@@ -249,6 +251,7 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
     }
 
     private void doPlay() {
+        Analytics.UIClick(getActivity(), "Player-Play");
         PassageActivity activity = (PassageActivity)getActivity();
         PlayerService.requestPlay((PassageActivity)getActivity(), passageId, seekBar.getProgress());
         playPauseButton.setImageResource(resolveThemeAttribute(R.attr.ic_action_av_pause));
@@ -275,6 +278,7 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
+        Analytics.UIClick(getActivity(), "Player-Seek");
         PassageActivity passageActivity = (PassageActivity)getActivity();
         if(passageActivity.isServiceAvailable()) {
             ((PassageActivity)getActivity()).getServiceInterface().setPosition(seekBar.getProgress());

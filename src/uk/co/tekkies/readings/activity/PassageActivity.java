@@ -239,6 +239,13 @@ public class PassageActivity extends BaseActivity implements PlayerService.IClie
     public void onEndAll() {
         serviceAvailable = false;
         unbindService(getServiceConnection());
+        
+        PassageFragment passageFragment = (PassageFragment) pagerAdapter.getFragment(viewPager.getCurrentItem());
+        if(passageFragment != null) {
+            passageFragment.setPlayPauseIcon();
+        }
+
+        
     }
 
     public boolean isServiceAvailable() {
