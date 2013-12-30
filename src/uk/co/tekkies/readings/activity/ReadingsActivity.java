@@ -82,7 +82,7 @@ public class ReadingsActivity extends BaseActivity implements OnDateSetListener,
         dayDateFormat = new SimpleDateFormat("E");
         thisYearDateFormat = new SimpleDateFormat("E d MMM");
         anotherYearDateFormat = new SimpleDateFormat("E d MMM yy");
-        ReadingsApplication.checkForMP3(this);
+        ReadingsApplication.checkForMP3Plugin(this);
         setContentView(R.layout.readings_activity);
         if(checkForUpgrade()) {
             showWhatsNewDialog();

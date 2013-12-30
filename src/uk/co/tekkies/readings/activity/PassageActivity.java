@@ -55,7 +55,7 @@ public class PassageActivity extends BaseActivity implements PlayerService.IClie
     public void onCreate(Bundle savedInstanceState) {
         setChosenTheme();
         super.onCreate(savedInstanceState);
-        ReadingsApplication.checkForMP3(this);
+        ReadingsApplication.checkForMP3Plugin(this);
         setContentView(R.layout.passage_activity);
         passableReadings = (ParcelableReadings) (getIntent().getParcelableExtra(ParcelableReadings.PARCEL_NAME));
         if(getPassableReadings() != null) {

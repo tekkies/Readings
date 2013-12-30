@@ -27,7 +27,7 @@ import android.content.pm.ResolveInfo;
 public class ReadingsApplication extends Application {
 
     private static ReadingsApplication application;
-    public static Boolean mp3Installed = false;
+    private static Boolean mp3Installed = false;
 
     public ReadingsApplication() {
         super();
@@ -37,20 +37,28 @@ public class ReadingsApplication extends Application {
     public void onCreate() {
     }
 
-    public static void checkForMP3(Context context) {
+    public static void checkForMP3Plugin(Context context) {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setType("vnd.android.cursor.item/vnd.uk.co.tekkies.mp3bible.passage");
         // Look for plugin in packages
         PackageManager pm = context.getPackageManager();
         List<ResolveInfo> list = pm.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
         if (list.size() > 0) {
-            mp3Installed = true;
+            setMp3Installed(true);
         } else {
-            mp3Installed = false;
+            setMp3Installed(false);
         }
     };
 
     public ReadingsApplication getApplication() {
         return application;
+    }
+
+    public static Boolean getMp3Installed() {
+        return mp3Installed;
+    }
+
+    public static void setMp3Installed(Boolean mp3Installed) {
+        ReadingsApplication.mp3Installed = mp3Installed;
     }
 }

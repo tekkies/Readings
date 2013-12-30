@@ -82,7 +82,7 @@ public class PortionArrayAdapter extends ArrayAdapter<Passage> implements OnClic
         view.findViewById(R.id.imageViewReadOnline).setOnClickListener(this);
         textViewSummary.setOnClickListener(this);
 
-        if (ReadingsApplication.mp3Installed) {
+        if (ReadingsApplication.getMp3Installed()) {
             View listenView = view.findViewById(R.id.imageListen);
             listenView.setVisibility(View.VISIBLE);
             listenView.setOnClickListener(this);

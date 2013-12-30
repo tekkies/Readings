@@ -17,6 +17,7 @@ limitations under the License.
 package uk.co.tekkies.readings.fragment;
 
 import uk.co.tekkies.readings.R;
+import uk.co.tekkies.readings.ReadingsApplication;
 import uk.co.tekkies.readings.activity.ContentLocationActivity;
 import uk.co.tekkies.readings.activity.PassageActivity;
 import uk.co.tekkies.readings.model.Prefs;
@@ -78,15 +79,23 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
                 getString(R.string.pref_key_night_mode), false)) {
             textView.setTextColor(Color.GRAY);
         }
+        
+        if(ReadingsApplication.getMp3Installed() || new Prefs(getActivity()).loadMp3Product().length() > 0) {
+            setupMediaControls(mainView);
+        }
+        loadTextSize();
+        registerGestureDetector(mainView);
+        return mainView;
+    }
+
+    private void setupMediaControls(View mainView) {
+        mainView.findViewById(R.id.layoutMediaControls).setVisibility(View.VISIBLE);
         playPauseButton = (ImageView) mainView.findViewById(R.id.button_play_pause);
         setPlayPauseIcon();
         playPauseButton.setOnClickListener(this);
         seekBar = (SeekBar) mainView.findViewById(R.id.seekBar1);
         seekBar.setOnSeekBarChangeListener(this);
         seekBar.setMax(1000);
-        loadTextSize();
-        registerGestureDetector(mainView);
-        return mainView;
     }
 
     public void setPlayPauseIcon() {
