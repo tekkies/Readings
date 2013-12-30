@@ -8,6 +8,9 @@ import java.util.Comparator;
 import uk.co.tekkies.readings.R;
 import uk.co.tekkies.readings.adapter.Mp3ContentArrayAdapter;
 import uk.co.tekkies.readings.model.content.Mp3ContentLocator;
+import uk.co.tekkies.readings.util.Analytics;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -46,6 +49,7 @@ public class ContentLocationActivity extends BaseActivity implements OnClickList
         setContentView(R.layout.mp3_search_activity);
         searchButton = (Button) findViewById(R.id.button_search);
         searchButton.setOnClickListener(this);
+        findViewById(R.id.button_help).setOnClickListener(this);
         progressBar = (ProgressBar) findViewById(R.id.progressBar1);
         searchStatus = (TextView) findViewById(R.id.textView_mp3location);
         listView = (ListView) findViewById(R.id.list_view);
@@ -61,18 +65,25 @@ public class ContentLocationActivity extends BaseActivity implements OnClickList
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        if (id == R.id.button_search) {
-            doSearchForKeyFile();
+        switch(id) {
+        case R.id.button_search:
+                doSearchForKeyFile();
+                break;
+            
+            case R.id.button_help:
+                doHelp();
+                break;
         }
     }
 
-//    private void doTest() {
-//        Mp3ContentLocator content = Mp3ContentLocator.createChosenMp3ContentDescription(this);
-//        if (content != null) {
-//            String mp3File = content.getMp3Path(this, 2);
-//            PlayerService.requestPlay(this, mp3File);
-//        }
-//    }
+    private void doHelp() {
+        Analytics.UIClick(this, "settings-mp3-help");
+        String url = "http://goo.gl/suiico";
+        Intent webIntent = new Intent(Intent.ACTION_VIEW);
+        Uri uri = Uri.parse(url);
+        webIntent.setData(uri);
+        startActivity(webIntent);
+    }
 
     ContentLocationActivity getActivity() {
         return this;
@@ -85,6 +96,7 @@ public class ContentLocationActivity extends BaseActivity implements OnClickList
     }
 
     private void doSearchForKeyFile() {
+        Analytics.UIClick(this, "settings-mp3-search");
         clearMainList();
     	updateSearchViews(true);
         SearchTask searchTask = new SearchTask();
@@ -123,9 +135,18 @@ public class ContentLocationActivity extends BaseActivity implements OnClickList
             mp3ContentLocators = results;
             sortList(mp3ContentLocators);
             Mp3ContentLocator.searchSaveBasePaths(getActivity(), mp3ContentLocators);
+            chooseValidResult();
             mp3ContentArrayAdapter = new Mp3ContentArrayAdapter(getActivity(), mp3ContentLocators);
             listView.setAdapter(mp3ContentArrayAdapter);
             updateSearchViews(false);
+        }
+
+        private void chooseValidResult() {
+//            if(selected is valid) {
+//                keep it
+//            } else if (another is valid) {
+//                select it
+//            }
         }
 
         private File findFile(File folder, ArrayList<Mp3ContentLocator> locators) {
