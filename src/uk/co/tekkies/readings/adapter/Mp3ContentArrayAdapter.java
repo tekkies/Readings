@@ -54,14 +54,10 @@ public class Mp3ContentArrayAdapter extends ArrayAdapter<Mp3ContentLocator> impl
         Boolean contentFound = mp3ContentLocators.get(position).getBasePath().length() != 0;
         //RadioButton
         RadioButton radioButton = (RadioButton) view.findViewById(R.id.radioButton1);
-        radioButton.setChecked(mp3ContentLocators.get(position).getClass().getName().equals(selected));
-        radioButton.setTag(mp3ContentLocators.get(position).getClass().getName());
+        radioButton.setChecked(mp3ContentLocators.get(position).getProduct().equals(getSelected()));
+        radioButton.setTag(mp3ContentLocators.get(position).getProduct());
         radioButton.setOnClickListener(this);
         radioButton.setVisibility(contentFound ? View.VISIBLE : View.INVISIBLE);
-//        //Listen
-//        View listenView = view.findViewById(R.id.imageListen);
-//        listenView.setOnClickListener(this);
-//        listenView.setVisibility(contentFound ? View.VISIBLE : View.GONE);
         //Text
         ((TextView)view.findViewById(R.id.passage_title)).setText(mp3ContentLocators.get(position).getTitle());
         setPathText(position, view);
@@ -87,8 +83,17 @@ public class Mp3ContentArrayAdapter extends ArrayAdapter<Mp3ContentLocator> impl
     }
 
 	private void doRadioButtonClick(View v) {
-		selected = v.getTag().toString();
-		prefs.saveMp3Product(selected);
+		setSelected(v.getTag().toString());
+		prefs.saveMp3Product(getSelected());
 		this.notifyDataSetChanged();
 	}
+
+    public String getSelected() {
+        return selected;
+    }
+
+    public void setSelected(String product) {
+        prefs.saveMp3Product(product);
+        this.selected = product;
+    }
 }

@@ -105,4 +105,8 @@ public abstract class Mp3ContentLocator {
         }
         return passageFullPath;
     }
+
+    public String getProduct() {
+        return getClass().getName();
+    }
 }

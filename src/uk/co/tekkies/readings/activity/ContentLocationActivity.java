@@ -7,6 +7,7 @@ import java.util.Comparator;
 
 import uk.co.tekkies.readings.R;
 import uk.co.tekkies.readings.adapter.Mp3ContentArrayAdapter;
+import uk.co.tekkies.readings.model.Prefs;
 import uk.co.tekkies.readings.model.content.Mp3ContentLocator;
 import uk.co.tekkies.readings.util.Analytics;
 import android.content.Intent;
@@ -141,23 +142,14 @@ public class ContentLocationActivity extends BaseActivity implements OnClickList
             updateSearchViews(false);
         }
 
-        private void chooseValidResult() {
-//            if(selected is valid) {
-//                keep it
-//            } else if (another is valid) {
-//                select it
-//            }
-        }
-
         private File findFile(File folder, ArrayList<Mp3ContentLocator> locators) {
-            publishProgress(folder.getAbsolutePath());
-            Log.v(TAG, "Search:" + folder.getAbsolutePath());
+            //Log.v(TAG, "Search:" + folder.getAbsolutePath());
             // Check files in this folder
             File[] files = folder.listFiles();
             if (files != null) {
                 for (File child : files) {
                     if (child.isFile()) {
-                        Log.v(TAG, "File:" + child);
+                        //Log.v(TAG, "File:" + child);
                         for (int i = 0; i < locators.size(); i++) {
                             Mp3ContentLocator locator = locators.get(i);
                             if (child.getName().contains(locator.searchGetKeyFileName())) {
@@ -183,7 +175,8 @@ public class ContentLocationActivity extends BaseActivity implements OnClickList
                         // Do not traverse system folders
                         if ((folder.getAbsolutePath().indexOf("/proc") != 0)
                                 && (folder.getAbsolutePath().indexOf("/sys") != 0)) {
-                            Log.v(TAG, "Directory:" + child);
+                            //Log.v(TAG, "Directory:" + child);
+                            publishProgress("Folder: "+child);
                             File found = findFile(child, locators);
                             // TODO: Remove this return if you want to keep
                             // searching for additional matches (e.g. if 2 mp3
@@ -201,6 +194,36 @@ public class ContentLocationActivity extends BaseActivity implements OnClickList
             }
             // Not found in this folder. Caller will try next folder
             return null;
+        }
+    }
+
+    private void chooseValidResult() {
+        Prefs prefs = new Prefs(this);
+        String selectedProduct = prefs.loadMp3Product();
+        Boolean valid = false;
+        
+        sortList(mp3ContentLocators);
+        
+        //check if product is valid
+        if(selectedProduct.length() != 0) {
+            for (Mp3ContentLocator locator: mp3ContentLocators) {
+                if(locator.getProduct() == selectedProduct) {
+                    if(locator.getBasePath().length() != 0) {
+                        valid = true;
+                    }
+                    break;
+                }
+            }
+        }
+        
+        if(!valid) {
+            //choose first valid item
+            for (Mp3ContentLocator locator: mp3ContentLocators) {
+                if(locator.getBasePath().length() > 0) {
+                    prefs.saveMp3Product(locator.getProduct());
+                    break;
+                }
+            }
         }
     }
 
