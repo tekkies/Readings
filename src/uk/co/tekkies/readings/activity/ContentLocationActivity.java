@@ -171,12 +171,12 @@ public class ContentLocationActivity extends BaseActivity implements OnClickList
 
                 // Not found at this level. Recurse through the folders
                 for (File child : files) {
+                    publishProgress("Folder: "+child);
                     if (child.isDirectory()) {
                         // Do not traverse system folders
                         if ((folder.getAbsolutePath().indexOf("/proc") != 0)
                                 && (folder.getAbsolutePath().indexOf("/sys") != 0)) {
                             //Log.v(TAG, "Directory:" + child);
-                            publishProgress("Folder: "+child);
                             File found = findFile(child, locators);
                             // TODO: Remove this return if you want to keep
                             // searching for additional matches (e.g. if 2 mp3
