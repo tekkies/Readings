@@ -7,8 +7,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import uk.co.tekkies.readings.R;
 import uk.co.tekkies.readings.activity.PassageActivity;
 import uk.co.tekkies.readings.model.ParcelableReadings;
+import uk.co.tekkies.readings.model.Passage;
 import uk.co.tekkies.readings.model.content.Mp3ContentLocator;
-
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.Notification;
@@ -69,24 +69,30 @@ public class PlayerService extends Service implements OnCompletionListener {
     public int onStartCommand(Intent intent, int flags, int startId) {
         registerPlayerBroadcastReceiver();
         passableReadings = (ParcelableReadings) (intent.getParcelableExtra(ParcelableReadings.PARCEL_NAME));
-        startWithOngoingNotification();
         int passageId = intent.getExtras().getInt(INTENT_EXTRA_PASSAGE_ID);
+        startWithOngoingNotification(passageId);
         int positionAsThousandth = intent.getExtras().getInt(INTENT_EXTRA_POSITION);
         doPlay(passageId, positionAsThousandth);
         return super.onStartCommand(intent, flags, startId);
     }
 
-    private void startWithOngoingNotification() {
+    private void startWithOngoingNotification(int passageId) {
         TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(this).addParentStack(PassageActivity.class);
+        String title = getNotificationTitle(passageId);
+        String content = getPassageTitles();
         taskStackBuilder.addNextIntent(new Intent(this, PassageActivity.class).putExtra(ParcelableReadings.PARCEL_NAME,
                 passableReadings));
-        notificationBuilder = new NotificationCompat.Builder(this).setTicker("Ticker text")
+        notificationBuilder = new NotificationCompat.Builder(this).setTicker(getPassageTitle(passageId))
                 .setSmallIcon(R.drawable.ic_action_av_play_holo_dark)
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher))
-                .setContentTitle("Content Title").setContentText("ContentText").setAutoCancel(true)
+                .setContentTitle(title).setContentText(content).setAutoCancel(true)
                 .setContentIntent(taskStackBuilder.getPendingIntent(0, PendingIntent.FLAG_CANCEL_CURRENT));
         notification = notificationBuilder.build();
         startForeground((int) Notification.FLAG_FOREGROUND_SERVICE, notification);
+    }
+
+    private String getNotificationTitle(int passageId) {
+        return getString(R.string.app_name)+":"+getPassageTitle(passageId);
     }
 
     private void registerPlayerBroadcastReceiver() {
@@ -149,14 +155,14 @@ public class PlayerService extends Service implements OnCompletionListener {
         mediaPlayer.setOnCompletionListener(this);
         setPlayerPosition(positionAsThousandth);
         mediaPlayer.start();
-        updateOngoingNotification("Passage:" + passageId);
+        updateOngoingNotification(getNotificationTitle(passageId));
         for (Activity client : clients.keySet()) {
             clients.get(client).onPassageChange(passageId);
         }
     }
 
-    private void updateOngoingNotification(String contentText) {
-        notificationBuilder.setContentText(contentText);
+    private void updateOngoingNotification(String contentTitle) {
+        notificationBuilder.setContentTitle(contentTitle);
         ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).notify(
                 (int) Notification.FLAG_FOREGROUND_SERVICE, notificationBuilder.build());
     }
@@ -246,6 +252,27 @@ public class PlayerService extends Service implements OnCompletionListener {
     
     private void setPlayerPosition(int positionAsThousandth) {
         mediaPlayer.seekTo((mediaPlayer.getDuration() *  positionAsThousandth) / 1000);
+    }
+    
+    protected String getPassageTitle(int passageId) {
+        String passageName = "Unknown";
+        for(Passage passage: passableReadings.passages) {
+            if(passage.getPassageId() == passageId) {
+                passageName = passage.getTitle();
+            }
+        }
+        return passageName;
+    }
+    
+    private String getPassageTitles() {
+        String passageTitles="";
+        for(Passage passage: passableReadings.passages) {
+            if(passageTitles.length() > 0){
+                passageTitles += ", ";
+            }
+            passageTitles += passage.getTitle();
+        }
+        return passageTitles;
     }
 
 }

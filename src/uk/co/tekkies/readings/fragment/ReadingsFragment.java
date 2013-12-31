@@ -82,13 +82,13 @@ public class ReadingsFragment extends Fragment {
     }
 
     public void showReadings() {
-        DatabaseHelper myDbHelper = new DatabaseHelper(getActivity());
+        DatabaseHelper databaseHelper = new DatabaseHelper(getActivity());
         listItems.clear();
         try {
-            SQLiteDatabase db = myDbHelper.getWritableDatabase();
+            SQLiteDatabase sqliteDatabase = databaseHelper.getWritableDatabase();
             String[] params = { Integer.toString(calendar.get(Calendar.MONTH) + 1),
                     Integer.toString(calendar.get(Calendar.DAY_OF_MONTH)) };
-            Cursor cursor = db
+            Cursor cursor = sqliteDatabase
                     .rawQuery(
                             "                            SELECT Coalesce(book.Name || ' ' || override, book.Name || ' ' || passage.chapter) AS passage, summary.summary_text, passage._id"
                                     + "                            FROM plan"
@@ -103,9 +103,10 @@ public class ReadingsFragment extends Fragment {
                         cursor.getInt(2)));
                 cursor.moveToNext();
             }
+            cursor.close();
             adapter.notifyDataSetChanged();
         } finally {
-            myDbHelper.close();
+            databaseHelper.close();
         }
     }
 
