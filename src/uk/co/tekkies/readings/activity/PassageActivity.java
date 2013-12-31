@@ -238,6 +238,9 @@ public class PassageActivity extends BaseActivity implements PlayerService.IClie
 
     public void unbindPlayerService() {
         Log.i(TAG_BIND, "unbindPlayerService");
+        if(serviceInterface != null) {
+            serviceInterface.unregisterActivity(this);
+        }
         if(serviceAvailable) {
             serviceAvailable = false;
             unbindService(getServiceConnection());
@@ -312,9 +315,9 @@ public class PassageActivity extends BaseActivity implements PlayerService.IClie
         if(progressUpdateTask != null) {
             progressUpdateTask.cancel(true);
         }
-        getServiceInterface().unregisterActivity(this);
         unbindPlayerService();
     }
+
     
     @Override
     protected void onResume() {
