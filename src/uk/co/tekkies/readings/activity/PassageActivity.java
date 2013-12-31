@@ -224,6 +224,7 @@ public class PassageActivity extends BaseActivity implements PlayerService.IClie
                 getServiceInterface().registerActivity(PassageActivity.this, getPassageActivity());
                 serviceAvailable = true;
                 progressUpdateTask = new ProgressUpdateTask().execute("");
+                viewPager.setCurrentItem(getPage(getServiceInterface().getPassage()));
                 Toast.makeText(getPassageActivity(), "PassageID="+getServiceInterface().getPassage(), Toast.LENGTH_SHORT).show();
             } catch (Throwable t) {
             }
