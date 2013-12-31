@@ -14,7 +14,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.webkit.WebView;
@@ -180,10 +179,6 @@ public class ContentLocationActivity extends BaseActivity implements OnClickList
                                     && (folder.getAbsolutePath().indexOf("/sys") != 0)) {
                                 //Log.v(TAG, "Directory:" + child);
                                 File found = findFile(child, locators, level+1);
-                                // TODO: Remove this return if you want to keep
-                                // searching for additional matches (e.g. if 2 mp3
-                                // bibles are installed)
-                                // if found, don't search any more folders
                                 if (FIND_FIRST_ONLY) {
                                     if (found != null) {
                                         return found; // Pass a found result up the
