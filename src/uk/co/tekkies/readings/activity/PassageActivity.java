@@ -37,6 +37,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -45,17 +46,22 @@ import android.widget.Toast;
 
 public class PassageActivity extends BaseActivity implements PlayerService.IClientInterface {
 
+    private static final String TAG_BIND = "BIND";
     PagerAdapter pagerAdapter;
     ViewPager viewPager;
     private ParcelableReadings passableReadings;
     private PlayerService.IServiceInterface serviceInterface = null;
+    private AsyncTask<String, Integer, Long> progressUpdateTask;
     private boolean serviceAvailable = false;
+    private PlayerServiceConnection serviceConnection; 
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         setChosenTheme();
         super.onCreate(savedInstanceState);
         ReadingsApplication.checkForMP3Plugin(this);
+        serviceConnection = new PlayerServiceConnection();
         setContentView(R.layout.passage_activity);
         passableReadings = (ParcelableReadings) (getIntent().getParcelableExtra(ParcelableReadings.PARCEL_NAME));
         if(getPassableReadings() != null) {
@@ -64,13 +70,11 @@ public class PassageActivity extends BaseActivity implements PlayerService.IClie
         }
     }
 
-    private void gotoPage(String selected) {
-        for (int page = 0; page < getPassableReadings().passages.size(); page++) {
-            if (getPassableReadings().passages.get(page).getTitle().equalsIgnoreCase(selected)) {
-                viewPager.setCurrentItem(page);
-                break;
-            }
-        }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.activity_passage, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
     private void setupPager() {
@@ -78,7 +82,7 @@ public class PassageActivity extends BaseActivity implements PlayerService.IClie
         viewPager = (ViewPager) findViewById(R.id.pager);
         viewPager.setAdapter(pagerAdapter);
     }
-
+    
     public class PagerAdapter extends FragmentStatePagerAdapter {
         
         WeakHashMap<Integer, Fragment> fragments=new WeakHashMap<Integer, Fragment>();
@@ -119,13 +123,15 @@ public class PassageActivity extends BaseActivity implements PlayerService.IClie
         
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.activity_passage, menu);
-        return super.onCreateOptionsMenu(menu);
+    private void gotoPage(String selected) {
+        for (int page = 0; page < getPassableReadings().passages.size(); page++) {
+            if (getPassableReadings().passages.get(page).getTitle().equalsIgnoreCase(selected)) {
+                viewPager.setCurrentItem(page);
+                break;
+            }
+        }
     }
-
+    
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -172,8 +178,9 @@ public class PassageActivity extends BaseActivity implements PlayerService.IClie
         return passableReadings;
     }
 
-    public void bindService() {
+    public void bindPlayerService() {
         if(PlayerService.isServiceRunning(this)) {
+            Log.i(TAG_BIND, "bindPlayerService");
             bindService(new Intent(this, PlayerService.class), getServiceConnection(), Activity.BIND_AUTO_CREATE);
         }
     }
@@ -181,12 +188,6 @@ public class PassageActivity extends BaseActivity implements PlayerService.IClie
     public PassageActivity getPassageActivity() {
         return this;
     }
-    
-    protected void onDestroy() {
-        super.onDestroy();
-        getServiceInterface().unregisterActivity(this);
-        unbindService(getServiceConnection());
-    };                                      
     
     @Override
     public void onPassageChange(int passageId) {
@@ -212,40 +213,48 @@ public class PassageActivity extends BaseActivity implements PlayerService.IClie
         this.serviceInterface = serviceInterface;
     }
 
-    private ServiceConnection serviceConnection = new ServiceConnection() {
+   
+    public class PlayerServiceConnection implements ServiceConnection
+    {
+
         public void onServiceConnected(ComponentName className, IBinder binder) {
+            Log.i(TAG_BIND, "onServiceConnected");
             setServiceInterface((PlayerService.IServiceInterface) binder);
             try {
                 getServiceInterface().registerActivity(PassageActivity.this, getPassageActivity());
                 serviceAvailable = true;
-                new ProgressUpdateTask().execute("");
+                progressUpdateTask = new ProgressUpdateTask().execute("");
                 Toast.makeText(getPassageActivity(), "PassageID="+getServiceInterface().getPassage(), Toast.LENGTH_SHORT).show();
             } catch (Throwable t) {
             }
         }
 
         public void onServiceDisconnected(ComponentName className) {
+            Log.i(TAG_BIND, "onServiceDisconnected");
             serviceAvailable = false;
             setServiceInterface(null);
         }
     };
 
     public void unbindPlayerService() {
-        serviceAvailable = false;
-        unbindService(getServiceConnection());
+        Log.i(TAG_BIND, "unbindPlayerService");
+        if(serviceAvailable) {
+            serviceAvailable = false;
+            unbindService(getServiceConnection());
+        }
     }
 
     @Override
     public void onEndAll() {
-        serviceAvailable = false;
-        unbindService(getServiceConnection());
-        
-        PassageFragment passageFragment = (PassageFragment) pagerAdapter.getFragment(viewPager.getCurrentItem());
+        unbindPlayerService();
+        PassageFragment passageFragment = getCurrentPageFragment();
         if(passageFragment != null) {
             passageFragment.setPlayPauseIcon();
         }
+    }
 
-        
+    private PassageFragment getCurrentPageFragment() {
+        return (PassageFragment) pagerAdapter.getFragment(viewPager.getCurrentItem());
     }
 
     public boolean isServiceAvailable() {
@@ -256,7 +265,7 @@ public class PassageActivity extends BaseActivity implements PlayerService.IClie
         return serviceConnection;
     }
 
-    public void setServiceConnection(ServiceConnection serviceConnection) {
+    public void setServiceConnection(PlayerServiceConnection serviceConnection) {
         this.serviceConnection = serviceConnection;
     }
     
@@ -274,9 +283,13 @@ public class PassageActivity extends BaseActivity implements PlayerService.IClie
         }
 
         protected void onProgressUpdate(Integer... progress) {
-            PassageFragment passageFragment = (PassageFragment) pagerAdapter.getFragment(viewPager.getCurrentItem());
-            if(passageFragment != null) {
-                passageFragment.setProgress(progress[0]);
+            try {
+                PassageFragment passageFragment = getCurrentPageFragment();
+                if(passageFragment != null) {
+                    passageFragment.setProgress(progress[0]);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
 
@@ -291,5 +304,21 @@ public class PassageActivity extends BaseActivity implements PlayerService.IClie
         if(nextPage < passableReadings.passages.size()) {
             viewPager.setCurrentItem(nextPage);
         }
+    }
+    
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(progressUpdateTask != null) {
+            progressUpdateTask.cancel(true);
+        }
+        getServiceInterface().unregisterActivity(this);
+        unbindPlayerService();
+    }
+    
+    @Override
+    protected void onResume() {
+        super.onResume();
+        bindPlayerService();
     }
 }

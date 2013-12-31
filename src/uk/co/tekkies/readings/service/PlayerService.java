@@ -81,7 +81,7 @@ public class PlayerService extends Service implements OnCompletionListener {
         taskStackBuilder.addNextIntent(new Intent(this, PassageActivity.class).putExtra(ParcelableReadings.PARCEL_NAME,
                 passableReadings));
         notificationBuilder = new NotificationCompat.Builder(this).setTicker("Ticker text")
-                .setSmallIcon(R.drawable.ic_action_hardware_headphones_holo_dark)
+                .setSmallIcon(R.drawable.ic_action_av_play_holo_dark)
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher))
                 .setContentTitle("Content Title").setContentText("ContentText").setAutoCancel(true)
                 .setContentIntent(taskStackBuilder.getPendingIntent(0, PendingIntent.FLAG_CANCEL_CURRENT));
