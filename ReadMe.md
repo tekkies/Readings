@@ -1,6 +1,4 @@
-# Download Binary #
-
-Try it out!
+# Daily Bible Reading #
 
 <a href="http://goo.gl/dHdjhS">
 <img class="alignright" alt="Get it on Google Play" src="https://developer.android.com/images/brand/en_generic_rgb_wo_45.png" width="129" height="45" />

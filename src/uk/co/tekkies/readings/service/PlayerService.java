@@ -20,6 +20,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.BitmapFactory;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.net.Uri;
@@ -45,7 +46,7 @@ public class PlayerService extends Service implements OnCompletionListener {
     Boolean beep = false;
     private final Binder binder = new PlayerServiceBinder();
     private Map<Activity, IClientInterface> clients = new ConcurrentHashMap<Activity, IClientInterface>();
-
+    
     public interface IClientInterface {
         void onPassageChange(int passageId);
         void onEndAll();
@@ -99,6 +100,7 @@ public class PlayerService extends Service implements OnCompletionListener {
         playerBroadcastReceiver = new PlayerBroadcastReceiver();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(INTENT_STOP);
+        intentFilter.addAction(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
         registerReceiver(playerBroadcastReceiver, intentFilter);
     }
 
@@ -131,7 +133,10 @@ public class PlayerService extends Service implements OnCompletionListener {
     class PlayerBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equals(INTENT_STOP)) {
+            String action = intent.getAction();
+            if (action.equals(INTENT_STOP)) {
+                doStop();
+            } else if (action.equals(AudioManager.ACTION_AUDIO_BECOMING_NOISY)) {
                 doStop();
             }
         }
@@ -139,6 +144,9 @@ public class PlayerService extends Service implements OnCompletionListener {
 
     private void doStop() {
         Log.i(LOG_TAG, "Stop");
+        for (Activity client : clients.keySet()) {
+            clients.get(client).onEndAll();
+        }
         passageId = 0;
         notification = null;
         mediaPlayer.stop();
@@ -199,9 +207,6 @@ public class PlayerService extends Service implements OnCompletionListener {
                     doPlay(passableReadings.passages.get(i).getPassageId(), 0);
                 } else {
                     // End
-                    for (Activity client : clients.keySet()) {
-                        clients.get(client).onEndAll();
-                    }
                     doStop();
                 }
                 break;
@@ -274,5 +279,6 @@ public class PlayerService extends Service implements OnCompletionListener {
         }
         return passageTitles;
     }
+    
 
 }
