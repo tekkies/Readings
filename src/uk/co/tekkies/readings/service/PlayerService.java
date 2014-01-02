@@ -170,7 +170,7 @@ public class PlayerService extends Service implements OnCompletionListener {
     }
 
     private void updateOngoingNotification(String contentTitle) {
-        notificationBuilder.setContentTitle(contentTitle);
+        notificationBuilder.setContentTitle(contentTitle).setTicker(getPassageTitle(passageId));
         ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).notify(
                 (int) Notification.FLAG_FOREGROUND_SERVICE, notificationBuilder.build());
     }
