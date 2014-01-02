@@ -2,6 +2,7 @@ package uk.co.tekkies.readings.util;
 
 import uk.co.tekkies.readings.R;
 import uk.co.tekkies.readings.activity.BaseActivity;
+import uk.co.tekkies.readings.model.Prefs;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -41,9 +42,9 @@ public class Analytics {
     }
 
     private static boolean isEnabled(Context context) {
-        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(
-                context.getString(R.string.pref_key_enable_analytics), true);
+        return (new Prefs(context)).loadAnalyticsEnabled();
     }
+
 
     private static void SendEvent(Context context, String category, String action, String label, long value) {
         if (isEnabled(context)) {
