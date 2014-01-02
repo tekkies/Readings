@@ -9,6 +9,10 @@ Try it out!
 
 Beta build available in the G+ community [(http://goo.gl/6yw8X9)](http://goo.gl/6yw8X9)
 
+
+![alt tag](https://raw.github.com/tekkies/Readings/master/Screenshots%20in%20nexus.png)
+
+
 # Build #
 
 Build using [Eclipse/ADT](http://developer.android.com/sdk/installing/installing-adt.html) - Just import the project into the Eclipse workspace.
