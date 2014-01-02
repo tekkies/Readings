@@ -21,6 +21,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.BitmapFactory;
 import android.media.AudioManager;
+import android.media.AudioManager.OnAudioFocusChangeListener;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.net.Uri;
@@ -30,7 +31,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 
-public class PlayerService extends Service implements OnCompletionListener {
+public class PlayerService extends Service implements OnCompletionListener, OnAudioFocusChangeListener {
 
     private static final String INTENT_EXTRA_PASSAGE_ID = "passageId";
     private static final String INTENT_EXTRA_POSITION = "position";
@@ -144,28 +145,33 @@ public class PlayerService extends Service implements OnCompletionListener {
 
     private void doStop() {
         Log.i(LOG_TAG, "Stop");
+        abandonAudioFocus();
         for (Activity client : clients.keySet()) {
             clients.get(client).onEndAll();
         }
         passageId = 0;
         notification = null;
-        mediaPlayer.stop();
+        if(mediaPlayer.isPlaying()) {
+            mediaPlayer.stop();
+        }
         mediaPlayer.release();
         stopSelf();
     }
 
     private void doPlay(int passageId, int positionAsThousandth) {
         Log.i(LOG_TAG, "Play:" + passageId);
-        this.passageId = passageId;
-        beep = false;
-        String filePath = Mp3ContentLocator.getPassageFullPath(this, passageId);
-        mediaPlayer = MediaPlayer.create(this, Uri.parse(filePath));
-        mediaPlayer.setOnCompletionListener(this);
-        setPlayerPosition(positionAsThousandth);
-        mediaPlayer.start();
-        updateOngoingNotification(getNotificationTitle(passageId));
-        for (Activity client : clients.keySet()) {
-            clients.get(client).onPassageChange(passageId);
+        if(getAudioFocus()) {
+            this.passageId = passageId;
+            beep = false;
+            String filePath = Mp3ContentLocator.getPassageFullPath(this, passageId);
+            mediaPlayer = MediaPlayer.create(this, Uri.parse(filePath));
+            mediaPlayer.setOnCompletionListener(this);
+            setPlayerPosition(positionAsThousandth);
+            mediaPlayer.start();
+            updateOngoingNotification(getNotificationTitle(passageId));
+            for (Activity client : clients.keySet()) {
+                clients.get(client).onPassageChange(passageId);
+            }
         }
     }
 
@@ -279,6 +285,41 @@ public class PlayerService extends Service implements OnCompletionListener {
         }
         return passageTitles;
     }
-    
 
+    private boolean getAudioFocus() {
+        AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        return (audioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN) == AudioManager.AUDIOFOCUS_REQUEST_GRANTED);
+    }
+
+    private void abandonAudioFocus() {
+        AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        audioManager.abandonAudioFocus(this);
+    }
+    
+    public void onAudioFocusChange(int focusChange) {
+        switch (focusChange) {
+            case AudioManager.AUDIOFOCUS_GAIN:
+                if(!mediaPlayer.isPlaying()) {
+                    mediaPlayer.start();
+                }
+                break;
+
+            case AudioManager.AUDIOFOCUS_LOSS:
+                doStop();
+                break;
+
+            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
+                if (mediaPlayer.isPlaying()) {
+                    mediaPlayer.pause();
+                }
+                break;
+
+            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
+                if (mediaPlayer.isPlaying()) {
+                    mediaPlayer.pause();
+                }
+                //mediaPlayer.setVolume(1.0f, 1.0f);
+                break;
+        }
+    }
 }
