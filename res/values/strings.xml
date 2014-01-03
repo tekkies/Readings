@@ -18,6 +18,8 @@
 \nSee the License for the specific language governing permissions and
 \nlimitations under the License.
 \n
+\nThis app collects anonymous statistics/crash reports.  This can be disabled in settings.
+\n
 \nSome assets (e.g. icons) were created using the Android Asset Studio
 \n
 </string>

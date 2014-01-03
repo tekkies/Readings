@@ -18,15 +18,20 @@
 
 		<TextView android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
-				android:text="Note: Anonymous statistics/crash reports can be disabled in settings" />
+				android:text="Note: This app collects anonymous statistics/crash reports.  This can be disabled in settings." />
             
-            
-			<TextView android:layout_width="fill_parent" android:layout_marginTop="10dp"
-				android:layout_height="wrap_content" android:text="Version 3.1.58"
+            <TextView android:layout_width="fill_parent" android:layout_marginTop="10dp"
+				android:layout_height="wrap_content" android:text="Version 3.2.0"
 				android:textStyle="bold" />
+			<ImageView
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:src="@drawable/whats_new_integrated_player"
+			    android:padding = "10dp" />
 			<TextView android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
-				android:text="- Integrated MP3 player preview" />
+				android:text="- Integrated MP3 player if compatable MP3 files installed
+							\n      - Menu > Settings -> MP3"/>
 
             <TextView android:layout_width="fill_parent" android:layout_marginTop="10dp"
 				android:layout_height="wrap_content" android:text="Version 3.1.52"
@@ -43,7 +48,8 @@
 			<ImageView
 			    android:layout_width="wrap_content"
 			    android:layout_height="wrap_content"
-			    android:src="@drawable/ic_whats_new_icon_change" />
+			    android:src="@drawable/ic_whats_new_icon_change"
+			    android:padding = "10dp" />
 			<TextView android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
 				android:text="- New icon" />
@@ -55,7 +61,8 @@
 			<ImageView
 			    android:layout_width="wrap_content"
 			    android:layout_height="wrap_content"
-			    android:src="@drawable/whats_new_swipe_between_readings" />
+			    android:src="@drawable/whats_new_swipe_between_readings" 
+			    android:padding = "10dp"/>
 			<TextView android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
 				android:text="- Swipe between passages of the day
