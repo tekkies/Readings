@@ -2,6 +2,7 @@ package uk.co.tekkies.readings.model;
 
 import uk.co.tekkies.readings.R;
 import uk.co.tekkies.readings.model.content.Mp3ContentLocator;
+import uk.co.tekkies.readings.util.Analytics;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -71,6 +72,7 @@ public class Prefs {
     }
     
     public void saveMp3Product(String product) {
+        Analytics.PrefsChange(context, PREF_MP3_PRODUCT);
         saveString(PREF_MP3_PRODUCT, product);
     }
 
