@@ -121,7 +121,7 @@ public class ContentLocationActivity extends BaseActivity implements OnClickList
             try {
                 findFile(root, searchLocators, 0);
             } catch (Exception e) {
-                e.printStackTrace();
+                Analytics.reportCaughtException(getActivity(), e);
             }
             return searchLocators;
         }

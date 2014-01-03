@@ -23,6 +23,7 @@ import uk.co.tekkies.readings.ReadingsApplication;
 import uk.co.tekkies.readings.fragment.PassageFragment;
 import uk.co.tekkies.readings.model.ParcelableReadings;
 import uk.co.tekkies.readings.service.PlayerService;
+import uk.co.tekkies.readings.util.Analytics;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ComponentName;
@@ -280,7 +281,7 @@ public class PassageActivity extends BaseActivity implements PlayerService.IClie
                     publishProgress(getServiceInterface().getProgress());
                     Thread.sleep(200);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    Analytics.reportCaughtException(getPassageActivity(), e);
                 }
             }
             return 0L;
@@ -293,7 +294,7 @@ public class PassageActivity extends BaseActivity implements PlayerService.IClie
                     passageFragment.setProgress(progress[0]);
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                Analytics.reportCaughtException(getPassageActivity(), e);
             }
         }
 
@@ -310,6 +311,8 @@ public class PassageActivity extends BaseActivity implements PlayerService.IClie
         }
     }
     
+    
+    
     @Override
     protected void onPause() {
         super.onPause();
@@ -318,7 +321,6 @@ public class PassageActivity extends BaseActivity implements PlayerService.IClie
         }
         unbindPlayerService();
     }
-
     
     @Override
     protected void onResume() {

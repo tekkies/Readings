@@ -63,7 +63,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         try {
             instream = AssetHelper.openAsset(context, upgradePath);
         } catch (IOException e) {
-            e.printStackTrace();
+            Analytics.reportCaughtException(context, e);
         }
         if (instream != null) {
             InputStreamReader inputreader = new InputStreamReader(instream);
@@ -89,7 +89,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     }
                     instream.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Analytics.reportCaughtException(context, e);
                 }
                 db.setTransactionSuccessful();
             } finally {

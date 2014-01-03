@@ -28,6 +28,7 @@ import uk.co.tekkies.readings.R;
 import uk.co.tekkies.readings.ReadingsApplication;
 import uk.co.tekkies.readings.fragment.DatePickerFragment;
 import uk.co.tekkies.readings.fragment.ReadingsFragment;
+import uk.co.tekkies.readings.util.Analytics;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -126,7 +127,7 @@ public class ReadingsActivity extends BaseActivity implements OnDateSetListener,
         try {
             versionName = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
         } catch (NameNotFoundException e) {
-            e.printStackTrace();
+            Analytics.reportCaughtException(this, e);
         }
         return versionName;
     }
@@ -152,8 +153,7 @@ public class ReadingsActivity extends BaseActivity implements OnDateSetListener,
             }
             reader.close();
         } catch (Exception e) {
-            //Ignore any problems.  It's no big deal if the toast doesn't show.
-            e.printStackTrace();
+            Analytics.reportCaughtException(this, e);
         }
         return summary;
     }

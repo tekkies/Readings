@@ -14,11 +14,13 @@ public class Analytics {
     private static final String CATEGORY_ACTION = "action";
     public  static final String CATEGORY_PREFS = "prefs";
     public static final String CATEGORY_MP3_CONTENT = "mp3_content";
+    private static final String CATEGORY_CAUGHT_EXCEPTION = "caught_exception";
 
     public static final String ACTION_BUTTON_PRESS = "button_press";
     public static final String ACTION_GENERAL = "action_general";
     public static final String ACTION_FOUND = "mp3_found";
-
+    private static final String ACTION_NONE = "none";
+    
     public static final String LABEL_NIGHT_MODE = "night_mode";
     public static final String LABEL_TEXT_SIZE = "text_size";
     public static final String LABEL_MP3_SEARCH = "settings_mp3_search";
@@ -84,5 +86,11 @@ public class Analytics {
             }
         }
         return value;
+    }
+
+    public static void reportCaughtException(Context context, Exception e) {
+        if (isEnabled(context)) {
+            SendEvent(context, CATEGORY_CAUGHT_EXCEPTION, ACTION_NONE, e.toString(), 0);
+        }
     }
 }
