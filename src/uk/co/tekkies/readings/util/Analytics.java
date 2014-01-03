@@ -12,13 +12,17 @@ import com.google.analytics.tracking.android.MapBuilder;
 public class Analytics {
 
     private static final String CATEGORY_ACTION = "action";
-    private static final String CATEGORY_PREFS = "prefs";
+    public  static final String CATEGORY_PREFS = "prefs";
+    public static final String CATEGORY_MP3_CONTENT = "mp3_content";
 
-    private static final String ACTION_BUTTON_PRESS = "button_press";
-    private static final String ACTION_GENERAL = "action_general";
+    public static final String ACTION_BUTTON_PRESS = "button_press";
+    public static final String ACTION_GENERAL = "action_general";
+    public static final String ACTION_FOUND = "mp3_found";
 
-    private static final String LABEL_NIGHT_MODE = "night_mode";
-    private static final String LABEL_TEXT_SIZE = "text_size";
+    public static final String LABEL_NIGHT_MODE = "night_mode";
+    public static final String LABEL_TEXT_SIZE = "text_size";
+    public static final String LABEL_MP3_SEARCH = "settings_mp3_search";
+    public static final String LABEL_TOTAL = "total";
 
     public static void startActivity(BaseActivity activity) {
         if (isEnabled(activity)) {
@@ -46,15 +50,15 @@ public class Analytics {
     }
 
 
-    private static void SendEvent(Context context, String category, String action, String label, long value) {
+    public static void SendEvent(Context context, String category, String action, String label, long value) {
         if (isEnabled(context)) {
             EasyTracker easyTracker = EasyTracker.getInstance(context);
             easyTracker.send(MapBuilder.createEvent(category, action, label, value).build());
         }
     }
 
-    public static void UIClick(Context context, String item) {
-        SendEvent(context, CATEGORY_ACTION, ACTION_GENERAL, item, 0);
+    public static void UIClick(Context context, String label) {
+        SendEvent(context, CATEGORY_ACTION, ACTION_GENERAL, label, 0);
     }
 
     public static void PrefsChange(Context context, String key) {

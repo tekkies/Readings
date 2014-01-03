@@ -96,7 +96,7 @@ public class ContentLocationActivity extends BaseActivity implements OnClickList
     }
 
     private void doSearchForKeyFile() {
-        Analytics.UIClick(this, "settings-mp3-search");
+        Analytics.UIClick(this, Analytics.LABEL_MP3_SEARCH);
         clearMainList();
     	updateSearchViews(true);
         SearchTask searchTask = new SearchTask();
@@ -137,6 +137,7 @@ public class ContentLocationActivity extends BaseActivity implements OnClickList
             sortList(mp3ContentLocators);
             Mp3ContentLocator.searchSaveBasePaths(getActivity(), mp3ContentLocators);
             chooseValidResult();
+            reportFoundContent(mp3ContentLocators);
             mp3ContentArrayAdapter = new Mp3ContentArrayAdapter(getActivity(), mp3ContentLocators);
             listView.setAdapter(mp3ContentArrayAdapter);
             updateSearchViews(false);
@@ -199,9 +200,7 @@ public class ContentLocationActivity extends BaseActivity implements OnClickList
         Prefs prefs = new Prefs(this);
         String selectedProduct = prefs.loadMp3Product();
         Boolean valid = false;
-        
         sortList(mp3ContentLocators);
-        
         //check if product is valid
         if(selectedProduct.length() != 0) {
             for (Mp3ContentLocator locator: mp3ContentLocators) {
@@ -225,7 +224,18 @@ public class ContentLocationActivity extends BaseActivity implements OnClickList
         }
     }
 
-	public void sortList(ArrayList<Mp3ContentLocator> mp3ContentLocators) {
+	public void reportFoundContent(ArrayList<Mp3ContentLocator> mp3ContentLocators) {
+	    int count=0;
+	    for(Mp3ContentLocator mp3ContentLocator: mp3ContentLocators) {
+	        if(mp3ContentLocator.getBasePath().length() > 0) {
+	            count++;
+	            Analytics.SendEvent(this, Analytics.CATEGORY_MP3_CONTENT, Analytics.ACTION_FOUND, mp3ContentLocator.getTitle(), 1);
+	        }
+	    }
+	    Analytics.SendEvent(this, Analytics.CATEGORY_MP3_CONTENT, Analytics.ACTION_FOUND, Analytics.LABEL_TOTAL, count);
+    }
+
+    public void sortList(ArrayList<Mp3ContentLocator> mp3ContentLocators) {
 		Collections.sort(mp3ContentLocators, new Comparator<Mp3ContentLocator>() {
 	        @Override
 	        public int compare(Mp3ContentLocator li1, Mp3ContentLocator li2) {
