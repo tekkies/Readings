@@ -192,7 +192,7 @@ public class PassageActivity extends BaseActivity implements PlayerService.IClie
     
     @Override
     public void onPassageChange(int passageId) {
-        Toast.makeText(this, "PassageID="+passageId, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "PassageID="+passageId, Toast.LENGTH_SHORT).show();
     }
 
     private int getPage(int passageId) {
@@ -226,8 +226,9 @@ public class PassageActivity extends BaseActivity implements PlayerService.IClie
                 serviceAvailable = true;
                 progressUpdateTask = new ProgressUpdateTask().execute("");
                 viewPager.setCurrentItem(getPage(getServiceInterface().getPassage()));
-                Toast.makeText(getPassageActivity(), "PassageID="+getServiceInterface().getPassage(), Toast.LENGTH_SHORT).show();
-            } catch (Throwable t) {
+                //Toast.makeText(getPassageActivity(), "PassageID="+getServiceInterface().getPassage(), Toast.LENGTH_SHORT).show();
+            } catch (Exception e) {
+                Analytics.reportCaughtException(getPassageActivity(), e);
             }
         }
 

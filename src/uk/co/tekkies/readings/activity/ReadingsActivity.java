@@ -261,6 +261,7 @@ public class ReadingsActivity extends BaseActivity implements OnDateSetListener,
             PackageInfo pi = getPackageManager().getPackageInfo(getPackageName(), 0);
             currentVersionNumber = pi.versionCode;
         } catch (Exception e) {
+            Analytics.reportCaughtException(this, e);
         }
         if (currentVersionNumber > savedVersionNumber) {
             Editor editor = sharedPref.edit();
@@ -330,6 +331,7 @@ public class ReadingsActivity extends BaseActivity implements OnDateSetListener,
         try {
             version = " v"+getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
         } catch (NameNotFoundException e) {
+            Analytics.reportCaughtException(this, e);
         }
         builder.setView(view).setTitle(getString(R.string.app_name)+version)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {

@@ -9,6 +9,7 @@ import uk.co.tekkies.readings.activity.PassageActivity;
 import uk.co.tekkies.readings.model.ParcelableReadings;
 import uk.co.tekkies.readings.model.Passage;
 import uk.co.tekkies.readings.model.content.Mp3ContentLocator;
+import uk.co.tekkies.readings.util.Analytics;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.Notification;
@@ -249,7 +250,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnAu
                 try {
                     progress = (mediaPlayer.getCurrentPosition() * 1000) / mediaPlayer.getDuration();
                 } catch (Exception e) {
-                    //must be the end or some complex race condition 
+                    Analytics.reportCaughtException(getPlayerService(), e);
                 }
             }
             return progress;
@@ -265,6 +266,10 @@ public class PlayerService extends Service implements OnCompletionListener, OnAu
         mediaPlayer.seekTo((mediaPlayer.getDuration() *  positionAsThousandth) / 1000);
     }
     
+    public Context getPlayerService() {
+        return this;
+    }
+
     protected String getPassageTitle(int passageId) {
         String passageName = "Unknown";
         for(Passage passage: passableReadings.passages) {

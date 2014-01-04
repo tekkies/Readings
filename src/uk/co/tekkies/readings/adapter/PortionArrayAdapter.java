@@ -162,7 +162,7 @@ public class PortionArrayAdapter extends ArrayAdapter<Passage> implements OnClic
         try {
             packageInfo = activity.getPackageManager().getPackageInfo("uk.co.tekkies.plugin.kjv", 0);
         } catch (NameNotFoundException e) {
-            //Assume not installed
+            Analytics.reportCaughtException(activity, e);
         }
         return packageInfo;
     }

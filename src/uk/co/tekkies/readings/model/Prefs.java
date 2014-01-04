@@ -54,8 +54,6 @@ public class Prefs {
         return sharedPreferences.getBoolean(key, defaultValue);
     }
     
-
-    
     public double loadPassageTextSize() {
         return sharedPreferences.getFloat(PREF_PASSAGE_TEXT_SIZE, 1);
     }
@@ -105,13 +103,11 @@ public class Prefs {
         try {
             versionCode = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode;
         } catch (NameNotFoundException e) {
-            //Unlikely
+            Analytics.reportCaughtException(context, e);
         }
         boolean enabled = ((versionCode % 2) == 0); //Enabled by default in even (release) 
         saveBoolean(key, enabled);
         return enabled;
     }
-
-    
     
 }
