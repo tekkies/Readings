@@ -43,7 +43,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 public class PassageActivity extends BaseActivity implements PlayerService.IClientInterface {
 

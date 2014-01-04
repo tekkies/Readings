@@ -6,8 +6,6 @@ import uk.co.tekkies.readings.model.Prefs;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.util.Log;
-
 import com.google.analytics.tracking.android.EasyTracker;
 import com.google.analytics.tracking.android.MapBuilder;
 
@@ -21,8 +19,6 @@ public class Analytics {
     public static final String ACTION_BUTTON_PRESS = "button_press";
     public static final String ACTION_GENERAL = "action_general";
     public static final String ACTION_FOUND = "mp3_found";
-    private static final String ACTION_NONE = "none";
-    
     public static final String LABEL_NIGHT_MODE = "night_mode";
     public static final String LABEL_TEXT_SIZE = "text_size";
     public static final String LABEL_MP3_SEARCH = "settings_mp3_search";
@@ -90,6 +86,20 @@ public class Analytics {
         return value;
     }
 
+    /**
+     * Extracts minimal essential exception data and reports it as a Google Analytics event 
+     * (Not reported as an App exception :).<br/>
+     * <br/>
+     * Reported action: Exception type & message<br/>
+     * Reported label: File & line no
+     * <code><pre>
+     * } catch (Exception e) {
+     *    Analytics.reportCaughtException(getActivity(), e);
+     * }
+     * </pre></code>  
+     * @param context
+     * @param exception 
+     */
     public static void reportCaughtException(Context context, Exception e) {
         if (isEnabled(context)) {
             String message=e.getClass().getSimpleName();
