@@ -2,8 +2,8 @@
 <!-- Version Code (VersionScheme-1)(API-2)(A-2)(B-2)(C-2) -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="uk.co.tekkies.readings"
-      android:versionCode="114030204"
-      android:versionName="3.2.4"
+      android:versionCode="114030205"
+      android:versionName="3.2.5"
       android:installLocation="auto">
     <uses-sdk android:minSdkVersion="14" android:targetSdkVersion="14" />
     <supports-screens android:smallScreens="true"/>
@@ -47,7 +47,9 @@
 		
         <activity
             android:name="uk.co.tekkies.readings.activity.ContentLocationActivity"
-            android:label="@string/mp3_search" >
+            android:label="@string/mp3_search" 
+            android:screenOrientation="portrait"
+   			android:configChanges="orientation|keyboardHidden" >
 		    <intent-filter>
            		<action android:name=".activity.ContentLocationActivity" />
            		<category android:name="android.intent.category.DEFAULT" />
