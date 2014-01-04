@@ -6,6 +6,8 @@ import uk.co.tekkies.readings.model.Prefs;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
+
 import com.google.analytics.tracking.android.EasyTracker;
 import com.google.analytics.tracking.android.MapBuilder;
 
@@ -90,7 +92,20 @@ public class Analytics {
 
     public static void reportCaughtException(Context context, Exception e) {
         if (isEnabled(context)) {
-            SendEvent(context, CATEGORY_CAUGHT_EXCEPTION, ACTION_NONE, e.toString(), 0);
+            String message=e.getClass().getSimpleName();
+            if(e.getMessage() != null) {
+                message += ":"+e.getMessage();
+            }
+            StackTraceElement[] stackTraceElements = e.getStackTrace();
+            String location="";
+            for(int i=0;i<stackTraceElements.length; i++) {
+                StackTraceElement stackTraceElement = stackTraceElements[i];
+                if(stackTraceElement.getClassName().contains("uk.co.tekkies")) {
+                    location += stackTraceElement.getFileName().replace(".java","")+":"+stackTraceElement.getLineNumber();
+                    break;
+                }
+            }
+            SendEvent(context, CATEGORY_CAUGHT_EXCEPTION, message, location, 0);
         }
     }
 }
