@@ -40,11 +40,11 @@
                 android:data="http://market.android.com/details?id=uk.co.tekkies.readings" />
         </PreferenceScreen>
         <PreferenceScreen
-            android:title="@string/pref_title_feedback" 
-            android:summary="@string/pref_summary_feedback">
+            android:title="@string/pref_title_web_site" 
+            android:summary="@string/pref_summary_web_site">
             <intent
                 android:action="android.intent.action.VIEW"
-                android:data="https://creadings.uservoice.com" />
+                android:data="http://tekkies.co.uk/bible-reading-app/" />
         </PreferenceScreen>
     </PreferenceCategory>
 
