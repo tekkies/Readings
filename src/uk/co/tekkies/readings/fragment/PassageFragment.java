@@ -80,6 +80,8 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
             textView.setTextColor(Color.GRAY);
         }
         Prefs prefs = new Prefs(getActivity());
+        //Legacy MP3 plugin installed but MP3 product not yet defined
+        //OR MP3 product defined
         if((ReadingsApplication.getMp3Installed() && prefs.isMp3ProductUndefined())
                 || prefs.loadMp3Product().length() > 0) {
             setupMediaControls(mainView);

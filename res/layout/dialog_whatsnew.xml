@@ -20,9 +20,13 @@
 				android:layout_height="wrap_content"
 				android:text="Note: Anonymous statistics/crash reports can be disabled in settings." />
             
-            <TextView android:layout_width="fill_parent" android:layout_marginTop="10dp"
-				android:layout_height="wrap_content" android:text="Version 3.2.4"
-				android:textStyle="bold" />
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Version 3.2.6"
+                android:textStyle="bold" />
+
 			<ImageView
 			    android:layout_width="wrap_content"
 			    android:layout_height="wrap_content"
