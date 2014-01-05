@@ -109,5 +109,10 @@ public class Prefs {
         saveBoolean(key, enabled);
         return enabled;
     }
+
+    public boolean isMp3ProductUndefined() {
+        final String notSet = "not-set";
+        return loadString(Prefs.PREF_MP3_PRODUCT, notSet).equals(notSet);
+    }
     
 }

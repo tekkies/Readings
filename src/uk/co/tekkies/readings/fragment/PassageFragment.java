@@ -79,8 +79,9 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
                 getString(R.string.pref_key_night_mode), false)) {
             textView.setTextColor(Color.GRAY);
         }
-        
-        if(ReadingsApplication.getMp3Installed() || new Prefs(getActivity()).loadMp3Product().length() > 0) {
+        Prefs prefs = new Prefs(getActivity());
+        if((ReadingsApplication.getMp3Installed() && prefs.isMp3ProductUndefined())
+                || prefs.loadMp3Product().length() > 0) {
             setupMediaControls(mainView);
         }
         loadTextSize();
@@ -233,8 +234,7 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
 
     private void doPlayPauseSearch() {
         Prefs prefs = new Prefs(getActivity());
-        final String notSet = "not-set";
-        if(prefs.loadString(Prefs.PREF_MP3_PRODUCT, notSet).equals(notSet)){
+        if(prefs.isMp3ProductUndefined()){
             prefs.saveMp3Product(""); //Only open settings once
             doSearch();
         } else {
@@ -245,6 +245,7 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
             }
         }
     }
+    
     
     private void doPause() {
         Analytics.UIClick(getActivity(), "Player-Pause");
