@@ -69,7 +69,7 @@ public class ContentLocationActivity extends BaseActivity implements OnClickList
     public void onClick(View v) {
         int id = v.getId();
         switch(id) {
-        case R.id.button_search:
+            case R.id.button_search:
                 doSearchForKeyFile();
                 break;
             
@@ -153,13 +153,11 @@ public class ContentLocationActivity extends BaseActivity implements OnClickList
         }
         
         private File findFile(File folder, ArrayList<Mp3ContentLocator> locators, int level) {
-            //Log.v(TAG, "Search:" + folder.getAbsolutePath());
             // Check files in this folder
             File[] files = folder.listFiles();
             if (files != null) {
                 for (File child : files) {
                     if (child.isFile()) {
-                        //Log.v(TAG, "File:" + child);
                         for (int i = 0; i < locators.size(); i++) {
                             Mp3ContentLocator locator = locators.get(i);
                             if (child.getName().contains(locator.searchGetKeyFileName())) {
@@ -191,7 +189,6 @@ public class ContentLocationActivity extends BaseActivity implements OnClickList
                             // Do not traverse system folders
                             if ((folder.getAbsolutePath().indexOf("/proc") != 0)
                                     && (folder.getAbsolutePath().indexOf("/sys") != 0)) {
-                                //Log.v(TAG, "Directory:" + child);
                                 File found = findFile(child, locators, level+1);
                                 if (FIND_FIRST_ONLY) {
                                     if (found != null) {

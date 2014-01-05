@@ -261,7 +261,11 @@ public class PassageActivity extends BaseActivity implements PlayerService.IClie
     private PassageFragment getCurrentPageFragment() {
         return (PassageFragment) pagerAdapter.getFragment(viewPager.getCurrentItem());
     }
-
+    
+    public int getCurrentPassageId() {
+        return passableReadings.passages.get(viewPager.getCurrentItem()).getPassageId();
+    }
+    
     public boolean isServiceAvailable() {
         return serviceAvailable;
     }
