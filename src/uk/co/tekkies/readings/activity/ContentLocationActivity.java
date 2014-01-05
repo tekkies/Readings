@@ -26,12 +26,14 @@ public class ContentLocationActivity extends BaseActivity implements OnClickList
 
     protected static final String TAG = "MP3Bible";
     Button searchButton = null;
+    Button instructionsButton = null;
     TextView searchStatus = null;
     ProgressBar progressBar = null;
     WebView webView1 = null;
     ArrayList<Mp3ContentLocator> mp3ContentLocators;
     Mp3ContentArrayAdapter mp3ContentArrayAdapter;
     ListView listView;
+    private SearchTask searchTask;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -49,7 +51,8 @@ public class ContentLocationActivity extends BaseActivity implements OnClickList
         setContentView(R.layout.mp3_search_activity);
         searchButton = (Button) findViewById(R.id.button_search);
         searchButton.setOnClickListener(this);
-        findViewById(R.id.button_help).setOnClickListener(this);
+        instructionsButton = (Button)findViewById(R.id.button_instructions);
+        instructionsButton.setOnClickListener(this);
         progressBar = (ProgressBar) findViewById(R.id.progressBar1);
         searchStatus = (TextView) findViewById(R.id.textView_mp3location);
         listView = (ListView) findViewById(R.id.list_view);
@@ -70,13 +73,13 @@ public class ContentLocationActivity extends BaseActivity implements OnClickList
                 doSearchForKeyFile();
                 break;
             
-            case R.id.button_help:
-                doHelp();
+            case R.id.button_instructions:
+                doInstructions();
                 break;
         }
     }
 
-    private void doHelp() {
+    private void doInstructions() {
         Analytics.UIClick(this, "settings-mp3-help");
         String url = "http://goo.gl/suiico";
         Intent webIntent = new Intent(Intent.ACTION_VIEW);
@@ -91,6 +94,7 @@ public class ContentLocationActivity extends BaseActivity implements OnClickList
     
     private void updateSearchViews(boolean searching) {
     	searchButton.setEnabled(!searching);
+    	instructionsButton.setEnabled(!searching);
     	searchStatus.setVisibility(searching ? View.VISIBLE : View.GONE);
     	progressBar.setVisibility(searching ? View.VISIBLE : View.GONE);
     }
@@ -99,7 +103,7 @@ public class ContentLocationActivity extends BaseActivity implements OnClickList
         Analytics.UIClick(this, Analytics.LABEL_MP3_SEARCH);
         clearMainList();
     	updateSearchViews(true);
-        SearchTask searchTask = new SearchTask();
+        searchTask = new SearchTask();
         searchTask.execute("");
     }
 
@@ -128,7 +132,11 @@ public class ContentLocationActivity extends BaseActivity implements OnClickList
 
         @Override
         protected void onProgressUpdate(String... values) {
-            searchStatus.setText(values[0]);
+            try {
+                searchStatus.setText(values[0]);
+            } catch (Exception e) {
+                Analytics.reportCaughtException(getActivity(), e);
+            }
         }
 
         @Override
@@ -141,8 +149,9 @@ public class ContentLocationActivity extends BaseActivity implements OnClickList
             mp3ContentArrayAdapter = new Mp3ContentArrayAdapter(getActivity(), mp3ContentLocators);
             listView.setAdapter(mp3ContentArrayAdapter);
             updateSearchViews(false);
+            searchTask = null;
         }
-
+        
         private File findFile(File folder, ArrayList<Mp3ContentLocator> locators, int level) {
             //Log.v(TAG, "Search:" + folder.getAbsolutePath());
             // Check files in this folder
@@ -250,4 +259,12 @@ public class ContentLocationActivity extends BaseActivity implements OnClickList
 	    });
 	}
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(searchTask != null) {
+            searchTask.cancel(true);
+            searchTask = null;
+        }
+    }
 }
