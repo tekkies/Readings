@@ -183,6 +183,10 @@ public class ContentLocationActivity extends BaseActivity implements OnClickList
                 if(level < MAX_DEPTH) {
                     for (File child : files) {
                         publishProgress("Folder: "+child);
+                        if(isCancelled()) {
+                            publishProgress("Cancelled");
+                            return null;
+                        }
                         if (child.isDirectory()) {
                             // Do not traverse system folders
                             if ((folder.getAbsolutePath().indexOf("/proc") != 0)
@@ -263,7 +267,7 @@ public class ContentLocationActivity extends BaseActivity implements OnClickList
     protected void onPause() {
         super.onPause();
         if(searchTask != null) {
-            searchTask.cancel(true);
+            searchTask.cancel(false);
             searchTask = null;
         }
     }

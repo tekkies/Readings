@@ -36,7 +36,7 @@
         android:id="@+id/textView_mp3location"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="TextView"
+        android:text="@string/starting_search"
         android:visibility="gone" />
 
     <LinearLayout

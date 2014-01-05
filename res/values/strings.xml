@@ -80,6 +80,7 @@
     <string name="not_found">Not found - try pressing search</string>
     <string name="found">"Found: "</string>
     <string name="instructions">Instructions</string>
+    <string name="starting_search">Starting search...</string>
     
     
     
