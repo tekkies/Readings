@@ -36,8 +36,9 @@
             android:layout_alignParentLeft="true"
             android:clickable="true"
             android:drawableRight="?attr/ic_action_social_chat"
+            android:drawablePadding="10dp"
             android:onClick="onClickFeedback"
-            android:padding="5dp"
+            android:padding="10dp"
             android:text="@string/feedback" />
 
         <Button
@@ -47,8 +48,9 @@
             android:layout_alignParentRight="true"
             android:clickable="true"
             android:drawableLeft="?attr/ic_action_location_web_site"
+            android:drawablePadding="10dp"
             android:onClick="onClickHelp"
-            android:padding="5dp"
+            android:padding="10dp"
             android:text="@string/help" />
     </RelativeLayout>
 

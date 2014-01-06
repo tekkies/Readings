@@ -115,7 +115,7 @@ public class ContentLocationActivity extends BaseActivity implements OnClickList
     private class SearchTask extends AsyncTask<String, String, ArrayList<Mp3ContentLocator>> {
 
         private static final boolean FIND_FIRST_ONLY = false;
-        private static final int MAX_DEPTH = 6;
+        private static final int MAX_DEPTH = 8;
 
         @Override
         protected ArrayList<Mp3ContentLocator> doInBackground(String... unused) {
