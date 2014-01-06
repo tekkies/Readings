@@ -16,11 +16,14 @@ limitations under the License.
 
 package uk.co.tekkies.readings.fragment;
 
+import java.io.File;
+
 import uk.co.tekkies.readings.R;
 import uk.co.tekkies.readings.ReadingsApplication;
 import uk.co.tekkies.readings.activity.ContentLocationActivity;
 import uk.co.tekkies.readings.activity.PassageActivity;
 import uk.co.tekkies.readings.model.Prefs;
+import uk.co.tekkies.readings.model.content.Mp3ContentLocator;
 import uk.co.tekkies.readings.service.PlayerService;
 import uk.co.tekkies.readings.util.Analytics;
 import android.content.Intent;
@@ -269,10 +272,16 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
 
     private void doPlay() {
         Analytics.UIClick(getActivity(), "Player-Play");
-        PassageActivity activity = (PassageActivity)getActivity();
-        PlayerService.requestPlay((PassageActivity)getActivity(), passageId, seekBar.getProgress());
-        playPauseButton.setImageResource(resolveThemeAttribute(R.attr.ic_action_av_pause));
-        activity.bindPlayerService();
+        String filePath = Mp3ContentLocator.getPassageFullPath(getActivity(), passageId);
+        File file = new File(filePath);
+        if(file.exists()) {
+            PassageActivity activity = (PassageActivity)getActivity();
+            PlayerService.requestPlay((PassageActivity)getActivity(), passageId, seekBar.getProgress());
+            playPauseButton.setImageResource(resolveThemeAttribute(R.attr.ic_action_av_pause));
+            activity.bindPlayerService();
+        } else {
+            Toast.makeText(getActivity(), getString(R.string.mp3_not_found_goto_settings), Toast.LENGTH_LONG).show();
+        }
     }
 
     private void doSearch() {

@@ -1,5 +1,6 @@
 package uk.co.tekkies.readings.service;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -31,6 +32,7 @@ import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
+import android.widget.Toast;
 
 public class PlayerService extends Service implements OnCompletionListener, OnAudioFocusChangeListener {
 
@@ -165,14 +167,20 @@ public class PlayerService extends Service implements OnCompletionListener, OnAu
             this.passageId = passageId;
             beep = false;
             String filePath = Mp3ContentLocator.getPassageFullPath(this, passageId);
-            mediaPlayer = MediaPlayer.create(this, Uri.parse(filePath));
-            mediaPlayer.setOnCompletionListener(this);
-            setPlayerPosition(positionAsThousandth);
-            mediaPlayer.start();
-            updateOngoingNotification(getNotificationTitle(passageId));
-            for (Activity client : clients.keySet()) {
-                clients.get(client).onPassageChange(passageId);
+            File file = new File(filePath);
+            if(file.exists()) {
+                mediaPlayer = MediaPlayer.create(this, Uri.parse(filePath));
+                mediaPlayer.setOnCompletionListener(this);
+                setPlayerPosition(positionAsThousandth);
+                mediaPlayer.start();
+                updateOngoingNotification(getNotificationTitle(passageId));
+                for (Activity client : clients.keySet()) {
+                    clients.get(client).onPassageChange(passageId);
+                }
+            } else {
+                Toast.makeText(this, getString(R.string.mp3_not_found_goto_settings), Toast.LENGTH_LONG).show();
             }
+            
         }
     }
 

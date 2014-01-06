@@ -78,6 +78,7 @@
     <string name="pref_title_mp3">MP3 integration</string>
     <string name="pref_summary_mp3">Search for MP3 Bible installations to connect with</string>
     <string name="not_found">Not found - try pressing search</string>
+    <string name="mp3_not_found_goto_settings">MP3 not found.  Please go to Settings > MP3 to reconfigure.</string>
     <string name="found">"Found: "</string>
     <string name="instructions">Instructions</string>
     <string name="starting_search">Starting search...</string>
