@@ -82,6 +82,17 @@
     <string name="instructions">Instructions</string>
     <string name="starting_search">Starting search...</string>
     
+    <string name="feedback_suggestion">I have a suggestion</string>
+    <string name="feedback_bug">I found a bug</string>
+    <string name="feedback_rate">I\'d like to rate this app 5-stars</string>
+    <string name="feedback_beta">Beta community feedback</string>
+    <string name="bug_email">android@tekkies.co.uk</string>
+    <string name="bug_subject">Readings app bug</string>
+    <string name="bug_content">I found a bug in the app.  This is what happened...</string>
+    <string name="bug_chooser_title">Send mail...</string>
+    <string name="feedback">Feedback</string>
+    <string name="help">Help</string>
+    
     
     
 </resources>

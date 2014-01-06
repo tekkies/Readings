@@ -3,15 +3,6 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
 
-    <!--
-     	<fragment
-        android:id="@+id/readings_fragment"
-        android:name="uk.co.tekkies.readings.ReadingsFragment"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1" />
-    -->
-
     <android.support.v4.view.ViewPager
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/pager"
@@ -38,25 +29,27 @@
         android:layout_alignParentBottom="true"
         android:paddingTop="8dp" >
 
-        <ImageView
-            android:id="@+id/imageViewFeedback"
+        <Button
+            android:id="@+id/buttonFeedback"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:clickable="true"
-            android:onClick="onClick"
-            android:src="@drawable/feedback"
-            android:tag="feedback" />
+            android:drawableRight="?attr/ic_action_social_chat"
+            android:onClick="onClickFeedback"
+            android:padding="5dp"
+            android:text="@string/feedback" />
 
-        <ImageView
+        <Button
             android:id="@+id/imageViewFacebook"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:clickable="true"
-            android:onClick="onClick"
-            android:src="@drawable/f_logo"
-            android:tag="facebook" />
+            android:drawableLeft="?attr/ic_action_location_web_site"
+            android:onClick="onClickHelp"
+            android:padding="5dp"
+            android:text="@string/help" />
     </RelativeLayout>
 
 </RelativeLayout>

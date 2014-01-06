@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array
+        name="feedback">
+        <item>@string/feedback_suggestion</item>
+        <item>@string/feedback_bug</item>
+        <item>@string/feedback_rate</item>
+        <item>@string/feedback_beta</item>
+    </string-array>
+</resources>

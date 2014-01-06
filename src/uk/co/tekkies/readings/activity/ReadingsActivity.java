@@ -56,11 +56,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.View.OnClickListener;
 import android.widget.DatePicker;
 import android.widget.Toast;
 
-public class ReadingsActivity extends BaseActivity implements OnDateSetListener, OnClickListener {
+public class ReadingsActivity extends BaseActivity implements OnDateSetListener {
 
     private static final String VERSION_KEY = "version_number";
     static final String NEWS_TOAST_URL = "http://tekkies.co.uk/readings/api/news-toast/";
@@ -343,7 +342,7 @@ public class ReadingsActivity extends BaseActivity implements OnDateSetListener,
         builder.create().show();
     }
 
-    private void doFeedback() {
+    private void doSuggestion() {
         String url = "http://goo.gl/pSraf";
         Intent webIntent = new Intent(Intent.ACTION_VIEW);
         Uri uri = Uri.parse(url);
@@ -351,12 +350,8 @@ public class ReadingsActivity extends BaseActivity implements OnDateSetListener,
         startActivity(webIntent);
     }
 
-    private void doFacebook() {
-        String url = "http://goo.gl/sE2oy";
-        Intent webIntent = new Intent(Intent.ACTION_VIEW);
-        Uri uri = Uri.parse(url);
-        webIntent.setData(uri);
-        startActivity(webIntent);
+    private void doRate() {
+        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=uk.co.tekkies.readings")));
     }
 
     @Override
@@ -366,15 +361,56 @@ public class ReadingsActivity extends BaseActivity implements OnDateSetListener,
         setDate(calendar);
     }
 
-    public void onClick(View v) {
-        switch (v.getId()) {
-        case R.id.imageViewFeedback:
-            doFeedback();
-            break;
-        case R.id.imageViewFacebook:
-            doFacebook();
-            break;
-        }
+    
+    public void onClickFeedback(View v) {
+        showFeedbackOptions();
+    }
+    
+    public void onClickHelp(View v) {
+        doHelp();
+    }
+    
+    private void doHelp() {
+        Analytics.UIClick(getReadingsActivity(), "help");
+        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://tekkies.co.uk/bible-reading-app/")));
+    }
+
+    private void showFeedbackOptions() {
+        
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Feedback")
+                   .setItems(R.array.feedback, new DialogInterface.OnClickListener() {
+                       public void onClick(DialogInterface dialog, int which) {
+                           String[] feedbackText = getResources().getStringArray(R.array.feedback);
+                           if(which < feedbackText.length) {
+                               Analytics.UIClick(getReadingsActivity(), "feedback:"+feedbackText[which]);
+                           }
+                           switch(which) {
+                               case 0: doSuggestion(); break;
+                               case 1: doReportBug(); break;
+                               case 2: doRate(); break;
+                               case 3: doBetaCommunity(); break;
+                           }
+                       }
+            });
+            builder.create().show();
+    }
+
+    protected void doBetaCommunity() {
+        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://plus.google.com/communities/110884043096085765786")));
+    }
+
+    protected void doReportBug() {
+        final Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+        intent.setType("text/html");
+        intent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{ getString(R.string.bug_email) });
+        intent.putExtra(android.content.Intent.EXTRA_SUBJECT, getString(R.string.bug_subject));
+        intent.putExtra(android.content.Intent.EXTRA_TEXT, getString(R.string.bug_content));
+        startActivity(Intent.createChooser(intent, getString(R.string.bug_chooser_title)));
+    }
+
+    protected ReadingsActivity getReadingsActivity() {
+        return this;
     }
 
     @Override
