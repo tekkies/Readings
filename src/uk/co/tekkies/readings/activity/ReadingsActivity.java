@@ -299,15 +299,18 @@ public class ReadingsActivity extends BaseActivity implements OnDateSetListener 
             doDayNightToggle();
             return true;
         case R.id.menu_date:
+            Analytics.UIClick(this, Analytics.LABEL_CUSTOM_DATE);
             doPickDate();
             return true;
         case R.id.menu_settings:
             doShowSettings();
             return true;
         case R.id.menu_about:
+            Analytics.UIClick(this, Analytics.LABEL_ABOUT);
             showAboutDialog();
             return true;
         case R.id.menu_whats_new:
+            Analytics.UIClick(this, Analytics.LABEL_WHATS_NEW);
             showWhatsNewDialog();
             return true;
 

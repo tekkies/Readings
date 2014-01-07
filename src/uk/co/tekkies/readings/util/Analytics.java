@@ -23,6 +23,9 @@ public class Analytics {
     public static final String LABEL_TEXT_SIZE = "text_size";
     public static final String LABEL_MP3_SEARCH = "settings_mp3_search";
     public static final String LABEL_TOTAL = "total";
+    public static final String LABEL_CUSTOM_DATE = "custom_date";
+    public static final String LABEL_ABOUT = "about";
+    public static final String LABEL_WHATS_NEW = "whats_new";
 
     public static void startActivity(BaseActivity activity) {
         if (isEnabled(activity)) {
