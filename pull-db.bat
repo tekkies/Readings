@@ -1,0 +1,1 @@
+adb pull "/data/data/uk.co.tekkies.readings/databases/Readings.db3"

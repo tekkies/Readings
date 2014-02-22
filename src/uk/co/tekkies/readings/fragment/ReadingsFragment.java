@@ -88,14 +88,14 @@ public class ReadingsFragment extends Fragment {
             SQLiteDatabase sqliteDatabase = databaseHelper.getWritableDatabase();
             String[] params = { Integer.toString(calendar.get(Calendar.MONTH) + 1),
                     Integer.toString(calendar.get(Calendar.DAY_OF_MONTH)) };
+            final String QUERY = "                            SELECT Coalesce(book.Name || ' ' || override, book.Name || ' ' || passage.chapter) AS passage, summary.summary_text, passage._id"
+                    + "                            FROM plan"
+                    + "                            LEFT JOIN passage ON passage._id = plan.passage_id"
+                    + "                            LEFT JOIN book ON book._id = passage.book_id"
+                    + "                            LEFT JOIN summary ON summary.book_id = book._id AND summary.chapter = passage.chapter"
+                    + "                            WHERE month = ? and day = ?";
             Cursor cursor = sqliteDatabase
-                    .rawQuery(
-                            "                            SELECT Coalesce(book.Name || ' ' || override, book.Name || ' ' || passage.chapter) AS passage, summary.summary_text, passage._id"
-                                    + "                            FROM plan"
-                                    + "                            LEFT JOIN passage ON passage._id = plan.passage_id"
-                                    + "                            LEFT JOIN book ON book._id = passage.book_id"
-                                    + "                            LEFT JOIN summary ON summary.book_id = book._id AND summary.chapter = passage.chapter"
-                                    + "                            WHERE month = ? and day = ?", params);
+                    .rawQuery(QUERY, params);
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
                 listItems.add(new Passage(cursor.getString(0),
