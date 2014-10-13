@@ -203,13 +203,12 @@ public class PortionArrayAdapter extends ArrayAdapter<Passage> implements OnClic
         boolean installed = false;
         Uri marketUri = Uri.parse("market://details?id=uk.co.tekkies.plugin.kjv");
         Intent marketIntent = new Intent(Intent.ACTION_VIEW).setData(marketUri);
-        //Look for plugin in packages
         PackageManager pm = activity.getPackageManager();
         List<ResolveInfo> list = pm.queryIntentActivities(marketIntent, PackageManager.MATCH_DEFAULT_ONLY);
         if (list.size() > 0)
             activity.startActivity(marketIntent);
         else {
-            Toast.makeText(activity, "Sorry the market is not installed", Toast.LENGTH_LONG).show();
+            Toast.makeText(activity, R.string.sorry_no_market_installed, Toast.LENGTH_LONG).show();
         }
         return installed;
     }

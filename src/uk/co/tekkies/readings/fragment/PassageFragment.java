@@ -17,6 +17,7 @@ limitations under the License.
 package uk.co.tekkies.readings.fragment;
 
 import java.io.File;
+import java.util.List;
 
 import uk.co.tekkies.readings.R;
 import uk.co.tekkies.readings.ReadingsApplication;
@@ -26,9 +27,15 @@ import uk.co.tekkies.readings.model.Prefs;
 import uk.co.tekkies.readings.model.content.Mp3ContentLocator;
 import uk.co.tekkies.readings.service.PlayerService;
 import uk.co.tekkies.readings.util.Analytics;
+import android.app.AlertDialog;
+import android.content.ComponentName;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
@@ -36,6 +43,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -55,7 +63,8 @@ import android.widget.Toast;
 
 public class PassageFragment extends Fragment implements OnSharedPreferenceChangeListener, OnClickListener, OnSeekBarChangeListener {
 
-    TextView textView;
+    private static final String MYSWORD_PACKAGE = "com.riversoft.android.mysword";
+	TextView textView;
     ScaleGestureDetector scaleGestureDetector;
     float defaultTextSize;
     double textSize;
@@ -89,6 +98,7 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
                 || prefs.loadMp3Product().length() > 0) {
             setupMediaControls(mainView);
         }
+        mainView.findViewById(R.id.button_study).setOnClickListener(this);
         loadTextSize();
         registerGestureDetector(mainView);
         return mainView;
@@ -117,6 +127,7 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
         passageId = args.getInt("passageId");
         String html = render(getPassageXml(passage));
         textView.setText(Html.fromHtml(html));
+        textView.setMovementMethod(LinkMovementMethod.getInstance());
         super.onViewCreated(view, savedInstanceState);
     }
 
@@ -234,10 +245,13 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
         case R.id.button_play_pause:
             doPlayPauseSearch();
             break;
+        case R.id.button_study:
+        	doStudy();
+        	break;
         }
     }
 
-    private void doPlayPauseSearch() {
+	private void doPlayPauseSearch() {
         Prefs prefs = new Prefs(getActivity());
         if(prefs.isMp3ProductUndefined()){
             prefs.saveMp3Product(""); //Only open settings once
@@ -250,10 +264,74 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
             }
         }
     }
+
+    private void doStudy() {
+    	Analytics.UIClick(getActivity(), "passage-do-study");
+    	if(!mySwordInstalled()) {
+    		askUserToInstallMySword();
+    	} else {
+	    	openMySwordPassage();
+    	}
+	}
+
+    private boolean mySwordInstalled() {
+		boolean installed = false;
+		PackageManager pm = getActivity().getPackageManager();
+		try {
+			pm.getPackageInfo(MYSWORD_PACKAGE, PackageManager.GET_ACTIVITIES);
+			installed = true;
+		} catch (NameNotFoundException e) {
+			//NOP
+		}
+		return installed;
+	}
+
+    private void askUserToInstallMySword() {
+    	Analytics.UIClick(getActivity(), "request-mysword-install");
+        AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(getActivity());
+        dlgAlert.setMessage(R.string.install_mysword_bible_app);
+        dlgAlert.setTitle(R.string.title_install);
+        dlgAlert.setCancelable(true);
+        dlgAlert.setPositiveButton(R.string.ok,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        installMySword();
+                    }
+                });
+        dlgAlert.create().show();
+    }
+
+    private boolean installMySword() {
+    	Analytics.UIClick(getActivity(), "opening-mysword-market");
+        boolean installed = false;
+        Uri marketUri = Uri.parse("market://details?id="+MYSWORD_PACKAGE);
+        Intent marketIntent = new Intent(Intent.ACTION_VIEW).setData(marketUri);
+        PackageManager pm = getActivity().getPackageManager();
+        List<ResolveInfo> list = pm.queryIntentActivities(marketIntent, PackageManager.MATCH_DEFAULT_ONLY);
+        if (list.size() > 0)
+            getActivity().startActivity(marketIntent);
+        else {
+            Toast.makeText(getActivity(), R.string.sorry_no_market_installed, Toast.LENGTH_LONG).show();
+        }
+        return installed;
+    }
     
+	private void openMySwordPassage() {
+		Analytics.UIClick(getActivity(), "open-mysword-passage");
+		try {
+		    Intent intent = new Intent();
+		    intent.setComponent(ComponentName.unflattenFromString(
+		        "com.riversoft.android.mysword/com.riversoft.android.mysword.MySwordLink"));
+		    intent.setData(Uri.parse("http://mysword.info/b?r="+passage));
+		    
+		    startActivity(intent);
+		} catch (Exception e) {
+			Analytics.reportCaughtException(getActivity(), e);
+		}
+	}
     
     private void doPause() {
-        Analytics.UIClick(getActivity(), "Player-Pause");
+        Analytics.UIClick(getActivity(), "player-pause");
         int playingPassageId = ((PassageActivity)getActivity()).getServiceInterface().getPassage();
         int displayedPassageId = ((PassageActivity)getActivity()).getCurrentPassageId();
         ((PassageActivity)getActivity()).unbindPlayerService();
@@ -271,7 +349,7 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
     }
 
     private void doPlay() {
-        Analytics.UIClick(getActivity(), "Player-Play");
+        Analytics.UIClick(getActivity(), "player-play");
         String filePath = Mp3ContentLocator.getPassageFullPath(getActivity(), passageId);
         File file = new File(filePath);
         if(file.exists()) {
@@ -304,7 +382,7 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
-        Analytics.UIClick(getActivity(), "Player-Seek");
+        Analytics.UIClick(getActivity(), "player-seek");
         PassageActivity passageActivity = (PassageActivity)getActivity();
         if(passageActivity.isServiceAvailable()) {
             ((PassageActivity)getActivity()).getServiceInterface().setPosition(seekBar.getProgress());
