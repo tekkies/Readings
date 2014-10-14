@@ -72,7 +72,7 @@
     <string name="pref_title_privacy_policy">Privacy Policy</string>
     <string name="pref_summary_privacy_policy">Click to view the privacy policy</string>
     <string name="search">Search</string>
-    <string name="searching">Searching...</string>
+    <string name="searching">Searching&#8230;</string>
     <string name="test">Test</string>
     <string name="mp3_search">MP3 Search</string>
     <string name="pref_title_mp3">MP3 integration</string>
@@ -81,7 +81,7 @@
     <string name="mp3_not_found_goto_settings">MP3 not found.  Please go to Settings > MP3 to reconfigure.</string>
     <string name="found">"Found: "</string>
     <string name="instructions">Instructions</string>
-    <string name="starting_search">Starting search...</string>
+    <string name="starting_search">Starting search&#8230;</string>
     
     <string name="feedback_suggestion">I have a suggestion</string>
     <string name="feedback_bug">I found a bug</string>
@@ -89,8 +89,8 @@
     <string name="feedback_beta">Beta community feedback</string>
     <string name="bug_email">android@tekkies.co.uk</string>
     <string name="bug_subject">Readings app bug</string>
-    <string name="bug_content">I found a bug in the app.  This is what happened...</string>
-    <string name="bug_chooser_title">Send mail...</string>
+    <string name="bug_content">I found a bug in the app.  This is what happened&#8230;</string>
+    <string name="bug_chooser_title">Send mail&#8230;</string>
     <string name="feedback">Feedback</string>
     <string name="help">Help</string>
     <string name="Study">Study</string>
