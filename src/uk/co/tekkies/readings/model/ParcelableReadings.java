@@ -17,12 +17,15 @@ limitations under the License.
 package uk.co.tekkies.readings.model;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
 public class ParcelableReadings implements Parcelable {
 
     public static final String PARCEL_NAME = "parcelableReadings";
+    public Calendar selectedDate;
     public String selected = null;
     public ArrayList<Passage> passages;
 
@@ -31,6 +34,7 @@ public class ParcelableReadings implements Parcelable {
     }
 
     public void writeToParcel(Parcel out, int flags) {
+        out.writeLong(selectedDate.getTimeInMillis());
         out.writeInt(passages.size());
         out.writeString(selected);
         for (Passage passage : passages) {
@@ -40,13 +44,16 @@ public class ParcelableReadings implements Parcelable {
         }
     }
 
-    public ParcelableReadings(ArrayList<Passage> passages, String selected) {
+    public ParcelableReadings(ArrayList<Passage> passages, String selected, Calendar selectedDate) {
+        this.selectedDate = selectedDate;
         this.passages = passages;
         this.selected = selected;
     }
 
     private ParcelableReadings(Parcel in) {
-        int size = in.readInt();
+    	selectedDate = Calendar.getInstance();
+    	selectedDate.setTimeInMillis(in.readLong());
+    	int size = in.readInt();
         selected = in.readString();
         passages = new ArrayList<Passage>();
         for (int index = 0; index < size; index++) {

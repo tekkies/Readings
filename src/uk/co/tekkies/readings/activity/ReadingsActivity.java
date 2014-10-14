@@ -64,7 +64,7 @@ public class ReadingsActivity extends BaseActivity implements OnDateSetListener 
     private static final String VERSION_KEY = "version_number";
     static final String NEWS_TOAST_URL = "http://tekkies.co.uk/readings/api/news-toast/";
     private static final int CENTER_PAGE = 100;
-    public static Calendar centerCalendar = null;
+    public static Calendar selectedDate = null;
     SimpleDateFormat thisYearDateFormat;
     SimpleDateFormat anotherYearDateFormat;
     SimpleDateFormat dayDateFormat;
@@ -159,7 +159,7 @@ public class ReadingsActivity extends BaseActivity implements OnDateSetListener 
 
     private void setDate(Calendar calendar) {
         Log.v("DATE", "setDate(" + anotherYearDateFormat.format(new Date(calendar.getTimeInMillis())));
-        centerCalendar = calendar;
+        selectedDate = calendar;
         today = isToday(calendar);
         viewPager.setAdapter(pagerAdapter); // force refresh
         viewPager.setCurrentItem(CENTER_PAGE);
@@ -195,18 +195,18 @@ public class ReadingsActivity extends BaseActivity implements OnDateSetListener 
         public android.support.v4.app.Fragment getItem(int i) {
             ReadingsFragment fragment = new ReadingsFragment();
             Bundle args = new Bundle();
-            Calendar fragmentCalendar = getCalendar(i);
-            args.putInt(ReadingsFragment.ARG_YEAR, fragmentCalendar.get(Calendar.YEAR));
-            args.putInt(ReadingsFragment.ARG_MONTH, fragmentCalendar.get(Calendar.MONTH));
-            args.putInt(ReadingsFragment.ARG_DAY, fragmentCalendar.get(Calendar.DAY_OF_MONTH));
+            Calendar fragmentSelectedDate = getSelectedDate(i);
+            args.putInt(ReadingsFragment.ARG_YEAR, fragmentSelectedDate.get(Calendar.YEAR));
+            args.putInt(ReadingsFragment.ARG_MONTH, fragmentSelectedDate.get(Calendar.MONTH));
+            args.putInt(ReadingsFragment.ARG_DAY, fragmentSelectedDate.get(Calendar.DAY_OF_MONTH));
             fragment.setArguments(args);
             return fragment;
         }
 
-        public Calendar getCalendar(int i) {
-            Calendar fragmentCalendar = (Calendar) centerCalendar.clone();
-            fragmentCalendar.add(Calendar.DATE, i - CENTER_PAGE);
-            return fragmentCalendar;
+        public Calendar getSelectedDate(int i) {
+            Calendar fragmentSelectedDate = (Calendar) selectedDate.clone();
+            fragmentSelectedDate.add(Calendar.DATE, i - CENTER_PAGE);
+            return fragmentSelectedDate;
         }
 
         @Override
@@ -216,7 +216,7 @@ public class ReadingsActivity extends BaseActivity implements OnDateSetListener 
 
         @Override
         public CharSequence getPageTitle(int position) {
-            Calendar pageCalendar = getCalendar(position);
+            Calendar pageCalendar = getSelectedDate(position);
             int pageDay = pageCalendar.get(Calendar.YEAR) * 1000 + pageCalendar.get(Calendar.DAY_OF_YEAR);
             Calendar nowCalendar = Calendar.getInstance();
             int nowDay = nowCalendar.get(Calendar.YEAR) * 1000 + nowCalendar.get(Calendar.DAY_OF_YEAR);
@@ -246,7 +246,7 @@ public class ReadingsActivity extends BaseActivity implements OnDateSetListener 
         @Override
         public void finishUpdate(ViewGroup container) {
             super.finishUpdate(container);
-            Calendar calendarPage = getCalendar(viewPager.getCurrentItem());
+            Calendar calendarPage = getSelectedDate(viewPager.getCurrentItem());
             today = isToday(calendarPage);
         }
 
@@ -419,7 +419,7 @@ public class ReadingsActivity extends BaseActivity implements OnDateSetListener 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         // super.onSaveInstanceState(outState);
-        Calendar calendar = pagerAdapter.getCalendar(viewPager.getCurrentItem());
+        Calendar calendar = pagerAdapter.getSelectedDate(viewPager.getCurrentItem());
         outState.putInt("year", calendar.get(Calendar.YEAR));
         outState.putInt("month", calendar.get(Calendar.MONTH));
         outState.putInt("dayOfMonth", calendar.get(Calendar.DAY_OF_MONTH));
@@ -435,7 +435,7 @@ public class ReadingsActivity extends BaseActivity implements OnDateSetListener 
     protected void onResume() {
         if (today) {
             // If was showing today, but current page is not today
-            Calendar calendar = pagerAdapter.getCalendar(viewPager.getCurrentItem());
+            Calendar calendar = pagerAdapter.getSelectedDate(viewPager.getCurrentItem());
             if (!isToday(calendar)) {
                 setDate(Calendar.getInstance());
             }
@@ -448,5 +448,9 @@ public class ReadingsActivity extends BaseActivity implements OnDateSetListener 
         return (calendar.get(Calendar.YEAR) == calendarNow.get(Calendar.YEAR))
                 && (calendar.get(Calendar.DAY_OF_YEAR) == calendarNow.get(Calendar.DAY_OF_YEAR));
     }
+
+	public Calendar getSelectedDate() {
+		return selectedDate;
+	}
 
 }

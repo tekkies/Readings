@@ -51,7 +51,7 @@ import android.widget.Toast;
 
 public class PortionArrayAdapter extends ArrayAdapter<Passage> implements OnClickListener {
 
-    private ReadingsActivity activity;
+    private ReadingsActivity readingsActivity;
     private ArrayList<Passage> passages;
     float defaultTextSize=0;
     Prefs prefs;
@@ -59,14 +59,14 @@ public class PortionArrayAdapter extends ArrayAdapter<Passage> implements OnClic
 
     public PortionArrayAdapter(Activity activity, ArrayList<Passage> values) {
         super(activity, R.layout.listitem_portion, values);
-        this.activity = (ReadingsActivity) activity;
+        this.readingsActivity = (ReadingsActivity) activity;
         this.passages = values;
         prefs = new Prefs(activity);
     }
     
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) readingsActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         ViewGroup view = (ViewGroup) inflater.inflate(R.layout.listitem_portion, parent, false);
         TextView textViewPassageTitle = (TextView) view.findViewById(R.id.passage_title);
         TextView textViewSummary = (TextView) view.findViewById(R.id.textViewSummary);
@@ -87,7 +87,7 @@ public class PortionArrayAdapter extends ArrayAdapter<Passage> implements OnClic
             listenView.setVisibility(View.VISIBLE);
             listenView.setOnClickListener(this);
         }
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(activity);
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(readingsActivity);
         Boolean showSummary = settings.getBoolean(ReadingsFragment.PREFS_SHOW_SUMMARY, true);
         if (showSummary) {
             textViewSummary.setText(passages.get(position).getSummary());
@@ -100,23 +100,23 @@ public class PortionArrayAdapter extends ArrayAdapter<Passage> implements OnClic
     public void onClick(View v) {
         switch (v.getId()) {
         case R.id.passage_title:
-            Analytics.UIClick(activity, "passage_title");
+            Analytics.UIClick(readingsActivity, "passage_title");
             tryOpenIntegratedReader(((View) v.getParent().getParent()).getTag().toString());
             break;
         case R.id.textViewSummary:
-            Analytics.UIClick(activity, "passage_summay");
+            Analytics.UIClick(readingsActivity, "passage_summay");
             tryOpenIntegratedReader(((View) v.getParent()).getTag().toString());
             break;
         case R.id.imageViewReadOffline:
-            Analytics.UIClick(activity, "passage_read_offline");
+            Analytics.UIClick(readingsActivity, "passage_read_offline");
             tryOpenIntegratedReader(((View) v.getParent().getParent()).getTag().toString());
             break;
         case R.id.imageListen:
-            Analytics.UIClick(activity, "passage_listen");
+            Analytics.UIClick(readingsActivity, "passage_listen");
             openMp3(((View) v.getParent().getParent()).getTag().toString());
             break;
         case R.id.imageViewReadOnline:
-            Analytics.UIClick(activity, "passage_read_online");
+            Analytics.UIClick(readingsActivity, "passage_read_online");
             openPositiveWord(((View) v.getParent().getParent()).getTag().toString());
             break;
         }
@@ -138,9 +138,9 @@ public class PortionArrayAdapter extends ArrayAdapter<Passage> implements OnClic
 
     private void upgradeKjvBiblePlugin(String passage) {
         final String finalPassage = passage;
-        AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(activity);
-        dlgAlert.setMessage(activity.getString(R.string.please_upgrade_the_kjv_bible_plugin));
-        dlgAlert.setTitle(activity.getString(R.string.upgrade_plugin));
+        AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(readingsActivity);
+        dlgAlert.setMessage(readingsActivity.getString(R.string.please_upgrade_the_kjv_bible_plugin));
+        dlgAlert.setTitle(readingsActivity.getString(R.string.upgrade_plugin));
         dlgAlert.setCancelable(true);
         dlgAlert.setPositiveButton("Download update",
                 new DialogInterface.OnClickListener() {
@@ -160,9 +160,9 @@ public class PortionArrayAdapter extends ArrayAdapter<Passage> implements OnClic
     private PackageInfo getOfflineKgvPackageInfo() {
         PackageInfo packageInfo=null;
         try {
-            packageInfo = activity.getPackageManager().getPackageInfo("uk.co.tekkies.plugin.kjv", 0);
+            packageInfo = readingsActivity.getPackageManager().getPackageInfo("uk.co.tekkies.plugin.kjv", 0);
         } catch (NameNotFoundException e) {
-            Analytics.reportCaughtException(activity, e);
+            Analytics.reportCaughtException(readingsActivity, e);
         }
         return packageInfo;
     }
@@ -172,21 +172,21 @@ public class PortionArrayAdapter extends ArrayAdapter<Passage> implements OnClic
         intent.setType("vnd.android.cursor.item/vnd.uk.co.tekkies.bible.passage");
         intent.putExtra("passage", passage);
         //Look for plugin in packages
-        PackageManager pm = activity.getPackageManager();
+        PackageManager pm = readingsActivity.getPackageManager();
         List<ResolveInfo> list = pm.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
         if (list.size() > 0) {
             // Intent can be serviced, try it.
-            activity.startActivity(intent);
+            readingsActivity.startActivity(intent);
         } else {
             // install the off-line Bible
-            Toast.makeText(activity, "The offline bible must be installed from Google Play.", Toast.LENGTH_LONG).show();
+            Toast.makeText(readingsActivity, "The offline bible must be installed from Google Play.", Toast.LENGTH_LONG).show();
             installKjvPlugin();
         }
 
     }
     
     private void askUserToInstallKjvPlugin() {
-        AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(activity);
+        AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(readingsActivity);
         dlgAlert.setMessage(R.string.install_kjv_bible_plugin);
         dlgAlert.setTitle(R.string.title_install);
         dlgAlert.setCancelable(true);
@@ -203,12 +203,12 @@ public class PortionArrayAdapter extends ArrayAdapter<Passage> implements OnClic
         boolean installed = false;
         Uri marketUri = Uri.parse("market://details?id=uk.co.tekkies.plugin.kjv");
         Intent marketIntent = new Intent(Intent.ACTION_VIEW).setData(marketUri);
-        PackageManager pm = activity.getPackageManager();
+        PackageManager pm = readingsActivity.getPackageManager();
         List<ResolveInfo> list = pm.queryIntentActivities(marketIntent, PackageManager.MATCH_DEFAULT_ONLY);
         if (list.size() > 0)
-            activity.startActivity(marketIntent);
+            readingsActivity.startActivity(marketIntent);
         else {
-            Toast.makeText(activity, R.string.sorry_no_market_installed, Toast.LENGTH_LONG).show();
+            Toast.makeText(readingsActivity, R.string.sorry_no_market_installed, Toast.LENGTH_LONG).show();
         }
         return installed;
     }
@@ -218,14 +218,14 @@ public class PortionArrayAdapter extends ArrayAdapter<Passage> implements OnClic
         Intent webIntent = new Intent(Intent.ACTION_VIEW);
         Uri uri = Uri.parse(url);
         webIntent.setData(uri);
-        activity.startActivity(webIntent);
+        readingsActivity.startActivity(webIntent);
     }
 
     private void openIntegratedReader(String selectedPassage) {
-        Intent intent = new Intent(activity, PassageActivity.class);
-        ParcelableReadings passableReadings = new ParcelableReadings(passages, selectedPassage);
+        Intent intent = new Intent(readingsActivity, PassageActivity.class);
+        ParcelableReadings passableReadings = new ParcelableReadings(passages, selectedPassage, readingsActivity.getSelectedDate());
         intent.putExtra(ParcelableReadings.PARCEL_NAME, passableReadings);
-        activity.startActivity(intent);
+        readingsActivity.startActivity(intent);
     }
 
     private void openMp3(String passage) {
@@ -233,14 +233,14 @@ public class PortionArrayAdapter extends ArrayAdapter<Passage> implements OnClic
         intent.setType("vnd.android.cursor.item/vnd.uk.co.tekkies.mp3bible.passage");
         intent.putExtra("passage", passage);
         //Look for plugin in packages
-        PackageManager pm = activity.getPackageManager();
+        PackageManager pm = readingsActivity.getPackageManager();
         List<ResolveInfo> list = pm.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
         if (list.size() > 0) {
             // Intent can be serviced, try it.
-            activity.startActivity(intent);
+            readingsActivity.startActivity(intent);
         } else {
             // install the off-line Bible
-            Toast.makeText(activity, "The MP3 plugin must be installed from Google Play.", Toast.LENGTH_LONG).show();
+            Toast.makeText(readingsActivity, "The MP3 plugin must be installed from Google Play.", Toast.LENGTH_LONG).show();
             installKjvPlugin();
         }
     }

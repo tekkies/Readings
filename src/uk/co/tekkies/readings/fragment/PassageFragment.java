@@ -17,6 +17,7 @@ limitations under the License.
 package uk.co.tekkies.readings.fragment;
 
 import java.io.File;
+import java.util.Calendar;
 import java.util.List;
 
 import uk.co.tekkies.readings.R;
@@ -73,6 +74,7 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
     Prefs prefs;
     ImageView playPauseButton;
     SeekBar seekBar; 
+    Calendar selectedDate;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -98,7 +100,8 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
                 || prefs.loadMp3Product().length() > 0) {
             setupMediaControls(mainView);
         }
-        mainView.findViewById(R.id.button_study).setOnClickListener(this);
+        mainView.findViewById(R.id.textViewStudy).setOnClickListener(this);
+        mainView.findViewById(R.id.textViewDiscuss).setOnClickListener(this);
         loadTextSize();
         registerGestureDetector(mainView);
         return mainView;
@@ -123,8 +126,10 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         Bundle args = getArguments();
-        passage = args.getString("passage");
-        passageId = args.getInt("passageId");
+        passage = args.getString(PassageActivity.ARG_PASSAGE);
+        passageId = args.getInt(PassageActivity.ARG_PASSAGE_ID);
+        selectedDate = Calendar.getInstance();
+        selectedDate.setTimeInMillis(args.getLong(PassageActivity.ARG_SELECTED_DATE)); 
         String html = render(getPassageXml(passage));
         textViewContent.setText(Html.fromHtml(html));
         textViewContent.setMovementMethod(LinkMovementMethod.getInstance());
@@ -242,8 +247,11 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
         case R.id.button_play_pause:
             doPlayPauseSearch();
             break;
-        case R.id.button_study:
+        case R.id.textViewStudy:
         	doStudy();
+        	break;
+        case R.id.textViewDiscuss:
+        	doDiscuss();
         	break;
         }
     }
@@ -320,13 +328,22 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
 		    intent.setComponent(ComponentName.unflattenFromString(
 		        "com.riversoft.android.mysword/com.riversoft.android.mysword.MySwordLink"));
 		    intent.setData(Uri.parse("http://mysword.info/b?r="+passage));
-		    
 		    startActivity(intent);
 		} catch (Exception e) {
 			Analytics.reportCaughtException(getActivity(), e);
 		}
 	}
-    
+
+	private void doDiscuss() {
+		int month = selectedDate.get(Calendar.MONTH)+1;
+		int day = selectedDate.get(Calendar.DAY_OF_MONTH);
+		String url = "http://www.dailyreadings.org.uk/default.asp?act=notesdisplay&m="+month+"&d="+day; //+"#r1";
+        Intent webIntent = new Intent(Intent.ACTION_VIEW);
+        Uri uri = Uri.parse(url);
+        webIntent.setData(uri);
+        startActivity(webIntent);	
+    }
+	
     private void doPause() {
         Analytics.UIClick(getActivity(), "player-pause");
         int playingPassageId = ((PassageActivity)getActivity()).getServiceInterface().getPassage();

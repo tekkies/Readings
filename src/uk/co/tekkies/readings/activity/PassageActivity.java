@@ -47,6 +47,10 @@ import android.view.ViewGroup;
 public class PassageActivity extends BaseActivity implements PlayerService.IClientInterface {
 
     private static final String TAG_BIND = "BIND";
+    public static final String ARG_SELECTED_DATE = "selectedDate";
+	public static final String ARG_PASSAGE = "passage";
+	public static final String ARG_PASSAGE_ID = "passageId";
+
     PagerAdapter pagerAdapter;
     ViewPager viewPager;
     private ParcelableReadings passableReadings;
@@ -54,7 +58,6 @@ public class PassageActivity extends BaseActivity implements PlayerService.IClie
     private AsyncTask<String, Integer, Long> progressUpdateTask;
     private boolean serviceAvailable = false;
     private PlayerServiceConnection serviceConnection; 
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -84,10 +87,10 @@ public class PassageActivity extends BaseActivity implements PlayerService.IClie
     }
     
     public class PagerAdapter extends FragmentStatePagerAdapter {
-        
-        WeakHashMap<Integer, Fragment> fragments=new WeakHashMap<Integer, Fragment>();
-        
-        public PagerAdapter(FragmentManager fm) {
+		
+    	WeakHashMap<Integer, Fragment> fragments=new WeakHashMap<Integer, Fragment>();
+
+		public PagerAdapter(FragmentManager fm) {
             super(fm);
         }
             
@@ -96,8 +99,9 @@ public class PassageActivity extends BaseActivity implements PlayerService.IClie
             Fragment fragment = new PassageFragment();
             fragments.put(i, fragment);
             Bundle args = new Bundle();
-            args.putString("passage", getPassableReadings().passages.get(i).getTitle());
-            args.putInt("passageId", getPassableReadings().passages.get(i).getPassageId());
+            args.putString(ARG_PASSAGE, getPassableReadings().passages.get(i).getTitle());
+            args.putInt(ARG_PASSAGE_ID, getPassableReadings().passages.get(i).getPassageId());
+            args.putLong(ARG_SELECTED_DATE, getPassableReadings().selectedDate.getTimeInMillis()); 
             fragment.setArguments(args);
             return fragment;
         }

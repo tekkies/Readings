@@ -46,13 +46,23 @@
                 android:orientation="horizontal" >
 
                 <TextView
-                    android:id="@+id/button_study"
+                    android:id="@+id/textViewStudy"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:drawableLeft="?ic_action_social_chat"
                     android:gravity="center"
                     android:padding="10dp"
                     android:text="@string/Study" />
+
+                <TextView
+                    android:id="@+id/textViewDiscuss"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="?ic_action_social_chat"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="@string/discuss" />
+
             </LinearLayout>
 
             <TextView
