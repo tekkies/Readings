@@ -64,7 +64,7 @@ import android.widget.Toast;
 public class PassageFragment extends Fragment implements OnSharedPreferenceChangeListener, OnClickListener, OnSeekBarChangeListener {
 
     private static final String MYSWORD_PACKAGE = "com.riversoft.android.mysword";
-	TextView textView;
+	TextView textViewContent;
     ScaleGestureDetector scaleGestureDetector;
     float defaultTextSize;
     double textSize;
@@ -85,11 +85,11 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
     public View onCreateView(android.view.LayoutInflater inflater, android.view.ViewGroup container,
             Bundle savedInstanceState) {
         View mainView = inflater.inflate(R.layout.passage_fragment, container, false);
-        textView = (TextView) (mainView.findViewById(R.id.textView1));
-        defaultTextSize = textView.getTextSize();
+        textViewContent = (TextView) (mainView.findViewById(R.id.textViewContent));
+        defaultTextSize = textViewContent.getTextSize();
         if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean(
                 getString(R.string.pref_key_night_mode), false)) {
-            textView.setTextColor(Color.GRAY);
+            textViewContent.setTextColor(Color.GRAY);
         }
         Prefs prefs = new Prefs(getActivity());
         //Legacy MP3 plugin installed but MP3 product not yet defined
@@ -126,8 +126,8 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
         passage = args.getString("passage");
         passageId = args.getInt("passageId");
         String html = render(getPassageXml(passage));
-        textView.setText(Html.fromHtml(html));
-        textView.setMovementMethod(LinkMovementMethod.getInstance());
+        textViewContent.setText(Html.fromHtml(html));
+        textViewContent.setMovementMethod(LinkMovementMethod.getInstance());
         super.onViewCreated(view, savedInstanceState);
     }
 
@@ -200,7 +200,7 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
 
     private void loadTextSize() {
         textSize = prefs.loadPassageTextSize();
-        textView.setTextSize((float) (textSize * defaultTextSize));
+        textViewContent.setTextSize((float) (textSize * defaultTextSize));
     }
 
     private void saveTextSize() {
@@ -219,7 +219,7 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
         @Override
         public boolean onScale(ScaleGestureDetector detector) {
             textSize *= detector.getScaleFactor();
-            textView.setTextSize((float) (textSize * defaultTextSize));
+            textViewContent.setTextSize((float) (textSize * defaultTextSize));
             return true;
         }
 
