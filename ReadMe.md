@@ -13,15 +13,17 @@ Beta build available in the G+ community [(http://goo.gl/6yw8X9)](http://goo.gl/
 
 # Build #
 
-Build using [Eclipse/ADT](http://developer.android.com/sdk/installing/installing-adt.html) - Just import the project into the Eclipse workspace.
+Build using Android Studio - Just open a project and point to this folder.
 
 You do not need to clone the submodules.  It contains content I prefer not to share.  Without it, alternative sample content is shown (from the licensed folder).
 
 ## Libraries ##
 
-Add libGoogleAnalyticsServices.jar to libs folder.  [Download](https://developers.google.com/analytics/devguides/collection/android/resources)
+Add libGoogleAnalyticsServices.jar to app/libs folder (create folder if required).  [Download](https://developers.google.com/analytics/devguides/collection/android/resources)
 
-[](http://developer.android.com/sdk/installing/installing-adt.html "Eclipse/ADT")
+Select App in the tree, open module settings, on the dependencies tab, add a file dependency, and select libGoogleAnalyticsServices.jar
+
+Synchronise the project and build.
 
 # ToDo #
 
