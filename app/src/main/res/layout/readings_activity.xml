@@ -1,0 +1,57 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/fragment_placeholder"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <android.support.v4.view.ViewPager
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bottomBar" >
+
+        <android.support.v4.view.PagerTitleStrip
+            android:id="@+id/pager_title_strip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:background="?pagerBackground"
+            android:paddingBottom="4dp"
+            android:paddingTop="4dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#fff" />
+    </android.support.v4.view.ViewPager>
+
+    <RelativeLayout
+        android:id="@+id/bottomBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:paddingTop="8dp" >
+
+        <Button
+            android:id="@+id/buttonFeedback"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:clickable="true"
+            android:drawableRight="?attr/ic_action_social_chat"
+            android:drawablePadding="10dp"
+            android:onClick="onClickFeedback"
+            android:padding="10dp"
+            android:text="@string/feedback" />
+
+        <Button
+            android:id="@+id/imageViewFacebook"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:clickable="true"
+            android:drawableLeft="?attr/ic_action_location_web_site"
+            android:drawablePadding="10dp"
+            android:onClick="onClickHelp"
+            android:padding="10dp"
+            android:text="@string/help" />
+    </RelativeLayout>
+
+</RelativeLayout>
