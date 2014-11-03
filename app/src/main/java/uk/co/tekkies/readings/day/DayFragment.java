@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-package uk.co.tekkies.readings.fragment;
+package uk.co.tekkies.readings.day;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -39,7 +39,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 
-public class ReadingsFragment extends Fragment implements DayView {
+public class DayFragment extends Fragment implements DayView {
 
     private DayPresenter presenter;
 
@@ -53,7 +53,7 @@ public class ReadingsFragment extends Fragment implements DayView {
     private Boolean showSummary = true;
     private Calendar calendar = Calendar.getInstance();
 
-    public ReadingsFragment() {
+    public DayFragment() {
         presenter = Injector.getDayPresenter(this);
     }
 

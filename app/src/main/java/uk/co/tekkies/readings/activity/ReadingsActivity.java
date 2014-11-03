@@ -27,7 +27,7 @@ import java.util.Date;
 import uk.co.tekkies.readings.R;
 import uk.co.tekkies.readings.ReadingsApplication;
 import uk.co.tekkies.readings.fragment.DatePickerFragment;
-import uk.co.tekkies.readings.fragment.ReadingsFragment;
+import uk.co.tekkies.readings.day.DayFragment;
 import uk.co.tekkies.readings.util.Analytics;
 
 import android.annotation.SuppressLint;
@@ -193,12 +193,12 @@ public class ReadingsActivity extends BaseActivity implements OnDateSetListener 
 
         @Override
         public android.support.v4.app.Fragment getItem(int i) {
-            ReadingsFragment fragment = new ReadingsFragment();
+            DayFragment fragment = new DayFragment();
             Bundle args = new Bundle();
             Calendar fragmentSelectedDate = getSelectedDate(i);
-            args.putInt(ReadingsFragment.ARG_YEAR, fragmentSelectedDate.get(Calendar.YEAR));
-            args.putInt(ReadingsFragment.ARG_MONTH, fragmentSelectedDate.get(Calendar.MONTH));
-            args.putInt(ReadingsFragment.ARG_DAY, fragmentSelectedDate.get(Calendar.DAY_OF_MONTH));
+            args.putInt(DayFragment.ARG_YEAR, fragmentSelectedDate.get(Calendar.YEAR));
+            args.putInt(DayFragment.ARG_MONTH, fragmentSelectedDate.get(Calendar.MONTH));
+            args.putInt(DayFragment.ARG_DAY, fragmentSelectedDate.get(Calendar.DAY_OF_MONTH));
             fragment.setArguments(args);
             return fragment;
         }

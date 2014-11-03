@@ -23,7 +23,7 @@ import uk.co.tekkies.readings.R;
 import uk.co.tekkies.readings.ReadingsApplication;
 import uk.co.tekkies.readings.activity.PassageActivity;
 import uk.co.tekkies.readings.activity.ReadingsActivity;
-import uk.co.tekkies.readings.fragment.ReadingsFragment;
+import uk.co.tekkies.readings.day.DayFragment;
 import uk.co.tekkies.readings.model.ParcelableReadings;
 import uk.co.tekkies.readings.model.Passage;
 import uk.co.tekkies.readings.model.Prefs;
@@ -88,7 +88,7 @@ public class PortionArrayAdapter extends ArrayAdapter<Passage> implements OnClic
             listenView.setOnClickListener(this);
         }
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(readingsActivity);
-        Boolean showSummary = settings.getBoolean(ReadingsFragment.PREFS_SHOW_SUMMARY, true);
+        Boolean showSummary = settings.getBoolean(DayFragment.PREFS_SHOW_SUMMARY, true);
         if (showSummary) {
             textViewSummary.setText(passages.get(position).getSummary());
         } else {
