@@ -1,4 +1,4 @@
-package uk.co.tekkies.readings.tdd;
+package uk.co.tekkies.readings.test.tdd;
 
 import junit.framework.TestCase;
 

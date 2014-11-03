@@ -20,7 +20,8 @@
 \n
 \nThis app collects anonymous statistics/crash reports.  This can be disabled in settings.
 \n
-\nSome assets (e.g. icons) were created using the Android Asset Studio
+\n- Some assets (e.g. icons) were created using the Android Asset Studio
+\n- Double-espresso by JakeWharton was used in the creation of this app.
 \n
 </string>
     <string name="menu_feedback">Feedback</string>
@@ -48,7 +49,10 @@
     <string name="pref_title_web_site">Web site</string>
     <string name="pref_summary_web_site">Help and feedback</string>
     <string name="about_readings">About Readings</string>
-    <string name="about_content_text">\n                Reading plan sourced from The Bible Companion reading plan as published by The Christadelphian (http://www.thechristadelphian.com).\n                \n                Chapter summaries based on Thomas Scott Bible Commentary, 1866</string>
+    <string name="about_content_text">
+\n                Reading plan sourced from The Bible Companion reading plan as published by The Christadelphian (http://www.thechristadelphian.com).
+\n                
+\n                Chapter summaries based on Thomas Scott Bible Commentary, 1866</string>
     <string name="about_content_title">Content</string>
     <string name="about_source_text">App source code available at https://github.com/tekkies/readings</string>
     <string name="about_app_title">App</string>

@@ -5,7 +5,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import java.util.Calendar;
-import java.util.List;
 
 import uk.co.tekkies.readings.R;
 import uk.co.tekkies.readings.model.Passage;
