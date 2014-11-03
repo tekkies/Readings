@@ -19,8 +19,11 @@ package uk.co.tekkies.readings.fragment;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import uk.co.tekkies.readings.Injector;
 import uk.co.tekkies.readings.R;
 import uk.co.tekkies.readings.adapter.PortionArrayAdapter;
+import uk.co.tekkies.readings.day.DayPresenter;
+import uk.co.tekkies.readings.day.DayView;
 import uk.co.tekkies.readings.model.Passage;
 import uk.co.tekkies.readings.util.DatabaseHelper;
 
@@ -36,7 +39,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 
-public class ReadingsFragment extends Fragment {
+public class ReadingsFragment extends Fragment implements DayView {
+
+    private DayPresenter presenter;
 
     public static final String ARG_YEAR = "year";
     public static final String ARG_MONTH = "month";
@@ -49,6 +54,7 @@ public class ReadingsFragment extends Fragment {
     private Calendar calendar = Calendar.getInstance();
 
     public ReadingsFragment() {
+        presenter = Injector.getDayPresenter(this);
     }
 
     @Override
@@ -78,6 +84,7 @@ public class ReadingsFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        presenter.startPresenting();
         showReadings();
     }
 
