@@ -17,19 +17,13 @@ limitations under the License.
 package uk.co.tekkies.readings.day;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 
 import uk.co.tekkies.readings.Injector;
 import uk.co.tekkies.readings.R;
 import uk.co.tekkies.readings.adapter.PortionArrayAdapter;
-import uk.co.tekkies.readings.day.DayPresenter;
-import uk.co.tekkies.readings.day.DayView;
 import uk.co.tekkies.readings.model.Passage;
-import uk.co.tekkies.readings.util.DatabaseHelper;
 
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -51,7 +45,6 @@ public class DayFragment extends Fragment implements DayView {
     ArrayList<Passage> listItems = new ArrayList<Passage>();
     PortionArrayAdapter adapter;
     private Boolean showSummary = true;
-    private Calendar calendar = Calendar.getInstance();
 
     public DayFragment() {
         presenter = Injector.getDayPresenter(this);
@@ -60,7 +53,8 @@ public class DayFragment extends Fragment implements DayView {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         Bundle args = getArguments();
-        calendar.set(args.getInt(ARG_YEAR), args.getInt(ARG_MONTH), args.getInt(ARG_DAY));
+        presenter.setCalendar(args.getInt(ARG_YEAR), args.getInt(ARG_MONTH), args.getInt(ARG_DAY));
+
         adapter = new PortionArrayAdapter(getActivity(), listItems);
         ListView listViewMain = (ListView) view.findViewById(R.id.listView);
         listViewMain.setAdapter(adapter);
@@ -84,38 +78,9 @@ public class DayFragment extends Fragment implements DayView {
     @Override
     public void onStart() {
         super.onStart();
-        presenter.startPresenting();
-        showReadings();
+        presenter.reLoad();
     }
 
-    public void showReadings() {
-        DatabaseHelper databaseHelper = new DatabaseHelper(getActivity());
-        listItems.clear();
-        try {
-            SQLiteDatabase sqliteDatabase = databaseHelper.getWritableDatabase();
-            String[] params = { Integer.toString(calendar.get(Calendar.MONTH) + 1),
-                    Integer.toString(calendar.get(Calendar.DAY_OF_MONTH)) };
-            final String QUERY = "                            SELECT Coalesce(book.Name || ' ' || override, book.Name || ' ' || passage.chapter) AS passage, summary.summary_text, passage._id"
-                    + "                            FROM plan"
-                    + "                            LEFT JOIN passage ON passage._id = plan.passage_id"
-                    + "                            LEFT JOIN book ON book._id = passage.book_id"
-                    + "                            LEFT JOIN summary ON summary.book_id = book._id AND summary.chapter = passage.chapter"
-                    + "                            WHERE month = ? and day = ?";
-            Cursor cursor = sqliteDatabase
-                    .rawQuery(QUERY, params);
-            cursor.moveToFirst();
-            while (!cursor.isAfterLast()) {
-                listItems.add(new Passage(cursor.getString(0),
-                        cursor.isNull(1) ? getString(R.string.sorry_no_summary_available_yet) : cursor.getString(1),
-                        cursor.getInt(2)));
-                cursor.moveToNext();
-            }
-            cursor.close();
-            adapter.notifyDataSetChanged();
-        } finally {
-            databaseHelper.close();
-        }
-    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -141,6 +106,21 @@ public class DayFragment extends Fragment implements DayView {
         SharedPreferences.Editor editor = settings.edit();
         editor.putBoolean(PREFS_SHOW_SUMMARY, showSummary);
         editor.commit();
-        showReadings();
+        presenter.reLoad();
+    }
+
+    @Override
+    public void clearList() {
+        listItems.clear();
+    }
+
+    @Override
+    public void addItem(Passage passage) {
+        listItems.add(passage);
+    }
+
+    @Override
+    public void notifyDataSetChanged() {
+        adapter.notifyDataSetChanged();
     }
 }
