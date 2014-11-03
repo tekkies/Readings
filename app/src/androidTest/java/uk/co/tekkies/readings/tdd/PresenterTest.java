@@ -1,6 +1,5 @@
-package tekkies.co.uk.readings;
+package uk.co.tekkies.readings.tdd;
 
-import junit.framework.Assert;
 import junit.framework.TestCase;
 
 /**
