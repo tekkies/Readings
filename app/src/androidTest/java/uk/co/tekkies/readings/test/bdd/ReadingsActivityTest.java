@@ -30,7 +30,13 @@ public class ReadingsActivityTest extends ActivityInstrumentationTestCase2<Readi
     }
 
     public void testOne() {
-        onView(withId(R.id.buttonFeedback)).perform(click());
+
+        com.google.android.apps.common.testing.ui.espresso.ViewInteraction whatsNew = onView(withId(R.id.whatsNewDialogRoot));
+        com.google.android.apps.common.testing.ui.espresso.ViewInteraction feedback = onView(withId(R.id.buttonFeedback));
+
+        whatsNew.perform(click());
+        feedback.perform(click());
+
     }
 
 }
