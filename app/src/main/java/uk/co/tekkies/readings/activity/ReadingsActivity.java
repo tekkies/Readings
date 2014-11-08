@@ -427,8 +427,9 @@ public class ReadingsActivity extends BaseActivity implements OnDateSetListener 
     }
 
     private void doPickDate() {
-        DialogFragment newFragment = new DatePickerFragment(this);
-        newFragment.show(getSupportFragmentManager(), "datePicker");
+        DatePickerFragment datePickerFragment = new DatePickerFragment();
+        datePickerFragment.setOnDateSetListener(this);
+        datePickerFragment.show(getSupportFragmentManager(), "datePicker");
     }
 
     @Override
