@@ -11,7 +11,7 @@ public class PresenterTest  extends TestCase {
         assertTrue(true);
     }
 
-    public void testFail() {
-        assertTrue(false);
-    }
+//    public void testFail() {
+//        assertTrue(false);
+//    }
 }

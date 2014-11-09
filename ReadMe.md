@@ -25,6 +25,10 @@ In Android Studio, the tree, go to app/libs, right click on  libGoogleAnalyticsS
 
 Click Synchronise (Ctrl-Alt-Y) the project and build.
 
+## Test automation ##
+When you run tests, (app/src/androidTest), you will need to edit the test configuration and set the "Specific instrumentation runner" to
+com.google.android.apps.common.testing.testrunner.GoogleInstrumentationTestRunner
+
 # ToDo #
 
 ## Passage Activity ##

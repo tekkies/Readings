@@ -61,7 +61,7 @@ import android.widget.Toast;
 
 public class ReadingsActivity extends BaseActivity implements OnDateSetListener {
 
-    private static final String VERSION_KEY = "version_number";
+    public static final String VERSION_KEY = "version_number";
     static final String NEWS_TOAST_URL = "http://tekkies.co.uk/readings/api/news-toast/";
     private static final int CENTER_PAGE = 100;
     public static Calendar selectedDate = null;
