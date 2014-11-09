@@ -21,9 +21,9 @@ You do not need to clone the submodules.  It contains content I prefer not to sh
 
 Add libGoogleAnalyticsServices.jar to app/libs folder (create folder if required).  [Download](https://developers.google.com/analytics/devguides/collection/android/resources)
 
-Select App in the tree, open module settings, on the dependencies tab, add a file dependency, and select libGoogleAnalyticsServices.jar
+In Android Studio, the tree, go to app/libs, right click on  libGoogleAnalyticsServices.jar and click "Add as Library...".
 
-Synchronise the project and build.
+Click Synchronise (Ctrl-Alt-Y) the project and build.
 
 # ToDo #
 
