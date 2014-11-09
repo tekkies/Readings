@@ -33,8 +33,8 @@ public class ShowWhatsNewOnUpgradeTest extends ActivityInstrumentationTestCase2<
     @Override
     public void setUp() throws Exception {
         super.setUp();
-//        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getInstrumentation().getContext());
-//        preferences.edit().clear().commit();
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getInstrumentation ().getTargetContext());
+        preferences.edit().clear().commit();
         getActivity(); //Start the activity
     }
 
