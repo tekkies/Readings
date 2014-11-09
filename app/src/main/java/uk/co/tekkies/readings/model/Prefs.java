@@ -5,6 +5,7 @@ import uk.co.tekkies.readings.model.content.Mp3ContentLocator;
 import uk.co.tekkies.readings.util.Analytics;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.preference.PreferenceManager;
 
@@ -13,6 +14,8 @@ public class Prefs {
     public static final String PREF_PASSAGE_TEXT_SIZE = "passageTextSize";
     public static final String PREF_MP3_BASE_PATH = "mp3BasePath";
     public static final String PREF_MP3_PRODUCT = "mp3Product";
+    public static final String VERSION_KEY = "version_number";
+
 
     SharedPreferences sharedPreferences;
     Context context;
@@ -48,8 +51,6 @@ public class Prefs {
         editor.commit();
     }
 
-
-    
     public Boolean loadBoolean(String key, boolean defaultValue) {
         return sharedPreferences.getBoolean(key, defaultValue);
     }
@@ -114,5 +115,22 @@ public class Prefs {
         final String notSet = "not-set";
         return loadString(Prefs.PREF_MP3_PRODUCT, notSet).equals(notSet);
     }
-    
+
+    public boolean checkForUpgrade() {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        int currentVersionNumber = 0;
+        int savedVersionNumber = sharedPref.getInt(VERSION_KEY, 0);
+        try {
+            PackageInfo pi = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+            currentVersionNumber = pi.versionCode;
+        } catch (Exception e) {
+            Analytics.reportCaughtException(context, e);
+        }
+        if (currentVersionNumber > savedVersionNumber) {
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putInt(VERSION_KEY, currentVersionNumber);
+            editor.commit();
+        }
+        return (currentVersionNumber > savedVersionNumber);
+    }
 }

@@ -28,6 +28,7 @@ import uk.co.tekkies.readings.R;
 import uk.co.tekkies.readings.ReadingsApplication;
 import uk.co.tekkies.readings.fragment.DatePickerFragment;
 import uk.co.tekkies.readings.day.DayFragment;
+import uk.co.tekkies.readings.model.Prefs;
 import uk.co.tekkies.readings.util.Analytics;
 
 import android.annotation.SuppressLint;
@@ -61,7 +62,6 @@ import android.widget.Toast;
 
 public class ReadingsActivity extends BaseActivity implements OnDateSetListener {
 
-    public static final String VERSION_KEY = "version_number";
     static final String NEWS_TOAST_URL = "http://tekkies.co.uk/readings/api/news-toast/";
     private static final int CENTER_PAGE = 100;
     public static Calendar selectedDate = null;
@@ -84,9 +84,9 @@ public class ReadingsActivity extends BaseActivity implements OnDateSetListener 
         anotherYearDateFormat = new SimpleDateFormat("E d MMM yy");
         ReadingsApplication.checkForMP3Plugin(this);
         setContentView(R.layout.readings_activity);
-        if(checkForUpgrade()) {
+        if(new Prefs(getApplicationContext()).checkForUpgrade()) {
             showWhatsNewDialog();
-        }            
+        }
         setupPager();
         if (!loadInstanceState(savedInstanceState)) {
             setDate(Calendar.getInstance());
@@ -252,24 +252,6 @@ public class ReadingsActivity extends BaseActivity implements OnDateSetListener 
 
     }
 
-    private Boolean checkForUpgrade() {
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        int currentVersionNumber = 0;
-        int savedVersionNumber = sharedPref.getInt(VERSION_KEY, 0);
-        try {
-            PackageInfo pi = getPackageManager().getPackageInfo(getPackageName(), 0);
-            currentVersionNumber = pi.versionCode;
-        } catch (Exception e) {
-            Analytics.reportCaughtException(this, e);
-        }
-        if (currentVersionNumber > savedVersionNumber) {
-            Editor editor = sharedPref.edit();
-            editor.putInt(VERSION_KEY, currentVersionNumber);
-            editor.commit();
-        }
-        return (currentVersionNumber > savedVersionNumber);
-    }
-   
     private void showWhatsNewDialog() {
         LayoutInflater inflater = LayoutInflater.from(this);
         View view = inflater.inflate(R.layout.dialog_whatsnew, null);
