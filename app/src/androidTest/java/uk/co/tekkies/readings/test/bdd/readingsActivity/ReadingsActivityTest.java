@@ -1,23 +1,17 @@
 package uk.co.tekkies.readings.test.bdd.readingsActivity;
 
-import android.app.Activity;
 import android.test.ActivityInstrumentationTestCase2;
 
-import uk.co.tekkies.readings.R;
+import java.util.Calendar;
+
 import uk.co.tekkies.readings.activity.ReadingsActivity;
 import uk.co.tekkies.readings.test.Utils;
 
 import static com.google.android.apps.common.testing.ui.espresso.Espresso.onView;
-import static com.google.android.apps.common.testing.ui.espresso.assertion.ViewAssertions.doesNotExist;
 import static com.google.android.apps.common.testing.ui.espresso.assertion.ViewAssertions.matches;
 import static com.google.android.apps.common.testing.ui.espresso.matcher.ViewMatchers.isDisplayed;
-import static com.google.android.apps.common.testing.ui.espresso.matcher.ViewMatchers.withId;
-import static com.google.android.apps.common.testing.ui.espresso.action.ViewActions.click;
-
-
-/**
- * <a href="http://d.android.com/tools/testing/testing_android.html">Testing Fundamentals</a>
- */
+import static com.google.android.apps.common.testing.ui.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.text.StringContains.containsString;
 
 public class ReadingsActivityTest extends ActivityInstrumentationTestCase2<ReadingsActivity> {
     public ReadingsActivityTest() {
@@ -32,17 +26,14 @@ public class ReadingsActivityTest extends ActivityInstrumentationTestCase2<Readi
     }
 
     public void testOpenSpecificDate() {
-//        onView(withId(R.id.menu_date)).perform(click());
-//        onView(withId(R.id.whatsNewLinearLayout)).perform(click());
         final ReadingsActivity readingsActivity = getActivity();
-
         readingsActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                readingsActivity.onDateSet(null, 2011, 1, 1);
+                readingsActivity.onDateSet(null, 2011, Calendar.FEBRUARY, 1);
             }
         });
-
-        onView(withId(R.id.whatsNewLinearLayout)).check(matches(isDisplayed()));
+        onView(withText(containsString("Exodus 5"))).check(matches(isDisplayed()));
     }
+
 }
