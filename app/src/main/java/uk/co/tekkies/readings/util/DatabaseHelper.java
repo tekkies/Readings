@@ -134,4 +134,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         return result;
     }
+
+    public int getFileVersion() {
+        int version = -1;
+        final String path = context.getDatabasePath(getDatabaseName()).getPath();
+        SQLiteDatabase database = SQLiteDatabase.openDatabase(path, null, SQLiteDatabase.OPEN_READONLY);
+        try {
+            version = database.getVersion();
+        } finally {
+            database.close();
+        }
+        return version;
+    }
+
+    public boolean isUpgradeRequired() {
+        return (getFileVersion() < DB_VERSION);
+    }
+
 }

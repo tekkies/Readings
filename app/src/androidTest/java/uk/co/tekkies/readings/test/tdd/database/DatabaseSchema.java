@@ -38,14 +38,9 @@ public class DatabaseSchema extends ApplicationTestCase<ReadingsApplication> {
         }
         assertTrue(!file.exists());
         DatabaseHelper databaseHelper = new DatabaseHelper(getContext());
+        assertTrue("Upgrade should be required", databaseHelper.isUpgradeRequired());
         databaseHelper.getWritableDatabase();
-
-        SQLiteDatabase database = SQLiteDatabase.openDatabase(DB_FILE, null, SQLiteDatabase.OPEN_READONLY);
-        try {
-            assertTrue("Upgraded to current version", database.getVersion() == DatabaseHelper.DB_VERSION);
-        } finally {
-            database.close();
-        }
+        assertTrue("Upgrade no longer required", !databaseHelper.isUpgradeRequired());
         assertTrue(file.exists());
     }
 }
