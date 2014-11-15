@@ -29,7 +29,7 @@ import android.util.Log;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static String DB_NAME = "Readings.db3";
-    private static int DB_VERSION = 50;
+    public static int DB_VERSION = 50;
     private final Context context;
 
     public DatabaseHelper(Context context) {
@@ -134,5 +134,4 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         return result;
     }
-
 }
