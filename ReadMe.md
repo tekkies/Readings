@@ -10,6 +10,9 @@ Beta build available in the G+ community [(http://goo.gl/6yw8X9)](http://goo.gl/
 
 ![alt tag](https://raw.github.com/tekkies/Readings/master/Screenshots%20in%20nexus.png)
 
+# Code Maturity #
+
+On this project, I'm more interested in trying new techniques when the whim takes me - I cut corners and break rules - as a parent, my time is very limited.
 
 # Build #
 
@@ -27,31 +30,11 @@ Click Synchronise (Ctrl-Alt-Y) the project and build.
 
 ## Test automation ##
 When you run tests, (app/src/androidTest), you will need to edit the test configuration and set the "Specific instrumentation runner" to
-com.google.android.apps.common.testing.testrunner.GoogleInstrumentationTestRunner
+com.google.android.apps.common.testing.testrunner.GoogleInstrumentationTestRunner for Espresso to drive the UI/BDD tests.
 
-# ToDo #
+# Next #
 
-## Passage Activity ##
-- Remove summary action bar icon
-## Reading Activity ##
-- Add about-transaltion action bar icon to reading activity
-- Add basic play button to open media
-- Basic handling of translations
- - 1 installed at a time?
- - dropdown on 
-## Open source ##
-- Move summary text into content provider (or submodule)
-- Move reading plan into submodule
- - Create alternative fallback reading plan
-## General ##
-- day/night
-  - http://stackoverflow.com/questions/2651360/how-to-provide-animation-when-calling-another-activity-in-android
-## Future ##
-- Chain MP3 playing
-  - Autoscroll?
-  - TTS announce 
-- NIV
- - Get install stats for leverge for content provider?
-- Customise passage list icons
- - Checkbox for read
-  - Sync
+
+
+1. Any whim that takes my fancy: RxJava? Jacoco? Google Play Game Services?
+2. See http://creadings.uservoice.com/forums/172482-readings
