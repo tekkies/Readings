@@ -20,6 +20,7 @@ import java.io.File;
 import java.util.Calendar;
 import java.util.List;
 
+import uk.co.tekkies.readings.Features;
 import uk.co.tekkies.readings.R;
 import uk.co.tekkies.readings.ReadingsApplication;
 import uk.co.tekkies.readings.activity.ContentLocationActivity;
@@ -100,8 +101,16 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
                 || prefs.loadMp3Product().length() > 0) {
             setupMediaControls(mainView);
         }
-        mainView.findViewById(R.id.textViewStudy).setOnClickListener(this);
-        mainView.findViewById(R.id.textViewDiscuss).setOnClickListener(this);
+        mainView.findViewById(R.id.textViewStudyTop).setOnClickListener(this);
+        mainView.findViewById(R.id.textViewStudyBottom).setOnClickListener(this);
+        if(Features.DAILYREADINGS_ORG_COMMENTS) {
+            TextView textViewDiscuss = (TextView) mainView.findViewById(R.id.textViewDiscussTop);
+            textViewDiscuss.setOnClickListener(this);
+            textViewDiscuss.setVisibility(View.VISIBLE);
+            textViewDiscuss = (TextView) mainView.findViewById(R.id.textViewDiscussBottom);
+            textViewDiscuss.setOnClickListener(this);
+            textViewDiscuss.setVisibility(View.VISIBLE);
+        }
         loadTextSize();
         registerGestureDetector(mainView);
         return mainView;
@@ -247,10 +256,10 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
         case R.id.button_play_pause:
             doPlayPauseSearch();
             break;
-        case R.id.textViewStudy:
+        case R.id.textViewStudyTop:
         	doStudy();
         	break;
-        case R.id.textViewDiscuss:
+        case R.id.textViewDiscussTop:
         	doDiscuss();
         	break;
         }
