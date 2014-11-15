@@ -138,11 +138,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public int getFileVersion() {
         int version = -1;
         final String path = context.getDatabasePath(getDatabaseName()).getPath();
-        SQLiteDatabase database = SQLiteDatabase.openDatabase(path, null, SQLiteDatabase.OPEN_READONLY);
         try {
-            version = database.getVersion();
-        } finally {
-            database.close();
+            SQLiteDatabase database = SQLiteDatabase.openDatabase(path, null, SQLiteDatabase.OPEN_READONLY);
+            try {
+                version = database.getVersion();
+            } finally {
+                database.close();
+            }
+        } catch (android.database.sqlite.SQLiteCantOpenDatabaseException e) {
+            version = -1;
         }
         return version;
     }
