@@ -8,6 +8,7 @@ import android.test.ActivityInstrumentationTestCase2;
 import android.test.ApplicationTestCase;
 
 import java.io.File;
+import java.util.Calendar;
 
 import uk.co.tekkies.readings.ReadingsApplication;
 import uk.co.tekkies.readings.activity.ReadingsActivity;
@@ -17,6 +18,7 @@ import static com.google.android.apps.common.testing.ui.espresso.Espresso.onView
 import static com.google.android.apps.common.testing.ui.espresso.assertion.ViewAssertions.matches;
 import static com.google.android.apps.common.testing.ui.espresso.matcher.ViewMatchers.isDisplayed;
 import static com.google.android.apps.common.testing.ui.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.text.StringContains.containsString;
 
 public class DatabaseSchema extends ApplicationTestCase<ReadingsApplication> {
     private static final String DB_FILE = "/data/data/uk.co.tekkies.readings/databases/Readings.db3";
@@ -30,7 +32,7 @@ public class DatabaseSchema extends ApplicationTestCase<ReadingsApplication> {
         super.setUp();
     }
 
-    public void testUpgrade() {
+    public void testUpgradeFromEmpty() {
         createApplication();
         File file = new File(DB_FILE);
         if (file.exists()) {
@@ -43,4 +45,5 @@ public class DatabaseSchema extends ApplicationTestCase<ReadingsApplication> {
         assertTrue("Upgrade no longer required", !databaseHelper.isUpgradeRequired());
         assertTrue(file.exists());
     }
+
 }

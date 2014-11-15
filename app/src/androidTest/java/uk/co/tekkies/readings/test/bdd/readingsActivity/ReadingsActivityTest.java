@@ -58,6 +58,12 @@ public class ReadingsActivityTest extends ActivityInstrumentationTestCase2<Readi
         onView(withText(containsString("Wed 2 Feb 11"))).check(matches(isDisplayed()));
     }
 
+    //Todo: Refactor and move to more appropriate location
+    public void testDatabaseUpgrade00051() {
+        jumpTo(2011, Calendar.NOVEMBER, 8);
+        onView(withText(containsString("YHWH stirred up the spirit of Cyrus. Cyrus' decree. Cyrus brought out the temple articles taken by Nebuchadnezzar."))).check(matches(isDisplayed()));
+    }
+
     private void jumpTo(final int year, final int month, final int day) {
         final ReadingsActivity readingsActivity = getActivity();
         readingsActivity.runOnUiThread(new Runnable() {
