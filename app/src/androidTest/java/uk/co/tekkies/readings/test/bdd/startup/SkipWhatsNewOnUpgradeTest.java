@@ -1,18 +1,13 @@
-package uk.co.tekkies.readings.test.bdd.whatsNew;
+package uk.co.tekkies.readings.test.bdd.startup;
 
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.test.ActivityInstrumentationTestCase2;
 
 import uk.co.tekkies.readings.R;
 import uk.co.tekkies.readings.activity.ReadingsActivity;
-import uk.co.tekkies.readings.model.Prefs;
 import uk.co.tekkies.readings.test.Utils;
 
 import static com.google.android.apps.common.testing.ui.espresso.Espresso.onView;
 import static com.google.android.apps.common.testing.ui.espresso.assertion.ViewAssertions.doesNotExist;
-import static com.google.android.apps.common.testing.ui.espresso.assertion.ViewAssertions.matches;
-import static com.google.android.apps.common.testing.ui.espresso.matcher.ViewMatchers.isDisplayed;
 import static com.google.android.apps.common.testing.ui.espresso.matcher.ViewMatchers.withId;
 
 /**

@@ -58,7 +58,6 @@ public class ReadingsActivityTest extends ActivityInstrumentationTestCase2<Readi
         onView(withText(containsString("Wed 2 Feb 11"))).check(matches(isDisplayed()));
     }
 
-
     private void jumpTo(final int year, final int month, final int day) {
         final ReadingsActivity readingsActivity = getActivity();
         readingsActivity.runOnUiThread(new Runnable() {

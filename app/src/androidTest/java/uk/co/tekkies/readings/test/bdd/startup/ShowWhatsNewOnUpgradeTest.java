@@ -1,14 +1,11 @@
-package uk.co.tekkies.readings.test.bdd.whatsNew;
+package uk.co.tekkies.readings.test.bdd.startup;
 
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
 import android.preference.PreferenceManager;
 import android.test.ActivityInstrumentationTestCase2;
 
 import uk.co.tekkies.readings.R;
 import uk.co.tekkies.readings.activity.ReadingsActivity;
-import uk.co.tekkies.readings.model.Prefs;
-import uk.co.tekkies.readings.util.Analytics;
 
 import static com.google.android.apps.common.testing.ui.espresso.Espresso.onView;
 import static com.google.android.apps.common.testing.ui.espresso.action.ViewActions.click;
@@ -41,28 +38,5 @@ public class ShowWhatsNewOnUpgradeTest extends ActivityInstrumentationTestCase2<
     public void testStartupWithWhatsNew() {
         onView(withId(R.id.whatsNewLinearLayout)).check(matches(isDisplayed()));
     }
-
-
-//
-//    private Boolean forceWhatsNewDialog() {
-//        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-//        int currentVersionNumber = 0;
-//        int savedVersionNumber = sharedPref.getInt(ReadingsActivity.VERSION_KEY, 0);
-//        try {
-//            PackageInfo pi = getPackageManager().getPackageInfo(getPackageName(), 0);
-//            currentVersionNumber = pi.versionCode;
-//        } catch (Exception e) {
-//            Analytics.reportCaughtException(this, e);
-//        }
-//        if (currentVersionNumber > savedVersionNumber) {
-//            SharedPreferences.Editor editor = sharedPref.edit();
-//            editor.putInt(VERSION_KEY, currentVersionNumber);
-//            editor.commit();
-//        }
-//        return (currentVersionNumber > savedVersionNumber);
-//    }
-//
-//
-//
 
 }
