@@ -22,6 +22,7 @@ import uk.co.tekkies.readings.Injector;
 import uk.co.tekkies.readings.R;
 import uk.co.tekkies.readings.adapter.PortionArrayAdapter;
 import uk.co.tekkies.readings.model.Passage;
+import uk.co.tekkies.readings.model.Prefs;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -40,7 +41,6 @@ public class DayFragment extends Fragment implements DayView {
     public static final String ARG_YEAR = "year";
     public static final String ARG_MONTH = "month";
     public static final String ARG_DAY = "day";
-    public final static String PREFS_SHOW_SUMMARY = "ShowSummary";
 
     ArrayList<Passage> listItems = new ArrayList<Passage>();
     PortionArrayAdapter adapter;
@@ -66,7 +66,7 @@ public class DayFragment extends Fragment implements DayView {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        showSummary = settings.getBoolean(PREFS_SHOW_SUMMARY, true);
+        showSummary = settings.getBoolean(Prefs.PREF_SHOW_SUMMARY, true);
     }
 
     @Override
@@ -104,7 +104,7 @@ public class DayFragment extends Fragment implements DayView {
         showSummary = !showSummary;
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity());
         SharedPreferences.Editor editor = settings.edit();
-        editor.putBoolean(PREFS_SHOW_SUMMARY, showSummary);
+        editor.putBoolean(Prefs.PREF_SHOW_SUMMARY, showSummary);
         editor.commit();
         presenter.reLoad();
     }

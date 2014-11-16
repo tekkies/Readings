@@ -41,7 +41,6 @@ public class BeforeV114030217 extends ReadingsActivityTestBase {
 
     public void testDatabaseUpgrade00051() {
         onView(withText("OK")).perform(click()); //Suppress What's New
-        onView(withId(R.id.menu_summary)).perform(click()); //turn the summaries back on?
         jumpTo(2011, Calendar.NOVEMBER, 8);
         onView(withText(containsString("YHWH stirred up the spirit of Cyrus. Cyrus' decree. Cyrus brought out the temple articles taken by Nebuchadnezzar."))).check(matches(isDisplayed()));
     }

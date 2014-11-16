@@ -88,7 +88,7 @@ public class PortionArrayAdapter extends ArrayAdapter<Passage> implements OnClic
             listenView.setOnClickListener(this);
         }
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(readingsActivity);
-        Boolean showSummary = settings.getBoolean(DayFragment.PREFS_SHOW_SUMMARY, true);
+        Boolean showSummary = settings.getBoolean(Prefs.PREF_SHOW_SUMMARY, true);
         if (showSummary) {
             textViewSummary.setText(passages.get(position).getSummary());
         } else {

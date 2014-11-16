@@ -15,6 +15,8 @@ public class Prefs {
     public static final String PREF_MP3_BASE_PATH = "mp3BasePath";
     public static final String PREF_MP3_PRODUCT = "mp3Product";
     public static final String VERSION_KEY = "version_number";
+    public final static String PREF_SHOW_SUMMARY = "ShowSummary";
+
 
 
     SharedPreferences sharedPreferences;
@@ -132,5 +134,9 @@ public class Prefs {
             editor.commit();
         }
         return (currentVersionNumber > savedVersionNumber);
+    }
+
+    public void saveShowSummaries(boolean show) {
+        saveBoolean(PREF_SHOW_SUMMARY, show);
     }
 }

@@ -78,24 +78,44 @@ public class ReadingsActivity extends BaseActivity implements OnDateSetListener 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        readingsActivity = this;
-        dayDateFormat = new SimpleDateFormat("E");
-        thisYearDateFormat = new SimpleDateFormat("E d MMM");
-        anotherYearDateFormat = new SimpleDateFormat("E d MMM yy");
-        ReadingsApplication.checkForMP3Plugin(this);
         setContentView(R.layout.readings_activity);
+        readingsActivity = this;
+        configureDateFormats();
+        ReadingsApplication.checkForMP3Plugin(this);
+        checkUpgrade();
+        checkWhatsNew();
+        setupPager();
+        setDateToDisplay(savedInstanceState);
+        checkToast();
+    }
+
+    private void checkUpgrade() {
+        new Prefs(this).saveShowSummaries(true);
+    }
+
+    private void checkWhatsNew() {
         if(new Prefs(getApplicationContext()).checkForUpgrade()) {
             showWhatsNewDialog();
         }
-        setupPager();
+    }
+
+    private void setDateToDisplay(Bundle savedInstanceState) {
         if (!loadInstanceState(savedInstanceState)) {
             setDate(Calendar.getInstance());
         }
+    }
+
+    private void checkToast() {
         if(!toastAttempted){
             toastAttempted = true;
-            showNewsToast();    
+            showNewsToast();
         }
-        
+    }
+
+    private void configureDateFormats() {
+        dayDateFormat = new SimpleDateFormat("E");
+        thisYearDateFormat = new SimpleDateFormat("E d MMM");
+        anotherYearDateFormat = new SimpleDateFormat("E d MMM yy");
     }
 
     private static Handler newsToastHandler = new Handler() {
