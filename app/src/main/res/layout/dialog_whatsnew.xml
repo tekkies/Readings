@@ -21,19 +21,29 @@
 				android:layout_height="wrap_content"
 				android:text="Note: Anonymous statistics/crash reports can be disabled in settings." />
 
-		
-			<TextView android:layout_width="fill_parent" android:layout_marginTop="10dp"
-				android:layout_height="wrap_content" android:text="Version 3.2.15 (preview)"
-				android:textStyle="bold" />
-			<TextView android:layout_width="fill_parent"
-				android:layout_height="wrap_content"
-				android:text="- Study button
+
+            <TextView android:layout_width="fill_parent" android:layout_marginTop="10dp"
+                android:layout_height="wrap_content" android:text="Version 3.2.16"
+                android:textStyle="bold" />
+            <TextView android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="- Full set of short summaries
+							\n  - Thanks to Dean Brown, PsalmOneNineteen.org" />
+
+
+
+
+            <TextView android:layout_width="fill_parent" android:layout_marginTop="10dp"
+                android:layout_height="wrap_content" android:text="Version 3.2.15"
+                android:textStyle="bold" />
+            <TextView android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="- Study button
 							\n- Discuss button" />
-		
-		
-		
-				
-		   <TextView android:layout_width="fill_parent" android:layout_marginTop="10dp"
+
+
+
+            <TextView android:layout_width="fill_parent" android:layout_marginTop="10dp"
 				android:layout_height="wrap_content" android:text="Version 3.2.14"
 				android:textStyle="bold" />
 			<TextView android:layout_width="fill_parent"
