@@ -37,16 +37,11 @@ import android.app.AlertDialog.Builder;
 import android.app.DatePickerDialog.OnDateSetListener;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.preference.PreferenceManager;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -78,24 +73,51 @@ public class ReadingsActivity extends BaseActivity implements OnDateSetListener 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        readingsActivity = this;
-        dayDateFormat = new SimpleDateFormat("E");
-        thisYearDateFormat = new SimpleDateFormat("E d MMM");
-        anotherYearDateFormat = new SimpleDateFormat("E d MMM yy");
-        ReadingsApplication.checkForMP3Plugin(this);
         setContentView(R.layout.readings_activity);
+        readingsActivity = this;
+        configureDateFormats();
+        ReadingsApplication.checkForMP3Plugin(this);
+        checkUpgradeActions();
+        checkWhatsNew();
+        setupPager();
+        setDateToDisplay(savedInstanceState);
+        checkToast();
+    }
+
+    private void checkUpgradeActions() {
+        Prefs prefs = new Prefs(this);
+        reEnableSummariesAt114030217(prefs);
+    }
+
+    private void reEnableSummariesAt114030217(Prefs prefs) {
+        if(prefs.loadLastRunAppVersion() <= 114030216) {
+            prefs.saveShowSummaries(true);
+        }
+    }
+
+    private void checkWhatsNew() {
         if(new Prefs(getApplicationContext()).checkForUpgrade()) {
             showWhatsNewDialog();
         }
-        setupPager();
+    }
+
+    private void setDateToDisplay(Bundle savedInstanceState) {
         if (!loadInstanceState(savedInstanceState)) {
             setDate(Calendar.getInstance());
         }
+    }
+
+    private void checkToast() {
         if(!toastAttempted){
             toastAttempted = true;
-            showNewsToast();    
+            showNewsToast();
         }
-        
+    }
+
+    private void configureDateFormats() {
+        dayDateFormat = new SimpleDateFormat("E");
+        thisYearDateFormat = new SimpleDateFormat("E d MMM");
+        anotherYearDateFormat = new SimpleDateFormat("E d MMM yy");
     }
 
     private static Handler newsToastHandler = new Handler() {
@@ -249,7 +271,6 @@ public class ReadingsActivity extends BaseActivity implements OnDateSetListener 
             Calendar calendarPage = getSelectedDate(viewPager.getCurrentItem());
             today = isToday(calendarPage);
         }
-
     }
 
     private void showWhatsNewDialog() {

@@ -10,9 +10,19 @@ Beta build available in the G+ community [(http://goo.gl/6yw8X9)](http://goo.gl/
 
 ![alt tag](https://raw.github.com/tekkies/Readings/master/Screenshots%20in%20nexus.png)
 
-# Code Maturity #
+# Code #
 
-On this project, I'm more interested in trying new techniques when the whim takes me - I cut corners and break rules - as a parent, my time is very limited.
+In the code you should find working (not necessarily textbook) examples of
+
+* Google Esspresso BDD tests
+* Goole App Analytics
+* ViewPager
+* Service 
+  * Background MP3 playing
+  * Audio-focus awareness
+* Notifications
+* Content provider client
+  * The [sister app](https://play.google.com/store/apps/details?id=uk.co.tekkies.plugin.kjv) provides content.
 
 # Build #
 

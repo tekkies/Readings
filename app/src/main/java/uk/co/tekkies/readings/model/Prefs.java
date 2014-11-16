@@ -15,6 +15,8 @@ public class Prefs {
     public static final String PREF_MP3_BASE_PATH = "mp3BasePath";
     public static final String PREF_MP3_PRODUCT = "mp3Product";
     public static final String VERSION_KEY = "version_number";
+    public final static String PREF_SHOW_SUMMARY = "ShowSummary";
+
 
 
     SharedPreferences sharedPreferences;
@@ -43,6 +45,16 @@ public class Prefs {
 
     public String loadString(String key, String defaultValue) {
         return sharedPreferences.getString(key, defaultValue);
+    }
+
+    private void saveInt(String key, int value) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(key, value);
+        editor.commit();
+    }
+
+    public int loadInt(String key, int defaultValue) {
+        return sharedPreferences.getInt(key, defaultValue);
     }
 
     private void saveBoolean(String key, Boolean value) {
@@ -116,21 +128,32 @@ public class Prefs {
         return loadString(Prefs.PREF_MP3_PRODUCT, notSet).equals(notSet);
     }
 
+    public int loadLastRunAppVersion() {
+        return loadInt(VERSION_KEY, 0);
+    }
+
     public boolean checkForUpgrade() {
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-        int currentVersionNumber = 0;
-        int savedVersionNumber = sharedPref.getInt(VERSION_KEY, 0);
+        int lastRunAppVersion = loadLastRunAppVersion();
+        int runningAppVersion = getRunningAppVersion();
+        if (runningAppVersion > lastRunAppVersion) {
+            saveInt(VERSION_KEY, runningAppVersion);
+        }
+        return (runningAppVersion > lastRunAppVersion);
+    }
+
+    private int getRunningAppVersion() {
+        int runningAppVersion=0;
         try {
             PackageInfo pi = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
-            currentVersionNumber = pi.versionCode;
+            runningAppVersion = pi.versionCode;
         } catch (Exception e) {
             Analytics.reportCaughtException(context, e);
         }
-        if (currentVersionNumber > savedVersionNumber) {
-            SharedPreferences.Editor editor = sharedPref.edit();
-            editor.putInt(VERSION_KEY, currentVersionNumber);
-            editor.commit();
-        }
-        return (currentVersionNumber > savedVersionNumber);
+        return runningAppVersion;
     }
+
+    public void saveShowSummaries(boolean show) {
+        saveBoolean(PREF_SHOW_SUMMARY, show);
+    }
+
 }

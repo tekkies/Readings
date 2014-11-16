@@ -6,6 +6,7 @@ import android.test.ActivityInstrumentationTestCase2;
 
 import uk.co.tekkies.readings.R;
 import uk.co.tekkies.readings.activity.ReadingsActivity;
+import uk.co.tekkies.readings.test.bdd.readingsActivity.ReadingsActivityTestBase;
 
 import static com.google.android.apps.common.testing.ui.espresso.Espresso.onView;
 import static com.google.android.apps.common.testing.ui.espresso.action.ViewActions.click;
@@ -15,17 +16,7 @@ import static com.google.android.apps.common.testing.ui.espresso.matcher.ViewMat
 import static com.google.android.apps.common.testing.ui.espresso.matcher.ViewMatchers.withText;
 import static com.google.android.apps.common.testing.ui.espresso.assertion.ViewAssertions.matches;
 
-/**
- * <a href="http://d.android.com/tools/testing/testing_android.html">Testing Fundamentals</a>
- */
-
-
-
-//public class ApplicationTest extends ApplicationTestCase<Application> {
-public class ShowWhatsNewOnUpgradeTest extends ActivityInstrumentationTestCase2<ReadingsActivity> {
-    public ShowWhatsNewOnUpgradeTest() {
-        super(ReadingsActivity.class);
-    }
+public class ShowWhatsNewOnUpgradeTest extends ReadingsActivityTestBase {
 
     @Override
     public void setUp() throws Exception {

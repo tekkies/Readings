@@ -1,5 +1,7 @@
 package uk.co.tekkies.readings.test.bdd.readingsActivity;
 
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.test.ActivityInstrumentationTestCase2;
 
 import java.util.Calendar;
@@ -13,21 +15,21 @@ import static com.google.android.apps.common.testing.ui.espresso.action.ViewActi
 import static com.google.android.apps.common.testing.ui.espresso.action.ViewActions.swipeLeft;
 import static com.google.android.apps.common.testing.ui.espresso.action.ViewActions.swipeRight;
 import static com.google.android.apps.common.testing.ui.espresso.assertion.ViewAssertions.matches;
+import static com.google.android.apps.common.testing.ui.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static com.google.android.apps.common.testing.ui.espresso.matcher.ViewMatchers.isDisplayed;
 import static com.google.android.apps.common.testing.ui.espresso.matcher.ViewMatchers.withId;
 import static com.google.android.apps.common.testing.ui.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.text.StringContains.containsString;
+import static org.hamcrest.Matchers.allOf;
 
-public class ReadingsActivityTest extends ActivityInstrumentationTestCase2<ReadingsActivity> {
-    public ReadingsActivityTest() {
-        super(ReadingsActivity.class);
-    }
-
+public class ReadingsActivityTest extends ReadingsActivityTestBase {
     @Override
     public void setUp() throws Exception {
         super.setUp();
-        Utils.suppressStartupWhatsNew(getInstrumentation().getTargetContext());
-        getActivity(); //Start the activity
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getInstrumentation().getTargetContext());
+        preferences.edit().clear().commit();
+        suppressStartupWhatsNew(getInstrumentation().getTargetContext());
+        getActivity();
     }
 
     public void testOpenSpecificDate() {
@@ -58,31 +60,9 @@ public class ReadingsActivityTest extends ActivityInstrumentationTestCase2<Readi
         onView(withText(containsString("Wed 2 Feb 11"))).check(matches(isDisplayed()));
     }
 
-//    public void testDayNight() {
-//        onView(withId(R.id.menu_brightness)).perform(click());
-//        onView(withId(R.id.menu_brightness)).perform(click());
-//    }
-
-    //Todo: Refactor and move to more appropriate location
-    public void testDatabaseUpgrade00051() {
-        jumpTo(2011, Calendar.NOVEMBER, 8);
-        onView(withText(containsString("YHWH stirred up the spirit of Cyrus. Cyrus' decree. Cyrus brought out the temple articles taken by Nebuchadnezzar."))).check(matches(isDisplayed()));
+    public void testPsalm119() {
+        final String summary = "How blessed those who walk in law of YHWH. Love God's law, meditation day & night. Seek me Your lost sheep.";
+        jumpTo(2011, Calendar.MARCH, 11);
+        onView(allOf(withText(containsString(summary)), isDisplayed())).check(matches(isDisplayed())); //next tab has same summary, is in the view hierarchy, but not visible.
     }
-
-    private void jumpTo(final int year, final int month, final int day) {
-        final ReadingsActivity readingsActivity = getActivity();
-        readingsActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                readingsActivity.onDateSet(null, year, month, day);
-            }
-        });
-    }
-
-    private void jumpToToday() {
-        onView(withId(R.id.menu_date)).perform(click());
-        onView(withText("Done")).perform(click());
-        onView(withText(containsString("Today"))).check(matches(isDisplayed()));
-    }
-
 }
