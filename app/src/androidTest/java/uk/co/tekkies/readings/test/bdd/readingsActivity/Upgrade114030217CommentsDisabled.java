@@ -27,7 +27,7 @@ public class Upgrade114030217CommentsDisabled extends ReadingsActivityTestBase {
         super.setUp();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getInstrumentation().getTargetContext());
         preferences.edit().clear().commit();
-        Utils.disableComments(getInstrumentation().getTargetContext());
+        Utils.setSummariesEnabled(getInstrumentation().getTargetContext(), false);
         getActivity(); //Start the activity
     }
 
@@ -35,11 +35,12 @@ public class Upgrade114030217CommentsDisabled extends ReadingsActivityTestBase {
         //todo: Also create Upgrade114030217CommentsDisabled class.
         onView(withText("OK")).perform(click()); //Suppress What's New
         jumpTo(2011, Calendar.NOVEMBER, 8);
-        onView(withText(containsString("Make this fail by fixing disableComments"))).check(matches(isDisplayed()));
+        onView(withText(containsString("YHWH stirred up the spirit of Cyrus. Cyrus' decree. Cyrus brought out the temple articles taken by Nebuchadnezzar."))).check(matches(isDisplayed()));
     }
 
     public void testDatabaseUpgrade00051() {
         onView(withText("OK")).perform(click()); //Suppress What's New
+        onView(withId(R.id.menu_summary)).perform(click()); //turn the summaries back on?
         jumpTo(2011, Calendar.NOVEMBER, 8);
         onView(withText(containsString("YHWH stirred up the spirit of Cyrus. Cyrus' decree. Cyrus brought out the temple articles taken by Nebuchadnezzar."))).check(matches(isDisplayed()));
     }
