@@ -24,23 +24,21 @@
 
 
             <TextView android:layout_width="fill_parent" android:layout_marginTop="10dp"
-                android:layout_height="wrap_content" android:text="Version 3.2.16"
+                android:layout_height="wrap_content"
+                android:text="Version 3.3.1"
                 android:textStyle="bold" />
+            <ImageView
+                android:id="@+id/imageViewReadOffline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:src="?ic_action_social_chat"
+                android:tag="offline" android:contentDescription="@string/read_offlice"/>
             <TextView android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="- Full set of short summaries
-							\n  - Thanks to Dean Brown, PsalmOneNineteen.org" />
-
-
-
-
-            <TextView android:layout_width="fill_parent" android:layout_marginTop="10dp"
-                android:layout_height="wrap_content" android:text="Version 3.2.15"
-                android:textStyle="bold" />
-            <TextView android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="- Study button
-							\n- Discuss button" />
+                android:text="- Full set of short chapter summaries
+							\n    - Thanks to Dean Brown, PsalmOneNineteen.org
+							\n- Study button to link directly to MySword chapter." />
 
 
 
