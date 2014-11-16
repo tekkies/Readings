@@ -15,10 +15,12 @@ import static com.google.android.apps.common.testing.ui.espresso.action.ViewActi
 import static com.google.android.apps.common.testing.ui.espresso.action.ViewActions.swipeLeft;
 import static com.google.android.apps.common.testing.ui.espresso.action.ViewActions.swipeRight;
 import static com.google.android.apps.common.testing.ui.espresso.assertion.ViewAssertions.matches;
+import static com.google.android.apps.common.testing.ui.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static com.google.android.apps.common.testing.ui.espresso.matcher.ViewMatchers.isDisplayed;
 import static com.google.android.apps.common.testing.ui.espresso.matcher.ViewMatchers.withId;
 import static com.google.android.apps.common.testing.ui.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.text.StringContains.containsString;
+import static org.hamcrest.Matchers.allOf;
 
 public class ReadingsActivityTest extends ReadingsActivityTestBase {
     @Override
@@ -59,7 +61,8 @@ public class ReadingsActivityTest extends ReadingsActivityTestBase {
     }
 
     public void testPsalm119() {
+        final String summary = "How blessed those who walk in law of YHWH. Love God's law, meditation day & night. Seek me Your lost sheep.";
         jumpTo(2011, Calendar.MARCH, 11);
-        onView(withText(containsString("Some summary"))).check(matches(isDisplayed()));
+        onView(allOf(withText(containsString(summary)), isDisplayed())).check(matches(isDisplayed())); //next tab has same summary, is in the view hierarchy, but not visible.
     }
 }
