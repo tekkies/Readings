@@ -51,4 +51,16 @@ public class ReadingsActivityTestBase extends ActivityInstrumentationTestCase2<R
         }
     }
 
+    public static void setLastRunAppVersion(Context context, int versionCode) {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        try {
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putInt(Prefs.VERSION_KEY, versionCode);
+            editor.commit();
+        } catch (Exception e) {
+            Analytics.reportCaughtException(context, e);
+        }
+    }
+
+
 }

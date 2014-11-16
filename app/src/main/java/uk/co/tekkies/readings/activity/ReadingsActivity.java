@@ -249,7 +249,6 @@ public class ReadingsActivity extends BaseActivity implements OnDateSetListener 
             Calendar calendarPage = getSelectedDate(viewPager.getCurrentItem());
             today = isToday(calendarPage);
         }
-
     }
 
     private void showWhatsNewDialog() {
