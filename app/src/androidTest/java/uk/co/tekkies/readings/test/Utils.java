@@ -10,9 +10,8 @@ import uk.co.tekkies.readings.model.Prefs;
  * Created by ajoiner on 09/11/2014.
  */
 public class Utils {
-    public static void suppressStartupWhatsNew(Context context) {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        new Prefs(context).checkForUpgrade(); //Checks and updates
+    public static void disableComments(Context context) {
+        assert(false);
+        //new Prefs(context).getCommentsEnabled();
     }
-
 }
