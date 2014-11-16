@@ -58,6 +58,11 @@ public class ReadingsActivityTest extends ActivityInstrumentationTestCase2<Readi
         onView(withText(containsString("Wed 2 Feb 11"))).check(matches(isDisplayed()));
     }
 
+//    public void testDayNight() {
+//        onView(withId(R.id.menu_brightness)).perform(click());
+//        onView(withId(R.id.menu_brightness)).perform(click());
+//    }
+
     //Todo: Refactor and move to more appropriate location
     public void testDatabaseUpgrade00051() {
         jumpTo(2011, Calendar.NOVEMBER, 8);
