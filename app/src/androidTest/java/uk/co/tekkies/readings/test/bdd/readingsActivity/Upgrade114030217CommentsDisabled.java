@@ -33,12 +33,13 @@ public class Upgrade114030217CommentsDisabled extends ReadingsActivityTestBase {
 
     public void testCommentsAutoEnabled(){
         //todo: Also create Upgrade114030217CommentsDisabled class.
+        onView(withText("OK")).perform(click()); //Suppress What's New
         jumpTo(2011, Calendar.NOVEMBER, 8);
-        assertTrue("Make this fail by fixing disableComments", false);
-        onView(withText(containsString("YHWH stirred up the spirit of Cyrus. Cyrus' decree. Cyrus brought out the temple articles taken by Nebuchadnezzar."))).check(matches(isDisplayed()));
+        onView(withText(containsString("Make this fail by fixing disableComments"))).check(matches(isDisplayed()));
     }
 
     public void testDatabaseUpgrade00051() {
+        onView(withText("OK")).perform(click()); //Suppress What's New
         jumpTo(2011, Calendar.NOVEMBER, 8);
         onView(withText(containsString("YHWH stirred up the spirit of Cyrus. Cyrus' decree. Cyrus brought out the temple articles taken by Nebuchadnezzar."))).check(matches(isDisplayed()));
     }
