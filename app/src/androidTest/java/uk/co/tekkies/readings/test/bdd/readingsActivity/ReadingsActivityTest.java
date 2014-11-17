@@ -12,6 +12,7 @@ import uk.co.tekkies.readings.test.Utils;
 
 import static com.google.android.apps.common.testing.ui.espresso.Espresso.onView;
 import static com.google.android.apps.common.testing.ui.espresso.action.ViewActions.click;
+import static com.google.android.apps.common.testing.ui.espresso.action.ViewActions.scrollTo;
 import static com.google.android.apps.common.testing.ui.espresso.action.ViewActions.swipeLeft;
 import static com.google.android.apps.common.testing.ui.espresso.action.ViewActions.swipeRight;
 import static com.google.android.apps.common.testing.ui.espresso.assertion.ViewAssertions.matches;
@@ -59,6 +60,14 @@ public class ReadingsActivityTest extends ReadingsActivityTestBase {
         onView(withText(containsString("Exodus 7"))).check(matches(isDisplayed()));
         onView(withText(containsString("Wed 2 Feb 11"))).check(matches(isDisplayed()));
     }
+
+    public void testShowAbout() {
+        getActivity().openOptionsMenu();
+        onView(withId(R.id.menu_about)).perform(click());
+        onView(withText(containsString("Licensed under the Apache License"))).check(matches(isDisplayed()));
+        onView(withText("OK")).perform(click());
+    }
+
 
     public void testPsalm119() {
         final String summary = "How blessed those who walk in law of YHWH. Love God's law, meditation day & night. Seek me Your lost sheep.";

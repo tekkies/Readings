@@ -25,10 +25,19 @@ android {
     }
 }
 
+repositories {
+    mavenCentral()
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+    maven { url 'http://guardian.github.com/maven/repo-releases' }
+}
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     androidTestCompile 'com.jakewharton.espresso:espresso:1.1-r3'
     androidTestCompile('com.jakewharton.espresso:espresso-support-v4:1.1-r3') {
+        exclude group: 'com.android.support'
+    }
+    compile ('net.rdrei.android.dirchooser:library:2.2-SNAPSHOT@aar') {
         exclude group: 'com.android.support'
     }
     compile 'com.android.support:support-v4:21.0.0'
