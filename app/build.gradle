@@ -33,12 +33,22 @@ repositories {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile 'com.jakewharton.espresso:espresso:1.1-r3'
+    compile 'com.android.support:support-v4:21.0.0'
+    androidTestCompile ('com.jakewharton.espresso:espresso:1.1-r3') {
+        exclude group: 'com.android.support'
+    }
     androidTestCompile('com.jakewharton.espresso:espresso-support-v4:1.1-r3') {
         exclude group: 'com.android.support'
     }
-    compile ('net.rdrei.android.dirchooser:library:2.2-SNAPSHOT@aar') {
+    compile('net.rdrei.android.dirchooser:library:2.2-SNAPSHOT@aar') {
         exclude group: 'com.android.support'
     }
-    compile 'com.android.support:support-v4:21.0.0'
+
+//    compile('net.rdrei.android.dirchooser:library:2.2-SNAPSHOT@aar') {
+//        exclude group: 'com.android.support' //, module: 'support-annotations'
+//    }
+
+//    compile('com.android.support:support-annotations:21.0.0') {
+//        force = true
+//    }
 }
