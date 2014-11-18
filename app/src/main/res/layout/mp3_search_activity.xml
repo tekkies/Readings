@@ -21,7 +21,14 @@
 	        android:layout_height="wrap_content"
 	        android:layout_gravity="right"
 	        android:text="@string/instructions" />
-    
+
+        <Button
+            android:id="@+id/button_download_mp3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/download_mp3"
+             />
+
     </LinearLayout>
 
     <ProgressBar

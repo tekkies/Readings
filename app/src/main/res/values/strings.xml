@@ -3,8 +3,7 @@
 
     <string name="app_name">Readings</string>
     <string name="copyright">Copyright 2013 Andrew Joiner</string>
-    <string name="about_app_text">
-\nCopyright 2013 Andrew Joiner
+    <string name="about_app_text">\nCopyright 2013 Andrew Joiner
 \n
 \nLicensed under the Apache License, Version 2.0 (the "License");
 \nyou may not use this file except in compliance with the License.
@@ -22,8 +21,7 @@
 \n
 \n- Some assets (e.g. icons) were created using the Android Asset Studio
 \n- Double-espresso by JakeWharton was used in the creation of this app.
-\n
-</string>
+\n</string>
     <string name="menu_feedback">Feedback</string>
     <string name="menu_date">Date</string>
     <string name="menu_summary">Summary</string>
@@ -36,7 +34,7 @@
     <string name="yesterday">Yesterday</string>
     <string name="today">Today</string>
     <string name="tomorrow">Tomorrow</string>
-    <string name="loading">"Loading&#8230;"</string>
+    <string name="loading">"Loading…"</string>
     <string name="pref_title_show_summary">Show chapter summary</string>
     <string name="sorry_no_summary_available_yet">Sorry, no summary available, yet.</string>
     <string name="whats_new">What\'s New</string>
@@ -49,8 +47,7 @@
     <string name="pref_title_web_site">Web site</string>
     <string name="pref_summary_web_site">Help and feedback</string>
     <string name="about_readings">About Readings</string>
-    <string name="about_content_text">
-\n- Reading plan sourced from The Bible Companion reading plan as published by The Christadelphian (http://www.thechristadelphian.com).
+    <string name="about_content_text">\n- Reading plan sourced from The Bible Companion reading plan as published by The Christadelphian (http://www.thechristadelphian.com).
 \n                
 \n- Chapter summaries provided by Dean Brown, PsalmOneNineteen.org</string>
     <string name="about_content_title">Content</string>
@@ -76,7 +73,7 @@
     <string name="pref_title_privacy_policy">Privacy Policy</string>
     <string name="pref_summary_privacy_policy">Click to view the privacy policy</string>
     <string name="search">Search</string>
-    <string name="searching">Searching&#8230;</string>
+    <string name="searching">Searching…</string>
     <string name="test">Test</string>
     <string name="mp3_search">MP3 Search</string>
     <string name="pref_title_mp3">MP3 integration</string>
@@ -85,23 +82,24 @@
     <string name="mp3_not_found_goto_settings">MP3 not found.  Please go to Settings > MP3 to reconfigure.</string>
     <string name="found">"Found: "</string>
     <string name="instructions">Instructions</string>
-    <string name="starting_search">Starting search&#8230;</string>
-    
+    <string name="starting_search">Starting search…</string>
     <string name="feedback_suggestion">I have a suggestion</string>
     <string name="feedback_bug">I found a bug</string>
     <string name="feedback_rate">I\'d like to rate this app 5-stars</string>
     <string name="feedback_beta">Beta community feedback</string>
     <string name="bug_email">android@tekkies.co.uk</string>
     <string name="bug_subject">Readings app bug</string>
-    <string name="bug_content">I found a bug in the app.  This is what happened&#8230;</string>
-    <string name="bug_chooser_title">Send mail&#8230;</string>
+    <string name="bug_content">I found a bug in the app.  This is what happened…</string>
+    <string name="bug_chooser_title">Send mail…</string>
     <string name="feedback">Feedback</string>
     <string name="help">Help</string>
     <string name="Study">Study</string>
     <string name="install_mysword_bible_app">Install MySword Bible app?</string>
     <string name="sorry_no_market_installed">Sorry the market is not installed</string>
     <string name="discuss">Discuss</string>
-    
-    
-    
+    <string name="title_activity_download_firefighters">DownloadFirefightersActivity</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="download_mp3">Download MP3</string>
+
 </resources>

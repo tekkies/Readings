@@ -7,6 +7,7 @@ import java.util.Comparator;
 
 import uk.co.tekkies.readings.R;
 import uk.co.tekkies.readings.adapter.Mp3ContentArrayAdapter;
+import uk.co.tekkies.readings.downloadmp3.DownloadMp3Activity;
 import uk.co.tekkies.readings.model.Prefs;
 import uk.co.tekkies.readings.model.content.Mp3ContentLocator;
 import uk.co.tekkies.readings.util.Analytics;
@@ -56,6 +57,7 @@ public class ContentLocationActivity extends BaseActivity implements OnClickList
         progressBar = (ProgressBar) findViewById(R.id.progressBar1);
         searchStatus = (TextView) findViewById(R.id.textView_mp3location);
         listView = (ListView) findViewById(R.id.list_view);
+        findViewById(R.id.button_download_mp3).setOnClickListener(this);
         mp3ContentLocators = Mp3ContentLocator.createSupportedMp3ContentLocators();
         Mp3ContentLocator.loadBasePaths(this, mp3ContentLocators);
         sortList(mp3ContentLocators);
@@ -76,7 +78,17 @@ public class ContentLocationActivity extends BaseActivity implements OnClickList
             case R.id.button_instructions:
                 doInstructions();
                 break;
+
+            case R.id.button_download_mp3:
+                doDownloadMp3();
+                break;
         }
+    }
+
+    private void doDownloadMp3() {
+        Intent intent = new Intent(this, DownloadMp3Activity.class);
+        startActivity(intent);
+
     }
 
     private void doInstructions() {
