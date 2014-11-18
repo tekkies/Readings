@@ -50,21 +50,32 @@ public class ContentLocationActivity extends BaseActivity implements OnClickList
 
     private void setupLayout() {
         setContentView(R.layout.mp3_search_activity);
-        searchButton = (Button) findViewById(R.id.button_search);
-        searchButton.setOnClickListener(this);
-        instructionsButton = (Button)findViewById(R.id.button_instructions);
-        instructionsButton.setOnClickListener(this);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar1);
-        searchStatus = (TextView) findViewById(R.id.textView_mp3location);
-        listView = (ListView) findViewById(R.id.list_view);
-        findViewById(R.id.button_download_mp3).setOnClickListener(this);
+        findViews();
+        setClickListeners();
+        setupMp3ContentLocatorList();
+        updateSearchViews(false);
+    }
+
+    private void setupMp3ContentLocatorList() {
         mp3ContentLocators = Mp3ContentLocator.createSupportedMp3ContentLocators();
         Mp3ContentLocator.loadBasePaths(this, mp3ContentLocators);
         sortList(mp3ContentLocators);
         mp3ContentArrayAdapter = new Mp3ContentArrayAdapter(getActivity(), mp3ContentLocators);
         listView.setAdapter(mp3ContentArrayAdapter);
-        // listView
-        updateSearchViews(false);
+    }
+
+    private void setClickListeners() {
+        searchButton.setOnClickListener(this);
+        instructionsButton.setOnClickListener(this);
+        findViewById(R.id.button_download_mp3).setOnClickListener(this);
+    }
+
+    private void findViews() {
+        searchButton = (Button) findViewById(R.id.button_search);
+        instructionsButton = (Button)findViewById(R.id.button_instructions);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar1);
+        searchStatus = (TextView) findViewById(R.id.textView_mp3location);
+        listView = (ListView) findViewById(R.id.list_view);
     }
 
     @Override
