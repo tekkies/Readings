@@ -22,16 +22,16 @@
             android:layout_gravity="center_horizontal"
             android:weightSum="1">
 
-            <TextView android:text="@string/hello_world" android:layout_width="wrap_content"
+            <TextView android:text="@string/download_mp3_warning" android:layout_width="wrap_content"
                 android:layout_height="51dp"
-                android:id="@+id/textView"
+                android:id="@+id/textViewWarning"
                 android:layout_weight="0.59" />
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="New Button"
-                android:id="@+id/button"
+                android:text="@string/Download"
+                android:id="@+id/buttonDownload"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentRight="true" />
 
