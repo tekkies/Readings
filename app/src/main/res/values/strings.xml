@@ -101,7 +101,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="download_mp3">Download MP3</string>
-    <string name="download_mp3_warning">Recommend downloading on WiFi - large file download can incurr carrier charges.</string>
+    <string name="download_mp3_warning">Warning! Downloading this large (approx 1Gb) file can incur carrier charges - WiFi download recommended.  Full terms below.</string>
     <string name="Download">Download</string>
 
 </resources>
