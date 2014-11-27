@@ -44,7 +44,8 @@ public abstract class Mp3ContentLocator {
         mp3ContentLocators.add(new KjvScourbyMp3ContentLocator());
         mp3ContentLocators.add(new KjvListenersMp3ContentLocator());
         mp3ContentLocators.add(new KjvFirefightersMp3ContentLocator());
-        return mp3ContentLocators; 
+        mp3ContentLocators.add(new KjvFirefightersMp3ZippedContentLocator());
+        return mp3ContentLocators;
     }
     
     /**
@@ -74,6 +75,10 @@ public abstract class Mp3ContentLocator {
         else if(KjvFirefightersMp3ContentLocator.class.getName().equalsIgnoreCase(mp3Product)) {
             contentLocator = new KjvFirefightersMp3ContentLocator();    
         }
+        else if(KjvFirefightersMp3ZippedContentLocator.class.getName().equalsIgnoreCase(mp3Product)) {
+            contentLocator = new KjvFirefightersMp3ZippedContentLocator();
+        }
+
         return contentLocator;
     }
 
