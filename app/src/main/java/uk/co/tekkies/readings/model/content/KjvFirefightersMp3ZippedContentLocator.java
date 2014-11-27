@@ -13,8 +13,7 @@ public class KjvFirefightersMp3ZippedContentLocator extends Mp3ContentLocator {
     
     @Override
     public String searchGetBaseFolderFromKeyFile(File potentialKeyFile) {
-        File bookFolder = potentialKeyFile.getParentFile();
-        return bookFolder.getParent();
+        return potentialKeyFile.getParent();
     }
 
     @Override
@@ -34,7 +33,7 @@ public class KjvFirefightersMp3ZippedContentLocator extends Mp3ContentLocator {
 
     @Override
     public String searchGetKeyFileName() {
-        return "01Gen001.mp3";
+        return "kjv.zip";
     }
     
     @Override

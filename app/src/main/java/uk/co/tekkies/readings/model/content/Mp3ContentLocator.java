@@ -38,13 +38,13 @@ public abstract class Mp3ContentLocator {
     public static ArrayList<Mp3ContentLocator> createSupportedMp3ContentLocators() {
         //TODO: Use reflection?
         ArrayList<Mp3ContentLocator> mp3ContentLocators= new ArrayList<Mp3ContentLocator>();
+        mp3ContentLocators.add(new KjvFirefightersMp3ZippedContentLocator());
         mp3ContentLocators.add(new KjvChristadelphianMp3ContentLocator());
         mp3ContentLocators.add(new NltLaridianTreeMp3ContentLocator());
         mp3ContentLocators.add(new NltLaridianMp3ContentLocator());
         mp3ContentLocators.add(new KjvScourbyMp3ContentLocator());
         mp3ContentLocators.add(new KjvListenersMp3ContentLocator());
         mp3ContentLocators.add(new KjvFirefightersMp3ContentLocator());
-        mp3ContentLocators.add(new KjvFirefightersMp3ZippedContentLocator());
         return mp3ContentLocators;
     }
     
