@@ -174,7 +174,11 @@ public class PlayerService extends Service implements OnCompletionListener, OnAu
         if(getAudioFocus()) {
             this.passageId = passageId;
             beep = false;
-            String filePath = Mp3ContentLocator.getPassageFullPath(this, passageId);
+            String filePath="";
+            Mp3ContentLocator mp3ContentLocator = Mp3ContentLocator.createContentLocator(this);
+            if(mp3ContentLocator!=null) {
+                filePath = mp3ContentLocator.getPassageFullPath(this, passageId);
+            }
             File file = new File(filePath);
             if(file.exists()) {
                 mediaPlayer = MediaPlayer.create(this, Uri.parse(filePath));

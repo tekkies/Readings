@@ -1,9 +1,13 @@
 package uk.co.tekkies.readings.model.content;
 
+import android.content.Context;
 import android.util.Log;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -50,7 +54,57 @@ public class KjvFirefightersMp3ZippedContentLocator extends Mp3ContentLocator {
     public String searchGetKeyFileName() {
         return "kjv.zip";
     }
-    
+
+
+    @Override
+    public String getPassageFullPath(Context context, int passageId) {
+        String passageFullPath="";
+
+        final String zipFilePath = getBasePath() + File.separator + searchGetKeyFileName();
+        try {
+            final ZipFile zipFile = new ZipFile(zipFilePath);
+            try{
+
+                ZipEntry zipEntry = zipFile.getEntry("- FireFighters/KJV/"+getPassageSubPath(passageId));
+                if(zipEntry != null) {
+
+                    File cacheDir = context.getCacheDir();
+                    String tempFilePath = cacheDir.getAbsolutePath()+"/temp.mp3";
+                    File tempFile = new File(tempFilePath);
+                    if(tempFile.exists()) {
+                        tempFile.delete();
+                    }
+                    tempFile = new File(tempFilePath);
+                    copy(zipFile.getInputStream(zipEntry), tempFile);
+
+                    passageFullPath = tempFile.getAbsolutePath();
+                }
+
+            } finally {
+                zipFile.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return passageFullPath;
+    }
+
+
+    private void copy(InputStream in, File file) {
+        try {
+            OutputStream out = new FileOutputStream(file);
+            byte[] buf = new byte[1024];
+            int len;
+            while((len=in.read(buf))>0){
+                out.write(buf,0,len);
+            }
+            out.close();
+            in.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     protected String getPassageSubPath(int passageId) {
         switch (passageId)

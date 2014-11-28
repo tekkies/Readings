@@ -102,12 +102,9 @@ public abstract class Mp3ContentLocator {
         }
     }
     
-    public static String getPassageFullPath(Context context, int passageId) {
+    public String getPassageFullPath(Context context, int passageId) {
         String passageFullPath="";
-        Mp3ContentLocator content = Mp3ContentLocator.createContentLocator(context);
-        if(content != null) {
-            passageFullPath = content.getBasePath()+"/"+content.getPassageSubPath(passageId);
-        }
+            passageFullPath = getBasePath()+"/"+getPassageSubPath(passageId);
         return passageFullPath;
     }
 

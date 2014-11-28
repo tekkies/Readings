@@ -378,7 +378,11 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
 
     private void doPlay() {
         Analytics.UIClick(getActivity(), "player-play");
-        String filePath = Mp3ContentLocator.getPassageFullPath(getActivity(), passageId);
+        String filePath="";
+        Mp3ContentLocator mp3ContentLocator = Mp3ContentLocator.createContentLocator(getActivity());
+        if(mp3ContentLocator != null) {
+            filePath = mp3ContentLocator.getPassageFullPath(getActivity(), passageId);
+        }
         File file = new File(filePath);
         if(file.exists()) {
             PassageActivity activity = (PassageActivity)getActivity();
