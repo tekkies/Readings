@@ -55,19 +55,18 @@ public class KjvFirefightersMp3ZippedContentLocator extends Mp3ContentLocator {
         return "kjv.zip";
     }
 
+    String getPathWithinZip(int passageId) {
+        return "- FireFighters/KJV/"+getPassageSubPath(passageId);
+    }
 
     @Override
     public String getPassageFullPath(Context context, int passageId) {
         String passageFullPath="";
-
-        final String zipFilePath = getBasePath() + File.separator + searchGetKeyFileName();
         try {
-            final ZipFile zipFile = new ZipFile(zipFilePath);
+            final ZipFile zipFile = new ZipFile(getZipFilePath());
             try{
-
-                ZipEntry zipEntry = zipFile.getEntry("- FireFighters/KJV/"+getPassageSubPath(passageId));
+                ZipEntry zipEntry = zipFile.getEntry(getPathWithinZip(passageId));
                 if(zipEntry != null) {
-
                     File cacheDir = context.getCacheDir();
                     String tempFilePath = cacheDir.getAbsolutePath()+"/temp.mp3";
                     File tempFile = new File(tempFilePath);
@@ -76,10 +75,8 @@ public class KjvFirefightersMp3ZippedContentLocator extends Mp3ContentLocator {
                     }
                     tempFile = new File(tempFilePath);
                     copy(zipFile.getInputStream(zipEntry), tempFile);
-
                     passageFullPath = tempFile.getAbsolutePath();
                 }
-
             } finally {
                 zipFile.close();
             }
@@ -93,13 +90,16 @@ public class KjvFirefightersMp3ZippedContentLocator extends Mp3ContentLocator {
     private void copy(InputStream in, File file) {
         try {
             OutputStream out = new FileOutputStream(file);
-            byte[] buf = new byte[1024];
-            int len;
-            while((len=in.read(buf))>0){
-                out.write(buf,0,len);
+            try {
+                byte[] buf = new byte[1024];
+                int len;
+                while ((len = in.read(buf)) > 0) {
+                    out.write(buf, 0, len);
+                }
+            } finally {
+                out.close();
+                in.close();
             }
-            out.close();
-            in.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -107,7 +107,25 @@ public class KjvFirefightersMp3ZippedContentLocator extends Mp3ContentLocator {
 
     @Override
     public boolean checkMediaAvailable(Context context, int passageId) {
-        Just see if the zipentry exists
+        boolean available = false;
+        try {
+            final ZipFile zipFile = new ZipFile(getZipFilePath());
+            try{
+                ZipEntry zipEntry = zipFile.getEntry(getPathWithinZip(passageId));
+                if(zipEntry != null) {
+                    available = true;
+                }
+            } finally {
+                zipFile.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return available;
+    }
+
+    private String getZipFilePath() {
+        return getBasePath() + File.separator + searchGetKeyFileName();
     }
 
     @Override
