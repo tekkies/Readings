@@ -9,11 +9,7 @@ import uk.co.tekkies.readings.model.content.KjvFirefightersMp3ZippedContentLocat
  */
 public class KjvFirefightersMp3ZippedContentLocatorTest extends TestCase {
 
-    public void testPass() {
-        assertTrue(true);
-    }
-
-    public void testKeyFileExists() {
+    public void testConfirmKeyFileFound() {
         KjvFirefightersMp3ZippedContentLocator locator=new KjvFirefightersMp3ZippedContentLocator();
         assertTrue(locator.searchConfirmKeyFileFound("/sdcard/Download"));
     }

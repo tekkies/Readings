@@ -3,6 +3,10 @@ package uk.co.tekkies.readings.model.content;
 import android.util.Log;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.Enumeration;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 public class KjvFirefightersMp3ZippedContentLocator extends Mp3ContentLocator {
 
@@ -19,14 +23,25 @@ public class KjvFirefightersMp3ZippedContentLocator extends Mp3ContentLocator {
     @Override
     public boolean searchConfirmKeyFileFound(String baseFolder) {
         Boolean confirmed = false;
-        File prov15 = new File(baseFolder + "/20_Pro/20Pro015.mp3");
-        if (prov15.exists()) {
-            Log.v(TAG, "confirmKeyFileFound: Found: Prov 15");
-            File james3 = new File(baseFolder + "/59_Jam/59Jam003.mp3");
-            if (james3.exists()) {
-                Log.v(TAG, "confirmKeyFileFound: Found: James 3");
-                confirmed = true;
+        final String zipFilePath = baseFolder + File.separator + searchGetKeyFileName();
+        try {
+            final ZipFile zipFile = new ZipFile(zipFilePath);
+            try{
+                if(zipFile.getEntry("- FireFighters/KJV/01_Gen/01Gen001.mp3") != null) {
+                    Log.v(TAG, "confirmKeyFileFound: Found: Gen 1");
+                    if (zipFile.getEntry("- FireFighters/KJV/20_Pro/20Pro015.mp3") != null) {
+                        Log.v(TAG, "confirmKeyFileFound: Found: Prov 15");
+                        if (zipFile.getEntry("- FireFighters/KJV/59_Jam/59Jam003.mp3") != null) {
+                            Log.v(TAG, "confirmKeyFileFound: Found: James 3");
+                            confirmed = true;
+                        }
+                    }
+                }
+            } finally {
+                zipFile.close();
             }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return confirmed;
     }
