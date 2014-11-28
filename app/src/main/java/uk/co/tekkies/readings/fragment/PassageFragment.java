@@ -378,13 +378,7 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
 
     private void doPlay() {
         Analytics.UIClick(getActivity(), "player-play");
-        String filePath="";
-        Mp3ContentLocator mp3ContentLocator = Mp3ContentLocator.createContentLocator(getActivity());
-        if(mp3ContentLocator != null) {
-            filePath = mp3ContentLocator.getPassageFullPath(getActivity(), passageId);
-        }
-        File file = new File(filePath);
-        if(file.exists()) {
+        if(checkMediaAvailable()) {
             PassageActivity activity = (PassageActivity)getActivity();
             PlayerService.requestPlay((PassageActivity)getActivity(), passageId, seekBar.getProgress());
             playPauseButton.setImageResource(resolveThemeAttribute(R.attr.ic_action_av_pause));
@@ -392,6 +386,15 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
         } else {
             Toast.makeText(getActivity(), getString(R.string.mp3_not_found_goto_settings), Toast.LENGTH_LONG).show();
         }
+    }
+
+    private boolean checkMediaAvailable() {
+        boolean mediaAvailable = false;
+        Mp3ContentLocator mp3ContentLocator = Mp3ContentLocator.createContentLocator(getActivity());
+        if(mp3ContentLocator != null) {
+            mediaAvailable = mp3ContentLocator.checkMediaAvailable(getActivity(), passageId);
+        }
+        return mediaAvailable;
     }
 
     private void doSearch() {

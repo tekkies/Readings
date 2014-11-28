@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import uk.co.tekkies.readings.model.Prefs;
 import android.content.Context;
+import android.support.v4.app.FragmentActivity;
 
 public abstract class Mp3ContentLocator {
     
@@ -110,5 +111,10 @@ public abstract class Mp3ContentLocator {
 
     public String getProduct() {
         return getClass().getName();
+    }
+
+    public boolean checkMediaAvailable(Context context, int passageId) {
+        String filePath = getPassageFullPath(context, passageId);
+        return (new File(filePath)).exists();
     }
 }

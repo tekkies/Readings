@@ -106,6 +106,11 @@ public class KjvFirefightersMp3ZippedContentLocator extends Mp3ContentLocator {
     }
 
     @Override
+    public boolean checkMediaAvailable(Context context, int passageId) {
+        Just see if the zipentry exists
+    }
+
+    @Override
     protected String getPassageSubPath(int passageId) {
         switch (passageId)
         {
