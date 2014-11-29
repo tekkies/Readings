@@ -3,6 +3,7 @@
 
     <!-- View styles -->
     <attr name="pagerBackground" format="reference" />
+    <attr name="readerBackground" format="reference|color" />
 	<attr name="ic_action_action_about" format="reference" />
     <attr name="ic_action_action_settings" format="reference" />
 	<attr name="ic_action_collections_go_to_today" format="reference" />

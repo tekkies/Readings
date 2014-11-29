@@ -6,7 +6,8 @@
         <!-- <item name="android:windowTitleSize">20dip</item> -->
         <!-- <item name="pagerBackground">#33b5e5</item> -->
         <item name="pagerBackground">@android:color/holo_blue_light</item>
-        
+        <item name="readerBackground">#00000000</item>
+
         <item name="ic_action_action_about">@drawable/ic_action_action_about_holo_light</item>
         <item name="ic_action_action_settings">@drawable/ic_action_action_settings_holo_light</item>
 		<item name="ic_action_collections_go_to_today">@drawable/ic_action_collections_go_to_today_holo_light</item>
@@ -24,7 +25,9 @@
 
         <!-- <item name="android:windowTitleSize">20dip</item> -->
         <item name="pagerBackground">@color/dark_grey</item>
-        
+        <item name="readerBackground">#ff000000</item>
+
+
         <item name="ic_action_action_about">@drawable/ic_action_action_about_holo_dark</item>
         <item name="ic_action_action_settings">@drawable/ic_action_action_settings_holo_dark</item>
 		<item name="ic_action_collections_go_to_today">@drawable/ic_action_collections_go_to_today_holo_dark</item>
