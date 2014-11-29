@@ -17,7 +17,7 @@
 		<item name="ic_action_social_chat">@drawable/ic_action_social_chat_holo_light</item>
 		<item name="ic_action_av_play">@drawable/ic_action_av_play_holo_light</item>
 		<item name="ic_action_av_pause">@drawable/ic_action_av_pause_holo_light</item>
-		
+        <item name="ic_action_social_school">@drawable/ic_action_social_school_holo_light</item>
 		</style>
 
     <style name="Night" parent="android:Theme.Holo">
@@ -35,7 +35,8 @@
 		<item name="ic_action_social_chat">@drawable/ic_action_social_chat_holo_dark</item>
 		<item name="ic_action_av_play">@drawable/ic_action_av_play_holo_dark</item>
 		<item name="ic_action_av_pause">@drawable/ic_action_av_pause_holo_dark</item>
-		
+        <item name="ic_action_social_school">@drawable/ic_action_social_school_holo_dark</item>
+
     </style>
 
 </resources>

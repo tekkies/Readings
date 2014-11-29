@@ -49,7 +49,7 @@
                     android:id="@+id/textViewStudyTop"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:drawableLeft="?ic_action_social_chat"
+                    android:drawableLeft="?ic_action_social_school"
                     android:gravity="center"
                     android:padding="10dp"
                     android:text="@string/Study"/>
@@ -83,7 +83,7 @@
                     android:id="@+id/textViewStudyBottom"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:drawableLeft="?ic_action_social_chat"
+                    android:drawableLeft="?ic_action_social_school"
                     android:gravity="center"
                     android:padding="10dp"
                     android:text="@string/Study"/>

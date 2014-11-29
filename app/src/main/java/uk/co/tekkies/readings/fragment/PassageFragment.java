@@ -257,9 +257,11 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
             doPlayPauseSearch();
             break;
         case R.id.textViewStudyTop:
+        case R.id.textViewStudyBottom:
         	doStudy();
         	break;
         case R.id.textViewDiscussTop:
+        case R.id.textViewDiscussBottom:
         	doDiscuss();
         	break;
         }
