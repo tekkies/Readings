@@ -4,7 +4,9 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.test.ActivityInstrumentationTestCase2;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 import uk.co.tekkies.readings.R;
 import uk.co.tekkies.readings.activity.ReadingsActivity;
@@ -43,7 +45,9 @@ public class ReadingsActivityTest extends ReadingsActivityTestBase {
         jumpTo(2011, Calendar.MARCH, 20);
         onView(withId(R.id.menu_date)).perform(click());
         onView(withText("Done")).perform(click());
-        onView(withText(containsString("Today"))).check(matches(isDisplayed()));
+        Date date = new Date(Calendar.getInstance().getTimeInMillis());
+        String expected = "Today (" +new SimpleDateFormat("E").format(date)+")";
+        onView(withText(containsString(expected))).check(matches(isDisplayed()));
     }
 
     public void testSwipeRight() {

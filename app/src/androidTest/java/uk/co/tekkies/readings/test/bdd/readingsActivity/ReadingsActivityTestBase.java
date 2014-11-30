@@ -6,6 +6,10 @@ import android.content.pm.PackageInfo;
 import android.preference.PreferenceManager;
 import android.test.ActivityInstrumentationTestCase2;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 import uk.co.tekkies.readings.R;
 import uk.co.tekkies.readings.activity.ReadingsActivity;
 import uk.co.tekkies.readings.model.Prefs;
@@ -36,7 +40,9 @@ public class ReadingsActivityTestBase extends ActivityInstrumentationTestCase2<R
     protected void jumpToToday() {
         onView(withId(R.id.menu_date)).perform(click());
         onView(withText("Done")).perform(click());
-        onView(withText(containsString("Today"))).check(matches(isDisplayed()));
+        Date date = new Date(Calendar.getInstance().getTimeInMillis());
+        String expected = "Today (" +new SimpleDateFormat("E").format(date)+")";
+        onView(withText(containsString(expected))).check(matches(isDisplayed()));
     }
 
     public static void suppressStartupWhatsNew(Context context) {
