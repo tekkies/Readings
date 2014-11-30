@@ -23,6 +23,32 @@
 				android:text="Note: Anonymous statistics/crash reports can be disabled in settings." />
 
 
+
+
+
+
+
+
+
+
+
+            <TextView android:layout_width="fill_parent" android:layout_marginTop="10dp"
+                android:layout_height="wrap_content"
+                android:text="Version 3.3.3"
+                android:textStyle="bold" />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:src="@drawable/tap_here_in_future"/>
+            <TextView android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="- Darker night view
+							\n- Update of summaries
+							\n    - Thanks to Dean Brown, PsalmOneNineteen.org" />
+
+
+
             <TextView android:layout_width="fill_parent" android:layout_marginTop="10dp"
                 android:layout_height="wrap_content"
                 android:text="Version 3.3.2"
