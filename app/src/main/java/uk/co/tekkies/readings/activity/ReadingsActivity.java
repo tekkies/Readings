@@ -118,6 +118,7 @@ public class ReadingsActivity extends BaseActivity implements OnDateSetListener 
         dayDateFormat = new SimpleDateFormat("E");
         thisYearDateFormat = new SimpleDateFormat("E d MMM");
         anotherYearDateFormat = new SimpleDateFormat("E d MMM yy");
+
     }
 
     private static Handler newsToastHandler = new Handler() {
@@ -243,18 +244,18 @@ public class ReadingsActivity extends BaseActivity implements OnDateSetListener 
             Calendar nowCalendar = Calendar.getInstance();
             int nowDay = nowCalendar.get(Calendar.YEAR) * 1000 + nowCalendar.get(Calendar.DAY_OF_YEAR);
             String title = "";
+            Date date = new Date(pageCalendar.getTimeInMillis());
             switch (pageDay - nowDay) {
             case -1:
-                title += getResources().getString(R.string.yesterday);
+                title += getResources().getString(R.string.yesterday) + " (" +dayDateFormat.format(date)+")";
                 break;
             case 0:
-                title += getResources().getString(R.string.today);
+                title += getResources().getString(R.string.today) + " (" +dayDateFormat.format(date)+")";
                 break;
             case 1:
-                title += getResources().getString(R.string.tomorrow);
+                title += getResources().getString(R.string.tomorrow) + " (" +dayDateFormat.format(date)+")";
                 break;
             default: {
-                Date date = new Date(pageCalendar.getTimeInMillis());
                 if (pageCalendar.get(Calendar.YEAR) == nowCalendar.get(Calendar.YEAR)) {
                     title += thisYearDateFormat.format(date);
                 } else {

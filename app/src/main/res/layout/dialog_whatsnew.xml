@@ -45,7 +45,8 @@
                 android:layout_height="wrap_content"
                 android:text="- Darker night view
 							\n- Update of summaries
-							\n    - Thanks to Dean Brown, PsalmOneNineteen.org" />
+							\n    - Thanks to Dean Brown, PsalmOneNineteen.org
+							\n- Confirm day of week, e.g. Today (Mon)" />
 
 
 
