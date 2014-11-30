@@ -63,7 +63,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         try {
             instream = AssetHelper.openAsset(context, upgradePath);
         } catch (IOException e) {
-            Analytics.reportCaughtException(context, e);
+            if(upgrade < 10 || upgrade > 51) {
+                //Don't moan about versions skipped in alpha experiment
+                Analytics.reportCaughtException(context, e);
+            }
         }
         if (instream != null) {
             InputStreamReader inputreader = new InputStreamReader(instream);
