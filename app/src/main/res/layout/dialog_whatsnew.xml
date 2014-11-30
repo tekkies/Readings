@@ -34,7 +34,7 @@
 
             <TextView android:layout_width="fill_parent" android:layout_marginTop="10dp"
                 android:layout_height="wrap_content"
-                android:text="Version 3.3.3"
+                android:text="Version 3.4.0"
                 android:textStyle="bold" />
             <ImageView
                 android:layout_width="wrap_content"
@@ -43,12 +43,10 @@
                 android:src="@drawable/tap_here_in_future"/>
             <TextView android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="- Darker night view
-							\n- Update of summaries
+                android:text="- Update of summaries
 							\n    - Thanks to Dean Brown, PsalmOneNineteen.org
-							\n- Confirm day of week, e.g. Today (Mon)" />
-
-
+							\n- Darker night view
+							\n- Always show day of week on main screen" />
 
             <TextView android:layout_width="fill_parent" android:layout_marginTop="10dp"
                 android:layout_height="wrap_content"

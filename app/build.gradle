@@ -7,8 +7,8 @@ android {
         applicationId 'uk.co.tekkies.readings'
         minSdkVersion 14
         targetSdkVersion 20
-        versionCode 114030303
-        versionName "3.3.3"
+        versionCode 114030400
+        versionName "3.4.0"
         testApplicationId "uk.co.tekkies.readings.test"
         testInstrumentationRunner "com.google.android.apps.common.testing.testrunner.GoogleInstrumentationTestRunner"
     }
