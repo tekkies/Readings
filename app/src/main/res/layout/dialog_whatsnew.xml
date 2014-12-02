@@ -52,13 +52,6 @@
                 android:layout_height="wrap_content"
                 android:text="Version 3.3.2"
                 android:textStyle="bold" />
-            <ImageView
-                android:id="@+id/imageViewReadOffline"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:src="?ic_action_social_chat"
-                android:tag="offline" android:contentDescription="@string/read_offlice"/>
             <TextView android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:text="- Full set of short chapter summaries
