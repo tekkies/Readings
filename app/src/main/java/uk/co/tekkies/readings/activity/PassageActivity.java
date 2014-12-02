@@ -289,7 +289,7 @@ public class PassageActivity extends BaseActivity implements PlayerService.IClie
                     publishProgress(getServiceInterface().getProgress());
                     Thread.sleep(200);
                 } catch (InterruptedException e) {
-                    Analytics.reportCaughtException(getPassageActivity(), e);
+                    //swallow it
                 }
             }
             return 0L;

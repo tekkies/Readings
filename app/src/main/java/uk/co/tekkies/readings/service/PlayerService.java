@@ -256,7 +256,10 @@ public class PlayerService extends Service implements OnCompletionListener, OnAu
                 progress = 0;
             } else {
                 try {
-                    progress = (mediaPlayer.getCurrentPosition() * 1000) / mediaPlayer.getDuration();
+                    //Split calc to determine source of exceptions
+                    int currentPosition = mediaPlayer.getCurrentPosition();
+                    int duration = mediaPlayer.getDuration();
+                    progress = (currentPosition * 1000) / duration;
                 } catch (Exception e) {
                     Analytics.reportCaughtException(getPlayerService(), e);
                 }

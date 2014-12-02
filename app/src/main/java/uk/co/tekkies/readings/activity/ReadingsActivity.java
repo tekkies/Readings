@@ -17,9 +17,14 @@ limitations under the License.
 package uk.co.tekkies.readings.activity;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
+import java.net.ConnectException;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -165,16 +170,29 @@ public class ReadingsActivity extends BaseActivity implements OnDateSetListener 
             BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
             String line = reader.readLine();
             //Sanity check message:  e.g. We wouldn't want to toast html from a hotspot paywall
-            if(line.equals("uk.co.tekkies.readings.news-toast")) {
-                line = reader.readLine();
-                summary = "";
-                while (line != null) {
-                    summary += line + "\n";
+            if(line != null) {
+                if(line.equals("uk.co.tekkies.readings.news-toast")) {
                     line = reader.readLine();
+                    summary = "";
+                    while (line != null) {
+                        summary += line + "\n";
+                        line = reader.readLine();
+                    }
                 }
             }
             reader.close();
-        } catch (Exception e) {
+        } catch (UnknownHostException e) {
+            //swallow it
+        } catch (ConnectException e) {
+            //swallow it
+        } catch (SocketException e) {
+            //swallow it
+        } catch (FileNotFoundException e) {
+            //swallow it
+        } catch (SocketTimeoutException e) {
+            //swallow it
+        }
+        catch (Exception e) {
             Analytics.reportCaughtException(this, e);
         }
         return summary;
