@@ -25,6 +25,7 @@ public class db00052 extends ReadingsActivityTestBase {
         super.setUp();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getInstrumentation().getTargetContext());
         preferences.edit().clear().commit();
+        deleteDatabase(getInstrumentation().getTargetContext());
         getActivity(); //Start the activity
     }
 

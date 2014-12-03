@@ -6,6 +6,7 @@ import android.content.pm.PackageInfo;
 import android.preference.PreferenceManager;
 import android.test.ActivityInstrumentationTestCase2;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -68,5 +69,11 @@ public class ReadingsActivityTestBase extends ActivityInstrumentationTestCase2<R
         }
     }
 
+    public static void deleteDatabase(Context context) {
+        File file = context.getDatabasePath("Readings.db3");
+        if(file.exists()) {
+            file.delete();
+        }
+    }
 
 }

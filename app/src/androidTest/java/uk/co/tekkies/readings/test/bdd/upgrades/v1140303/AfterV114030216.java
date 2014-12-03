@@ -25,6 +25,7 @@ public class AfterV114030216 extends ReadingsActivityTestBase {
         super.setUp();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getInstrumentation().getTargetContext());
         preferences.edit().clear().commit();
+        deleteDatabase(getInstrumentation().getTargetContext());
         Utils.setSummariesEnabled(getInstrumentation().getTargetContext(), false);
         setLastRunAppVersion(getInstrumentation().getTargetContext(), 114030217);
         getActivity(); //Start the activity

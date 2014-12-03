@@ -28,6 +28,7 @@ public class BeforeV114030217 extends ReadingsActivityTestBase {
         super.setUp();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getInstrumentation().getTargetContext());
         preferences.edit().clear().commit();
+        deleteDatabase(getInstrumentation().getTargetContext());
         Utils.setSummariesEnabled(getInstrumentation().getTargetContext(), false);
         setLastRunAppVersion(getInstrumentation().getTargetContext(), 114030216);
         getActivity(); //Start the activity
