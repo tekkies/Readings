@@ -16,10 +16,8 @@ public class Analytics {
     public static final String CATEGORY_MP3_CONTENT = "mp3_content";
     private static final String CATEGORY_CAUGHT_EXCEPTION = "caught_exception";
 
-    public static final String ACTION_BUTTON_PRESS = "button_press";
     public static final String ACTION_GENERAL = "action_general";
     public static final String ACTION_FOUND = "mp3_found";
-    public static final String LABEL_NIGHT_MODE = "night_mode";
     public static final String LABEL_TEXT_SIZE = "text_size";
     public static final String LABEL_MP3_SEARCH = "settings_mp3_search";
     public static final String LABEL_TOTAL = "total";
@@ -37,10 +35,6 @@ public class Analytics {
         if (isEnabled(activity)) {
             EasyTracker.getInstance(activity).activityStop(activity);
         }
-    }
-
-    public static void EventDayNightToggle(Context context, Boolean nightMode) {
-        SendEvent(context, CATEGORY_ACTION, ACTION_BUTTON_PRESS, LABEL_NIGHT_MODE, (long) (nightMode ? 1 : 0));
     }
 
     public static void EventTextSize(Context context, double textSize) {
@@ -62,6 +56,10 @@ public class Analytics {
 
     public static void UIClick(Context context, String label) {
         SendEvent(context, CATEGORY_ACTION, ACTION_GENERAL, label, 0);
+    }
+
+    public static void UIClick(Context context, String label, long value) {
+        SendEvent(context, CATEGORY_ACTION, ACTION_GENERAL, label, value);
     }
 
     public static void PrefsChange(Context context, String key) {

@@ -26,7 +26,7 @@ public class BaseActivity extends FragmentActivity {
     protected void doDayNightToggle() {
         nightMode = !nightMode;
         sharedPreferences.edit().putBoolean(getString(R.string.pref_key_night_mode), nightMode).commit();
-        Analytics.EventDayNightToggle(this, nightMode);
+        Analytics.UIClick(this, "night_mode", (long) (nightMode ? 1 : 0));
         recreate();
     }
 
