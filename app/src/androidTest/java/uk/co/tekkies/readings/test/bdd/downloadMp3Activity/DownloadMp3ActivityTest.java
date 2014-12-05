@@ -35,7 +35,7 @@ public class DownloadMp3ActivityTest extends ActivityInstrumentationTestCase2<Do
         getActivity();
     }
 
-    public void testOpenSpecificDate() {
+    public void testShowDownloadButton() {
         onView(withText("Download")).check(matches(isDisplayed()));
     }
 
