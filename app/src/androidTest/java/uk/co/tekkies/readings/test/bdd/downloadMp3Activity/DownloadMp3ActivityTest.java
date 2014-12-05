@@ -36,7 +36,7 @@ public class DownloadMp3ActivityTest extends ActivityInstrumentationTestCase2<Do
     }
 
     public void testOpenSpecificDate() {
-        onView(withText(containsString("Tue 1 Feb 11"))).check(matches(isDisplayed()));
+        onView(withText("Download")).check(matches(isDisplayed()));
     }
 
 
