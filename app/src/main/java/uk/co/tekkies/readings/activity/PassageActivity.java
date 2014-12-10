@@ -299,7 +299,9 @@ public class PassageActivity extends BaseActivity implements PlayerService.IClie
             try {
                 PassageFragment passageFragment = getCurrentPageFragment();
                 if(passageFragment != null) {
-                    passageFragment.setProgress(progress[0]);
+                    if(progress[0] >= 0) {
+                        passageFragment.setProgress(progress[0]);
+                    }
                 }
             } catch (Exception e) {
                 Analytics.reportCaughtException(getPassageActivity(), e);

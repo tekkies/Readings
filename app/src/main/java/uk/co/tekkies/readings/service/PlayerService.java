@@ -154,10 +154,18 @@ public class PlayerService extends Service implements OnCompletionListener, OnAu
         }
         passageId = 0;
         notification = null;
-        if(mediaPlayer.isPlaying()) {
-            mediaPlayer.stop();
+        try {
+            if (mediaPlayer.isPlaying()) {
+                mediaPlayer.stop();
+            }
+        } catch (IllegalStateException e) {
+            Analytics.reportCaughtException(getPlayerService(), e);
         }
-        mediaPlayer.release();
+        try {
+            mediaPlayer.release();
+        } catch (IllegalStateException e) {
+            Analytics.reportCaughtException(getPlayerService(), e);
+        }
         stopSelf();
     }
 
@@ -251,7 +259,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnAu
 
         @Override
         public int getProgress() {
-            int progress=0;
+            int progress=-1;
             if(beep) {
                 progress = 0;
             } else {
@@ -260,6 +268,8 @@ public class PlayerService extends Service implements OnCompletionListener, OnAu
                     int currentPosition = mediaPlayer.getCurrentPosition();
                     int duration = mediaPlayer.getDuration();
                     progress = (currentPosition * 1000) / duration;
+                } catch (IllegalStateException e) {
+                    //swallow it
                 } catch (Exception e) {
                     Analytics.reportCaughtException(getPlayerService(), e);
                 }
