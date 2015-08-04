@@ -14,7 +14,7 @@ android {
     }
     buildTypes {
         release {
-            runProguard false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -32,4 +32,5 @@ dependencies {
         exclude group: 'com.android.support'
     }
     compile 'com.android.support:support-v4:21.0.0'
+    compile files('libs/libGoogleAnalyticsServices.jar')
 }
