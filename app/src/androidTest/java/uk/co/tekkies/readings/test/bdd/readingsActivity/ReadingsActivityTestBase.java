@@ -6,6 +6,8 @@ import android.content.pm.PackageInfo;
 import android.preference.PreferenceManager;
 import android.test.ActivityInstrumentationTestCase2;
 
+import com.google.android.apps.common.testing.testrunner.InstrumentationRegistry;
+
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -17,6 +19,7 @@ import uk.co.tekkies.readings.model.Prefs;
 import uk.co.tekkies.readings.util.Analytics;
 
 import static com.google.android.apps.common.testing.ui.espresso.Espresso.onView;
+import static com.google.android.apps.common.testing.ui.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static com.google.android.apps.common.testing.ui.espresso.action.ViewActions.click;
 import static com.google.android.apps.common.testing.ui.espresso.assertion.ViewAssertions.matches;
 import static com.google.android.apps.common.testing.ui.espresso.matcher.ViewMatchers.isDisplayed;
@@ -25,6 +28,8 @@ import static com.google.android.apps.common.testing.ui.espresso.matcher.ViewMat
 import static org.hamcrest.text.StringContains.containsString;
 
 public class ReadingsActivityTestBase extends ActivityInstrumentationTestCase2<ReadingsActivity> {
+    protected final String CalendarConfirmButtonText="OK";
+
     public ReadingsActivityTestBase() {
         super(ReadingsActivity.class);
     }
@@ -39,8 +44,9 @@ public class ReadingsActivityTestBase extends ActivityInstrumentationTestCase2<R
     }
 
     protected void jumpToToday() {
+        //openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getInstance().getTargetContext());
         onView(withId(R.id.menu_date)).perform(click());
-        onView(withText("Done")).perform(click());
+        onView(withText(CalendarConfirmButtonText)).perform(click());
         Date date = new Date(Calendar.getInstance().getTimeInMillis());
         String expected = "Today (" +new SimpleDateFormat("E").format(date)+")";
         onView(withText(containsString(expected))).check(matches(isDisplayed()));

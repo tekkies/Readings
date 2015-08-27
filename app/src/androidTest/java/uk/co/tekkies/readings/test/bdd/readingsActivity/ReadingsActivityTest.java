@@ -4,6 +4,8 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.test.ActivityInstrumentationTestCase2;
 
+import com.google.android.apps.common.testing.testrunner.InstrumentationRegistry;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -23,6 +25,7 @@ import static com.google.android.apps.common.testing.ui.espresso.matcher.ViewMat
 import static com.google.android.apps.common.testing.ui.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.text.StringContains.containsString;
 import static org.hamcrest.Matchers.allOf;
+import static com.google.android.apps.common.testing.ui.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 
 public class ReadingsActivityTest extends ReadingsActivityTestBase {
     @Override
@@ -44,7 +47,7 @@ public class ReadingsActivityTest extends ReadingsActivityTestBase {
     public void testOpenToday() {
         jumpTo(2011, Calendar.MARCH, 20);
         onView(withId(R.id.menu_date)).perform(click());
-        onView(withText("Done")).perform(click());
+        onView(withText(CalendarConfirmButtonText)).perform(click());
         Date date = new Date(Calendar.getInstance().getTimeInMillis());
         String expected = "Today (" +new SimpleDateFormat("E").format(date)+")";
         onView(withText(containsString(expected))).check(matches(isDisplayed()));
