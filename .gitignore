@@ -5,3 +5,5 @@
 .DS_Store
 /build
 /app/libs
+/app/app.iml
+/.idea/misc.xml

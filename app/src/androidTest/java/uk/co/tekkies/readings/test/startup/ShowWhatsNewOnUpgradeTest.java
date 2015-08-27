@@ -1,4 +1,4 @@
-package uk.co.tekkies.readings.test.bdd.startup;
+package uk.co.tekkies.readings.test.startup;
 
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -6,7 +6,7 @@ import android.test.ActivityInstrumentationTestCase2;
 
 import uk.co.tekkies.readings.R;
 import uk.co.tekkies.readings.activity.ReadingsActivity;
-import uk.co.tekkies.readings.test.bdd.readingsActivity.ReadingsActivityTestBase;
+import uk.co.tekkies.readings.test.readingsActivity.ReadingsActivityTestBase;
 
 import static com.google.android.apps.common.testing.ui.espresso.Espresso.onView;
 import static com.google.android.apps.common.testing.ui.espresso.action.ViewActions.click;

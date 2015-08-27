@@ -1,4 +1,4 @@
-package uk.co.tekkies.readings.test.bdd.upgrades.v1140303;
+package uk.co.tekkies.readings.test.upgrades.v1140303;
 
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -7,7 +7,7 @@ import java.util.Calendar;
 
 import uk.co.tekkies.readings.R;
 import uk.co.tekkies.readings.test.Utils;
-import uk.co.tekkies.readings.test.bdd.readingsActivity.ReadingsActivityTestBase;
+import uk.co.tekkies.readings.test.readingsActivity.ReadingsActivityTestBase;
 
 import static com.google.android.apps.common.testing.ui.espresso.Espresso.onView;
 import static com.google.android.apps.common.testing.ui.espresso.action.ViewActions.click;

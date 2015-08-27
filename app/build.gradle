@@ -33,4 +33,6 @@ dependencies {
     }
     compile 'com.android.support:support-v4:21.0.0'
     compile files('libs/libGoogleAnalyticsServices.jar')
+    testCompile 'junit:junit:4.12'
+    testCompile "org.mockito:mockito-core:1.9.5"
 }

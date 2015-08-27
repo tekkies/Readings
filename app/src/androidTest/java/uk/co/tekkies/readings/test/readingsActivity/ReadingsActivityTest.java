@@ -1,4 +1,4 @@
-package uk.co.tekkies.readings.test.bdd.readingsActivity;
+package uk.co.tekkies.readings.test.readingsActivity;
 
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
