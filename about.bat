@@ -1,0 +1,1 @@
+adb shell dumpsys package uk.co.tekkies.readings
