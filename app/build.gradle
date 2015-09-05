@@ -12,10 +12,19 @@ android {
         testApplicationId "uk.co.tekkies.readings.test"
         testInstrumentationRunner "com.google.android.apps.common.testing.testrunner.GoogleInstrumentationTestRunner"
     }
+    signingConfigs {
+        release {
+            storeFile file('C:\\dev\\keys\\tekkies-android-release-key.keystore')
+            storePassword System.getProperty('SIGNING_KEY', 'defaultPassword')
+            keyAlias "tekkies_keystore"
+            keyPassword System.getProperty('SIGNING_KEY', 'defaultPassword')
+        }
+    }
     buildTypes {
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
     productFlavors {
