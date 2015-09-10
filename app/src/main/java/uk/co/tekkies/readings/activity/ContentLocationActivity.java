@@ -10,6 +10,8 @@ import uk.co.tekkies.readings.adapter.Mp3ContentArrayAdapter;
 import uk.co.tekkies.readings.model.Prefs;
 import uk.co.tekkies.readings.model.content.Mp3ContentLocator;
 import uk.co.tekkies.readings.util.Analytics;
+import uk.co.tekkies.readings.util.AppInstaller;
+
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -21,15 +23,19 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class ContentLocationActivity extends BaseActivity implements OnClickListener {
 
     protected static final String TAG = "MP3Bible";
-    Button searchButton = null;
+    private static final int REQUEST_CODE_PICK_DIRECTORY = 0;
+    private static final String ESFILEXPLORER_PACKAGE_ID = "com.estrongs.android.pop";
+    public static final String COM_ESTRONGS_ACTION_PICK_DIRECTORY = "com.estrongs.action.PICK_DIRECTORY";
+    public static final String COM_ESTRONGS_INTENT_EXTRA_TITLE = "com.estrongs.intent.extra.TITLE";
+    Button browseButton = null;
     Button instructionsButton = null;
     TextView searchStatus = null;
     ProgressBar progressBar = null;
-    WebView webView1 = null;
     ArrayList<Mp3ContentLocator> mp3ContentLocators;
     Mp3ContentArrayAdapter mp3ContentArrayAdapter;
     ListView listView;
@@ -49,10 +55,8 @@ public class ContentLocationActivity extends BaseActivity implements OnClickList
 
     private void setupLayout() {
         setContentView(R.layout.mp3_search_activity);
-        searchButton = (Button) findViewById(R.id.button_search);
-        searchButton.setOnClickListener(this);
-        instructionsButton = (Button)findViewById(R.id.button_instructions);
-        instructionsButton.setOnClickListener(this);
+        browseButton = registerButton(R.id.button_browse);
+        instructionsButton = registerButton(R.id.button_instructions);
         progressBar = (ProgressBar) findViewById(R.id.progressBar1);
         searchStatus = (TextView) findViewById(R.id.textView_mp3location);
         listView = (ListView) findViewById(R.id.list_view);
@@ -61,21 +65,51 @@ public class ContentLocationActivity extends BaseActivity implements OnClickList
         sortList(mp3ContentLocators);
         mp3ContentArrayAdapter = new Mp3ContentArrayAdapter(getActivity(), mp3ContentLocators);
         listView.setAdapter(mp3ContentArrayAdapter);
-        // listView
         updateSearchViews(false);
+    }
+
+    private Button registerButton(int buttonId) {
+        Button button = (Button) findViewById(buttonId);
+        button.setOnClickListener(this);
+        return button;
     }
 
     @Override
     public void onClick(View v) {
         int id = v.getId();
         switch(id) {
-            case R.id.button_search:
-                doSearchForKeyFile();
+            case R.id.button_browse:
+                doOpenDirectoryBrowser();
                 break;
-            
+
             case R.id.button_instructions:
                 doInstructions();
                 break;
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == REQUEST_CODE_PICK_DIRECTORY)
+        {
+            if(data != null)
+            {
+                Uri uri = data.getData();
+                if (uri != null) {
+                    doSearchForKeyFile(uri.getPath());
+                }
+            }
+        }
+    }
+
+    private void doOpenDirectoryBrowser() {
+        AppInstaller appInstaller = new AppInstaller(this, ESFILEXPLORER_PACKAGE_ID, getString(R.string.es_file_explorer));
+        if(appInstaller.isAppInstalled()) {
+            Intent intent = new Intent(COM_ESTRONGS_ACTION_PICK_DIRECTORY);
+            intent.putExtra(COM_ESTRONGS_INTENT_EXTRA_TITLE, getString(R.string.search_directory));
+            startActivityForResult(intent, REQUEST_CODE_PICK_DIRECTORY);
+        } else {
+            appInstaller.askUserToInstallApp();
         }
     }
 
@@ -93,18 +127,18 @@ public class ContentLocationActivity extends BaseActivity implements OnClickList
     }
     
     private void updateSearchViews(boolean searching) {
-    	searchButton.setEnabled(!searching);
+    	browseButton.setEnabled(!searching);
     	instructionsButton.setEnabled(!searching);
     	searchStatus.setVisibility(searching ? View.VISIBLE : View.GONE);
     	progressBar.setVisibility(searching ? View.VISIBLE : View.GONE);
     }
 
-    private void doSearchForKeyFile() {
+    private void doSearchForKeyFile(String path) {
         Analytics.UIClick(this, Analytics.LABEL_MP3_SEARCH);
         clearMainList();
     	updateSearchViews(true);
         searchTask = new SearchTask();
-        searchTask.execute("");
+        searchTask.execute(path);
     }
 
     private void clearMainList() {
@@ -113,13 +147,12 @@ public class ContentLocationActivity extends BaseActivity implements OnClickList
     }
 
     private class SearchTask extends AsyncTask<String, String, ArrayList<Mp3ContentLocator>> {
-
         private static final boolean FIND_FIRST_ONLY = false;
         private static final int MAX_DEPTH = 8;
 
         @Override
-        protected ArrayList<Mp3ContentLocator> doInBackground(String... unused) {
-            File root = new File("/");
+        protected ArrayList<Mp3ContentLocator> doInBackground(String... taskParameters) {
+            File root = new File(taskParameters[0]);
             ArrayList<Mp3ContentLocator> searchLocators = Mp3ContentLocator.createSupportedMp3ContentLocators();
             Mp3ContentLocator.searchResetBasePaths(searchLocators); // Start from nothing
             try {

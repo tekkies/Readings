@@ -18,7 +18,6 @@ package uk.co.tekkies.readings.fragment;
 
 import java.io.File;
 import java.util.Calendar;
-import java.util.List;
 
 import uk.co.tekkies.readings.Features;
 import uk.co.tekkies.readings.R;
@@ -29,15 +28,12 @@ import uk.co.tekkies.readings.model.Prefs;
 import uk.co.tekkies.readings.model.content.Mp3ContentLocator;
 import uk.co.tekkies.readings.service.PlayerService;
 import uk.co.tekkies.readings.util.Analytics;
-import android.app.AlertDialog;
+import uk.co.tekkies.readings.util.AppInstaller;
+
 import android.content.ComponentName;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import android.content.pm.PackageManager;
-import android.content.pm.PackageManager.NameNotFoundException;
-import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
@@ -282,56 +278,15 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
     }
 
     private void doStudy() {
+        AppInstaller appInstaller = new AppInstaller(getActivity(), MYSWORD_PACKAGE, getActivity().getString(R.string.mysword));
     	Analytics.UIClick(getActivity(), "passage-do-study");
-    	if(!mySwordInstalled()) {
-    		askUserToInstallMySword();
+    	if(!appInstaller.isAppInstalled()) {
+            appInstaller.askUserToInstallApp();
     	} else {
 	    	openMySwordPassage();
     	}
 	}
 
-    private boolean mySwordInstalled() {
-		boolean installed = false;
-		PackageManager pm = getActivity().getPackageManager();
-		try {
-			pm.getPackageInfo(MYSWORD_PACKAGE, PackageManager.GET_ACTIVITIES);
-			installed = true;
-		} catch (NameNotFoundException e) {
-			//NOP
-		}
-		return installed;
-	}
-
-    private void askUserToInstallMySword() {
-    	Analytics.UIClick(getActivity(), "request-mysword-install");
-        AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(getActivity());
-        dlgAlert.setMessage(R.string.install_mysword_bible_app);
-        dlgAlert.setTitle(R.string.title_install);
-        dlgAlert.setCancelable(true);
-        dlgAlert.setPositiveButton(R.string.ok,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        installMySword();
-                    }
-                });
-        dlgAlert.create().show();
-    }
-
-    private boolean installMySword() {
-    	Analytics.UIClick(getActivity(), "opening-mysword-market");
-        boolean installed = false;
-        Uri marketUri = Uri.parse("market://details?id="+MYSWORD_PACKAGE);
-        Intent marketIntent = new Intent(Intent.ACTION_VIEW).setData(marketUri);
-        PackageManager pm = getActivity().getPackageManager();
-        List<ResolveInfo> list = pm.queryIntentActivities(marketIntent, PackageManager.MATCH_DEFAULT_ONLY);
-        if (list.size() > 0)
-            getActivity().startActivity(marketIntent);
-        else {
-            Toast.makeText(getActivity(), R.string.sorry_no_market_installed, Toast.LENGTH_LONG).show();
-        }
-        return installed;
-    }
-    
 	private void openMySwordPassage() {
 		Analytics.UIClick(getActivity(), "open-mysword-passage");
 		try {
