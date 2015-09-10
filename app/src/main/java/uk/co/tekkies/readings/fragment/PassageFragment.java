@@ -42,6 +42,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -140,6 +141,7 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
         textViewContent.setMovementMethod(LinkMovementMethod.getInstance());
         super.onViewCreated(view, savedInstanceState);
     }
+
 
     @Override
     public void onResume() {
@@ -332,16 +334,28 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
     }
 
     private void doPlay() {
+        int logIndex=0;
+        Log.i("CRASH","index="+logIndex++);
         Analytics.UIClick(getActivity(), "player-play");
+        Log.i("CRASH","index="+logIndex++);
         String filePath = Mp3ContentLocator.getPassageFullPath(getActivity(), passageId);
+        Log.i("CRASH","index="+logIndex++);
         File file = new File(filePath);
+        Log.i("CRASH","index="+logIndex++);
         if(file.exists()) {
+            Log.i("CRASH","index(A)="+logIndex++);
             PassageActivity activity = (PassageActivity)getActivity();
-            PlayerService.requestPlay((PassageActivity)getActivity(), passageId, seekBar.getProgress());
+            Log.i("CRASH","index(A)="+logIndex++);
+            PlayerService.requestPlay((PassageActivity) getActivity(), passageId, seekBar.getProgress());
+            Log.i("CRASH","index(A)="+logIndex++);
             playPauseButton.setImageResource(resolveThemeAttribute(R.attr.ic_action_av_pause));
+            Log.i("CRASH","index(A)="+logIndex++);
             activity.bindPlayerService();
+            Log.i("CRASH","index(A)="+logIndex++);
         } else {
+            Log.i("CRASH","index(B)="+logIndex++);
             Toast.makeText(getActivity(), getString(R.string.mp3_not_found_goto_settings), Toast.LENGTH_LONG).show();
+            Log.i("CRASH", "index(B)=" + logIndex++);
         }
     }
 
