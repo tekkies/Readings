@@ -27,6 +27,13 @@
 
 
 
+            <TextView android:layout_width="fill_parent" android:layout_marginTop="10dp"
+                android:layout_height="wrap_content"
+                android:text="Version 3.4.5"
+                android:textStyle="bold" />
+            <TextView android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="- MP3 Settings: You can now browse for MP3 instead of searching the entire device." />
 
 
 
@@ -47,6 +54,8 @@
 							\n    - Thanks to Dean Brown, PsalmOneNineteen.org
 							\n- Darker night view
 							\n- Always show day of week on main screen" />
+
+
 
             <TextView android:layout_width="fill_parent" android:layout_marginTop="10dp"
                 android:layout_height="wrap_content"
