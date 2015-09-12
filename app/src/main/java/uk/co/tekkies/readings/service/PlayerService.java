@@ -58,7 +58,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnAu
     }
 
     public interface IPlayerService {
-        void registerActivity(Activity activity, IPlayerUi playerUi);
+        void registerActivity(Activity activity, IPlayerUi callback);
         void unregisterActivity(Activity activity);
         int getPassage();
         int getProgress();
@@ -74,14 +74,14 @@ public class PlayerService extends Service implements OnCompletionListener, OnAu
     public int onStartCommand(Intent intent, int flags, int startId) {
         registerPlayerBroadcastReceiver();
         passableReadings = (ParcelableReadings) (intent.getParcelableExtra(ParcelableReadings.PARCEL_NAME));
-        int passageId = intent.getExtras().getInt(INTENT_EXTRA_PASSAGE_ID);
-        startWithOngoingNotification(passageId);
+        passageId = intent.getExtras().getInt(INTENT_EXTRA_PASSAGE_ID);
+        startWithOngoingNotification();
         int positionAsThousandth = intent.getExtras().getInt(INTENT_EXTRA_POSITION);
-        doPlay(passageId, positionAsThousandth);
+        doPlay(positionAsThousandth);
         return super.onStartCommand(intent, flags, startId);
     }
 
-    private void startWithOngoingNotification(int passageId) {
+    private void startWithOngoingNotification() {
         TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(this).addParentStack(PassageActivity.class);
         String title = getNotificationTitle(passageId);
         String content = getPassageTitles();
@@ -161,10 +161,9 @@ public class PlayerService extends Service implements OnCompletionListener, OnAu
         stopSelf();
     }
 
-    private void doPlay(int passageId, int positionAsThousandth) {
+    private void doPlay(int positionAsThousandth) {
         Log.i(LOG_TAG, "Play:" + passageId);
         if(getAudioFocus()) {
-            this.passageId = passageId;
             beep = false;
             String filePath = Mp3ContentLocator.getPassageFullPath(this, passageId);
             File file = new File(filePath);
@@ -219,9 +218,9 @@ public class PlayerService extends Service implements OnCompletionListener, OnAu
                 i++;
                 if (i < passableReadings.passages.size()) {
                     // Play next
-                    doPlay(passableReadings.passages.get(i).getPassageId(), 0);
+                    passageId = passableReadings.passages.get(i).getPassageId();
+                    doPlay(0);
                 } else {
-                    // End
                     doStop();
                 }
                 break;
