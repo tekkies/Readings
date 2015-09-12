@@ -42,11 +42,13 @@ import android.app.AlertDialog.Builder;
 import android.app.DatePickerDialog.OnDateSetListener;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -296,7 +298,7 @@ public class ReadingsActivity extends BaseActivity implements OnDateSetListener 
         LayoutInflater inflater = LayoutInflater.from(this);
         View view = inflater.inflate(R.layout.dialog_whatsnew, null);
         Builder builder = new AlertDialog.Builder(this);
-        builder.setView(view).setTitle(getString(R.string.whats_new))
+        builder.setView(view).setTitle(getString(R.string.whats_new_in_v)+getAppVersion())
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -351,13 +353,7 @@ public class ReadingsActivity extends BaseActivity implements OnDateSetListener 
         LayoutInflater inflater = LayoutInflater.from(this);
         View view = inflater.inflate(R.layout.dialog_about, null);
         Builder builder = new AlertDialog.Builder(this);
-        String version="";
-        try {
-            version = " v"+getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
-        } catch (NameNotFoundException e) {
-            Analytics.reportCaughtException(this, e);
-        }
-        builder.setView(view).setTitle(getString(R.string.app_name)+version)
+        builder.setView(view).setTitle(getString(R.string.app_name) + " v" + getAppVersion())
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -365,6 +361,17 @@ public class ReadingsActivity extends BaseActivity implements OnDateSetListener 
                     }
                 });
         builder.create().show();
+    }
+
+    @NonNull
+    private String getAppVersion() {
+        String version="";
+        try {
+            version = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+        } catch (NameNotFoundException e) {
+            Analytics.reportCaughtException(this, e);
+        }
+        return version;
     }
 
     private void doSuggestion() {

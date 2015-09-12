@@ -40,7 +40,7 @@
     <string name="pref_title_show_summary">Show chapter summary</string>
     <string name="sorry_no_summary_available_yet">Sorry, no summary available, yet.</string>
     <string name="whats_new">What\'s New</string>
-    <string name="whats_new_in">What\'s New in</string>
+    <string name="whats_new_in_v">What\'s New in v</string>
     <string name="pref_summary_show_summary">Show passage summaries if available</string>
     <string name="pref_title_general">General</string>
     <string name="pref_title_connect">Connect</string>
