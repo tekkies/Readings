@@ -49,16 +49,16 @@ public class PlayerService extends Service implements OnCompletionListener, OnAu
     int passageId = 0;
     Boolean beep = false;
     private final Binder binder = new PlayerServiceBinder();
-    private Map<Activity, IClientInterface> clients = new ConcurrentHashMap<Activity, IClientInterface>();
+    private Map<Activity, IPlayerUi> clients = new ConcurrentHashMap<Activity, IPlayerUi>();
     
-    public interface IClientInterface {
+    public interface IPlayerUi {
         void onPassageChange(int passageId);
         void onEndAll();
         void onPassageEnding(int passageId);
     }
 
-    public interface IServiceInterface {
-        void registerActivity(Activity activity, IClientInterface callback);
+    public interface IPlayerService {
+        void registerActivity(Activity activity, IPlayerUi playerUi);
         void unregisterActivity(Activity activity);
         int getPassage();
         int getProgress();
@@ -237,9 +237,9 @@ public class PlayerService extends Service implements OnCompletionListener, OnAu
         mediaPlayer.start();
     }
 
-    public class PlayerServiceBinder extends Binder implements IServiceInterface {
-        public void registerActivity(Activity activity, IClientInterface callback) {
-            clients.put(activity, callback);
+    public class PlayerServiceBinder extends Binder implements IPlayerService {
+        public void registerActivity(Activity activity, IPlayerUi playerUi) {
+            clients.put(activity, playerUi);
         }
         public void unregisterActivity(Activity activity) {
             clients.remove(activity);

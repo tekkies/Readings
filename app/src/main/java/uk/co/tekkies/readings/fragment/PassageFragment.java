@@ -312,9 +312,9 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
 	
     private void doPause() {
         Analytics.UIClick(getActivity(), "player-pause");
-        PlayerService.IServiceInterface serviceInterface = ((PassageActivity)getActivity()).getServiceInterface();
-        if(serviceInterface != null) {
-            int playingPassageId = serviceInterface.getPassage();
+        PlayerService.IPlayerService playerService = ((PassageActivity)getActivity()).getPlayerService();
+        if(playerService != null) {
+            int playingPassageId = playerService.getPassage();
             int displayedPassageId = ((PassageActivity) getActivity()).getCurrentPassageId();
             ((PassageActivity) getActivity()).unbindPlayerService();
             PlayerService.requestStop(getActivity());
@@ -368,7 +368,7 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
         Analytics.UIClick(getActivity(), "player-seek");
         PassageActivity passageActivity = (PassageActivity)getActivity();
         if(passageActivity.isServiceAvailable()) {
-            ((PassageActivity)getActivity()).getServiceInterface().setPosition(seekBar.getProgress());
+            ((PassageActivity)getActivity()).getPlayerService().setPosition(seekBar.getProgress());
         }
     }
     
