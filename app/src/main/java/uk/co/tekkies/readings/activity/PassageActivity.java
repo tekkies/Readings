@@ -22,6 +22,7 @@ import uk.co.tekkies.readings.R;
 import uk.co.tekkies.readings.ReadingsApplication;
 import uk.co.tekkies.readings.fragment.PassageFragment;
 import uk.co.tekkies.readings.model.ParcelableReadings;
+import uk.co.tekkies.readings.service.IPlayerUi;
 import uk.co.tekkies.readings.service.PlayerService;
 import uk.co.tekkies.readings.util.Analytics;
 import android.app.Activity;
@@ -44,7 +45,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 
-public class PassageActivity extends BaseActivity implements PlayerService.IPlayerUi {
+public class PassageActivity extends BaseActivity implements IPlayerUi {
 
     private static final String TAG_BIND = "BIND";
     public static final String ARG_SELECTED_DATE = "selectedDate";
