@@ -57,11 +57,6 @@ public class PlayerService extends Service {
         return new ReadingsPlayer(this, parcelableReadings, passageId);
     }
 
-    private void doStop() {
-        readingsPlayer.doStop();
-        readingsPlayer = null;
-    }
-
     @Override
     public IBinder onBind(Intent intent) {
         return binder;

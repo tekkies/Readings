@@ -17,7 +17,6 @@ import uk.co.tekkies.readings.service.PlayerService;
 import uk.co.tekkies.readings.service.ReadingsPlayer;
 
 public class PlayerNotificationApi14 implements IPlayerNotification {
-
     private final Context context;
     private final ReadingsPlayer readingsPlayer;
     private Notification notification;
@@ -55,7 +54,7 @@ public class PlayerNotificationApi14 implements IPlayerNotification {
                 .setContentTitle(title).setContentText(content).setAutoCancel(true)
                 .setContentIntent(taskStackBuilder.getPendingIntent(0, PendingIntent.FLAG_CANCEL_CURRENT));
         notification = notificationBuilder.build();
-        ((PlayerService)context).startForeground((int) Notification.FLAG_FOREGROUND_SERVICE, notification);
+        ((PlayerService) context).startForeground((int) Notification.FLAG_FOREGROUND_SERVICE, notification);
     }
 
     private void updateOngoingNotification(String contentTitle) {
@@ -65,29 +64,27 @@ public class PlayerNotificationApi14 implements IPlayerNotification {
     }
 
     private String getNotificationTitle(int passageId) {
-        return context.getString(R.string.app_name)+":"+getPassageTitle(passageId);
+        return context.getString(R.string.app_name) + ":" + getPassageTitle(passageId);
     }
 
     private String getPassageTitles() {
-        String passageTitles="";
-        for(Passage passage: readingsPlayer.getParcelableReadings().passages) {
-            if(passageTitles.length() > 0){
+        String passageTitles = "";
+        for (Passage passage : readingsPlayer.getParcelableReadings().passages) {
+            if (passageTitles.length() > 0) {
                 passageTitles += ", ";
             }
             passageTitles += passage.getTitle();
         }
         return passageTitles;
     }
+
     protected String getPassageTitle(int passageId) {
         String passageName = "Unknown";
-        for(Passage passage: readingsPlayer.getParcelableReadings().passages) {
-            if(passage.getPassageId() == passageId) {
+        for (Passage passage : readingsPlayer.getParcelableReadings().passages) {
+            if (passage.getPassageId() == passageId) {
                 passageName = passage.getTitle();
             }
         }
         return passageName;
     }
-
-
-
 }
