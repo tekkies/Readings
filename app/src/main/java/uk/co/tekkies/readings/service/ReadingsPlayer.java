@@ -53,7 +53,7 @@ public class ReadingsPlayer implements AudioManager.OnAudioFocusChangeListener, 
 
 
 
-    private final Context context;
+    private final PlayerService playerService;
     private final ParcelableReadings parcelableReadings;
     private IPlayerNotification playerNotification;
     PlayerBroadcastReceiver playerBroadcastReceiver;
@@ -64,17 +64,17 @@ public class ReadingsPlayer implements AudioManager.OnAudioFocusChangeListener, 
 
 
 
-    public ReadingsPlayer(Context context, ParcelableReadings parcelableReadings, int passageId) {
-        this.context = context;
+    public ReadingsPlayer(PlayerService playerService, ParcelableReadings parcelableReadings, int passageId) {
+        this.playerService = playerService;
         this.parcelableReadings = parcelableReadings;
         this.setPassageId(passageId);
-        playerNotification = new PlayerNotificationApi14(context, this);
+        playerNotification = new PlayerNotificationApi14(playerService, this);
         playerNotification.show();
     }
 
     public void destroy() {
         if (playerBroadcastReceiver != null) {
-            context.unregisterReceiver(playerBroadcastReceiver);
+            playerService.unregisterReceiver(playerBroadcastReceiver);
             playerBroadcastReceiver = null;
         }
     }
@@ -89,10 +89,10 @@ public class ReadingsPlayer implements AudioManager.OnAudioFocusChangeListener, 
         Log.i(LOG_TAG, "Play:" + getPassageId() + "(" + positionAsThousandth + ")");
         if(getAudioFocus()) {
             beep = false;
-            String filePath = Mp3ContentLocator.getPassageFullPath(context, getPassageId());
+            String filePath = Mp3ContentLocator.getPassageFullPath(playerService, getPassageId());
             File file = new File(filePath);
             if(file.exists()) {
-                mediaPlayer = MediaPlayer.create(context, Uri.parse(filePath));
+                mediaPlayer = MediaPlayer.create(playerService, Uri.parse(filePath));
                 mediaPlayer.setOnCompletionListener(this);
                 setPlayerPosition(positionAsThousandth);
                 mediaPlayer.start();
@@ -101,7 +101,7 @@ public class ReadingsPlayer implements AudioManager.OnAudioFocusChangeListener, 
                     clients.get(client).onPassageChange(getPassageId());
                 }
             } else {
-                Toast.makeText(this, getString(R.string.mp3_not_found_goto_settings), Toast.LENGTH_LONG).show();
+                Toast.makeText(playerService, playerService.getString(R.string.mp3_not_found_goto_settings), Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -113,12 +113,17 @@ public class ReadingsPlayer implements AudioManager.OnAudioFocusChangeListener, 
             clients.get(client).onEndAll();
         }
         setPassageId(0);
-        notification = null;
+        destroyNotification();
         if(mediaPlayer.isPlaying()) {
             mediaPlayer.stop();
         }
         mediaPlayer.release();
-        stopSelf();
+        playerService.stopSelf();
+    }
+
+    private void destroyNotification() {
+        playerNotification.destroy();
+        playerNotification = null;
     }
 
     void doPause() {
@@ -160,12 +165,12 @@ public class ReadingsPlayer implements AudioManager.OnAudioFocusChangeListener, 
 
 
     private boolean getAudioFocus() {
-        AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+        AudioManager audioManager = (AudioManager) playerService.getSystemService(Context.AUDIO_SERVICE);
         return (audioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN) == AudioManager.AUDIOFOCUS_REQUEST_GRANTED);
     }
 
     private void abandonAudioFocus() {
-        AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+        AudioManager audioManager = (AudioManager) playerService.getSystemService(Context.AUDIO_SERVICE);
         audioManager.abandonAudioFocus(this);
     }
 
@@ -180,7 +185,7 @@ public class ReadingsPlayer implements AudioManager.OnAudioFocusChangeListener, 
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(INTENT_STOP);
         intentFilter.addAction(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
-        context.registerReceiver(playerBroadcastReceiver, intentFilter);
+        playerService.registerReceiver(playerBroadcastReceiver, intentFilter);
     }
 
     @Override
@@ -215,7 +220,7 @@ public class ReadingsPlayer implements AudioManager.OnAudioFocusChangeListener, 
     private void doBeep() {
         beep = true;
         mediaPlayer.release();
-        mediaPlayer = MediaPlayer.create(this, R.raw.beep);
+        mediaPlayer = MediaPlayer.create(playerService, R.raw.beep);
         mediaPlayer.setOnCompletionListener(this);
         mediaPlayer.start();
     }
@@ -231,7 +236,7 @@ public class ReadingsPlayer implements AudioManager.OnAudioFocusChangeListener, 
                 int duration = mediaPlayer.getDuration();
                 progress = (currentPosition * 1000) / duration;
             } catch (Exception e) {
-                Analytics.reportCaughtException(context, e);
+                Analytics.reportCaughtException(playerService, e);
             }
         }
         return progress;

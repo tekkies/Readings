@@ -13,6 +13,7 @@ import uk.co.tekkies.readings.R;
 import uk.co.tekkies.readings.activity.PassageActivity;
 import uk.co.tekkies.readings.model.ParcelableReadings;
 import uk.co.tekkies.readings.model.Passage;
+import uk.co.tekkies.readings.service.PlayerService;
 import uk.co.tekkies.readings.service.ReadingsPlayer;
 
 public class PlayerNotificationApi14 implements IPlayerNotification {
@@ -37,6 +38,11 @@ public class PlayerNotificationApi14 implements IPlayerNotification {
         updateOngoingNotification(getNotificationTitle(passageId));
     }
 
+    @Override
+    public void destroy() {
+        notification = null;
+    }
+
     private void showOngoingNotification() {
         TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context).addParentStack(PassageActivity.class);
         String title = getNotificationTitle(readingsPlayer.getPassageId());
@@ -49,7 +55,7 @@ public class PlayerNotificationApi14 implements IPlayerNotification {
                 .setContentTitle(title).setContentText(content).setAutoCancel(true)
                 .setContentIntent(taskStackBuilder.getPendingIntent(0, PendingIntent.FLAG_CANCEL_CURRENT));
         notification = notificationBuilder.build();
-        startForeground((int) Notification.FLAG_FOREGROUND_SERVICE, notification);
+        ((PlayerService)context).startForeground((int) Notification.FLAG_FOREGROUND_SERVICE, notification);
     }
 
     private void updateOngoingNotification(String contentTitle) {
