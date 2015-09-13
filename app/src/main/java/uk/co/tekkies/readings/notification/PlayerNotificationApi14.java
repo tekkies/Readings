@@ -1,6 +1,7 @@
 package uk.co.tekkies.readings.notification;
 
 import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -44,6 +45,12 @@ public class PlayerNotificationApi14 implements IPlayerNotification {
                 .setContentIntent(taskStackBuilder.getPendingIntent(0, PendingIntent.FLAG_CANCEL_CURRENT));
         notification = notificationBuilder.build();
         startForeground((int) Notification.FLAG_FOREGROUND_SERVICE, notification);
+    }
+
+    private void updateOngoingNotification(String contentTitle) {
+        notificationBuilder.setContentTitle(contentTitle).setTicker(getPassageTitle(readingsPlayer.getPassageId()));
+        ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE)).notify(
+                (int) Notification.FLAG_FOREGROUND_SERVICE, notificationBuilder.build());
     }
 
     private String getNotificationTitle(int passageId) {

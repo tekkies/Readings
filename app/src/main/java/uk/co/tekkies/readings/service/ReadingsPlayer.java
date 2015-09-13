@@ -1,7 +1,10 @@
 package uk.co.tekkies.readings.service;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -16,14 +19,35 @@ import uk.co.tekkies.readings.model.Passage;
 import uk.co.tekkies.readings.model.content.Mp3ContentLocator;
 import uk.co.tekkies.readings.notification.IPlayerNotification;
 import uk.co.tekkies.readings.notification.PlayerNotificationApi14;
+import uk.co.tekkies.readings.util.Analytics;
 
-public class ReadingsPlayer implements AudioManager.OnAudioFocusChangeListener {
+public class ReadingsPlayer implements AudioManager.OnAudioFocusChangeListener, MediaPlayer.OnCompletionListener {
+    public static final String INTENT_STOP = "stop";
     private static final String LOG_TAG = "PLAYER";
+
+
+
+    class PlayerBroadcastReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (action.equals(INTENT_STOP)) {
+                doStop();
+            } else if (action.equals(AudioManager.ACTION_AUDIO_BECOMING_NOISY)) {
+                doStop();
+            }
+        }
+    }
 
     private final Context context;
     private final ParcelableReadings parcelableReadings;
-    private final int passageId;
     private IPlayerNotification playerNotification;
+    PlayerBroadcastReceiver playerBroadcastReceiver;
+    MediaPlayer mediaPlayer;
+    private int passageId = 0;
+    Boolean beep = false;
+
+
 
     public ReadingsPlayer(Context context, ParcelableReadings parcelableReadings, int passageId) {
         this.context = context;
@@ -33,6 +57,12 @@ public class ReadingsPlayer implements AudioManager.OnAudioFocusChangeListener {
         playerNotification.show();
     }
 
+    public void destroy() {
+        if (playerBroadcastReceiver != null) {
+            context.unregisterReceiver(playerBroadcastReceiver);
+            playerBroadcastReceiver = null;
+        }
+    }
 
 
     public int getPassageId() {
@@ -128,4 +158,73 @@ public class ReadingsPlayer implements AudioManager.OnAudioFocusChangeListener {
     public ParcelableReadings getParcelableReadings() {
         return parcelableReadings;
     }
+
+
+    private void registerPlayerBroadcastReceiver() {
+        playerBroadcastReceiver = new PlayerBroadcastReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(INTENT_STOP);
+        intentFilter.addAction(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
+        context.registerReceiver(playerBroadcastReceiver, intentFilter);
+    }
+
+    @Override
+    public void onCompletion(MediaPlayer mp) {
+        if (beep == false) {
+            for (Activity client : clients.keySet()) {
+                clients.get(client).onPassageEnding(getPassageId());
+            }
+            doBeep();
+        } else {
+            beep = false;
+            advanceOrExit();
+        }
+    }
+
+    private void advanceOrExit() {
+        for (int i = 0; i < parcelableReadings.passages.size(); i++) {
+            if (getPassageId() == parcelableReadings.passages.get(i).getPassageId()) {
+                i++;
+                if (i < parcelableReadings.passages.size()) {
+                    // Play next
+                    setPassageId(parcelableReadings.passages.get(i).getPassageId());
+                    doPlay(0);
+                } else {
+                    doStop();
+                }
+                break;
+            }
+        }
+    }
+
+    private void doBeep() {
+        beep = true;
+        mediaPlayer.release();
+        mediaPlayer = MediaPlayer.create(this, R.raw.beep);
+        mediaPlayer.setOnCompletionListener(this);
+        mediaPlayer.start();
+    }
+
+    public int getProgress() {
+        int progress=0;
+        if(beep) {
+            progress = 0;
+        } else {
+            try {
+                //Split calc to determine source of exceptions
+                int currentPosition = mediaPlayer.getCurrentPosition();
+                int duration = mediaPlayer.getDuration();
+                progress = (currentPosition * 1000) / duration;
+            } catch (Exception e) {
+                Analytics.reportCaughtException(context, e);
+            }
+        }
+        return progress;
+    }
+
+    void setPlayerPosition(int positionAsThousandth) {
+        mediaPlayer.seekTo((mediaPlayer.getDuration() *  positionAsThousandth) / 1000);
+    }
+
+
 }
