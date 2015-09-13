@@ -37,7 +37,7 @@ import android.widget.Toast;
 public class PlayerService extends Service implements OnCompletionListener {
     private static final String INTENT_EXTRA_PASSAGE_ID = "passageId";
     private static final String INTENT_EXTRA_POSITION = "position";
-    private static final String LOG_TAG = "PLAYER";
+    private static final String LOG_TAG = "PLAYSVC";
     private static final String SERVICE_NAME = "uk.co.tekkies.readings.service.PlayerService";
     private static final String INTENT_STOP = "stop";
     ReadingsPlayer readingsPlayer;
@@ -96,7 +96,7 @@ public class PlayerService extends Service implements OnCompletionListener {
     private ReadingsPlayer CreateReadingsPlayer(Intent intent) {
         ParcelableReadings parcelableReadings = intent.getParcelableExtra(ParcelableReadings.PARCEL_NAME);
         int passageId = intent.getExtras().getInt(INTENT_EXTRA_PASSAGE_ID);
-        return new ReadingsPlayer(parcelableReadings, passageId);
+        return new ReadingsPlayer(this, parcelableReadings, passageId);
     }
 
     class PlayerBroadcastReceiver extends BroadcastReceiver {
@@ -247,14 +247,5 @@ public class PlayerService extends Service implements OnCompletionListener {
 
 
 
-    private boolean getAudioFocus() {
-        AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-        return (audioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN) == AudioManager.AUDIOFOCUS_REQUEST_GRANTED);
-    }
-
-    private void abandonAudioFocus() {
-        AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-        audioManager.abandonAudioFocus(this);
-    }
 
 }

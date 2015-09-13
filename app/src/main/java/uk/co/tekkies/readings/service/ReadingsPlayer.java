@@ -3,6 +3,7 @@ package uk.co.tekkies.readings.service;
 import android.app.Activity;
 import android.app.Notification;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.media.AudioManager;
@@ -20,33 +21,26 @@ import uk.co.tekkies.readings.activity.PassageActivity;
 import uk.co.tekkies.readings.model.ParcelableReadings;
 import uk.co.tekkies.readings.model.Passage;
 import uk.co.tekkies.readings.model.content.Mp3ContentLocator;
+import uk.co.tekkies.readings.notification.IPlayerNotification;
+import uk.co.tekkies.readings.notification.PlayerNotificationApi14;
 
 public class ReadingsPlayer implements AudioManager.OnAudioFocusChangeListener {
+    private static final String LOG_TAG = "PLAYER";
+
+    private final Context context;
     private final ParcelableReadings parcelableReadings;
     private final int passageId;
+    private IPlayerNotification playerNotification;
 
-    public ReadingsPlayer(ParcelableReadings parcelableReadings, int passageId) {
-
+    public ReadingsPlayer(Context context, ParcelableReadings parcelableReadings, int passageId) {
+        this.context = context;
         this.parcelableReadings = parcelableReadings;
         this.passageId = passageId;
-        showOngoingNotification();
+        playerNotification = new PlayerNotificationApi14(context);
+        playerNotification.show();
     }
 
 
-    private void showOngoingNotification() {
-        TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(this).addParentStack(PassageActivity.class);
-        String title = getNotificationTitle(getPassageId());
-        String content = getPassageTitles();
-        taskStackBuilder.addNextIntent(new Intent(this, PassageActivity.class).putExtra(ParcelableReadings.PARCEL_NAME,
-                passableReadings));
-        notificationBuilder = new NotificationCompat.Builder(this).setTicker(getPassageTitle(getPassageId()))
-                .setSmallIcon(R.drawable.ic_action_av_play_holo_dark)
-                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher))
-                .setContentTitle(title).setContentText(content).setAutoCancel(true)
-                .setContentIntent(taskStackBuilder.getPendingIntent(0, PendingIntent.FLAG_CANCEL_CURRENT));
-        notification = notificationBuilder.build();
-        startForeground((int) Notification.FLAG_FOREGROUND_SERVICE, notification);
-    }
 
     public int getPassageId() {
         return passageId;
@@ -137,7 +131,7 @@ public class ReadingsPlayer implements AudioManager.OnAudioFocusChangeListener {
 
 
     private String getNotificationTitle(int passageId) {
-        return getString(R.string.app_name)+":"+getPassageTitle(passageId);
+        return context.getString(R.string.app_name)+":"+getPassageTitle(passageId);
     }
 
     private String getPassageTitles() {
@@ -149,6 +143,16 @@ public class ReadingsPlayer implements AudioManager.OnAudioFocusChangeListener {
             passageTitles += passage.getTitle();
         }
         return passageTitles;
+    }
+
+    private boolean getAudioFocus() {
+        AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+        return (audioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN) == AudioManager.AUDIOFOCUS_REQUEST_GRANTED);
+    }
+
+    private void abandonAudioFocus() {
+        AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+        audioManager.abandonAudioFocus(this);
     }
 
 
