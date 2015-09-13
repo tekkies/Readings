@@ -1,23 +1,16 @@
 package uk.co.tekkies.readings.service;
 
 import android.app.Activity;
-import android.app.Notification;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 import android.widget.Toast;
 
 import java.io.File;
 
 import uk.co.tekkies.readings.R;
-import uk.co.tekkies.readings.activity.PassageActivity;
 import uk.co.tekkies.readings.model.ParcelableReadings;
 import uk.co.tekkies.readings.model.Passage;
 import uk.co.tekkies.readings.model.content.Mp3ContentLocator;
@@ -36,7 +29,7 @@ public class ReadingsPlayer implements AudioManager.OnAudioFocusChangeListener {
         this.context = context;
         this.parcelableReadings = parcelableReadings;
         this.passageId = passageId;
-        playerNotification = new PlayerNotificationApi14(context);
+        playerNotification = new PlayerNotificationApi14(context, this);
         playerNotification.show();
     }
 
@@ -119,31 +112,7 @@ public class ReadingsPlayer implements AudioManager.OnAudioFocusChangeListener {
         }
     }
 
-    protected String getPassageTitle(int passageId) {
-        String passageName = "Unknown";
-        for(Passage passage: parcelableReadings.passages) {
-            if(passage.getPassageId() == passageId) {
-                passageName = passage.getTitle();
-            }
-        }
-        return passageName;
-    }
 
-
-    private String getNotificationTitle(int passageId) {
-        return context.getString(R.string.app_name)+":"+getPassageTitle(passageId);
-    }
-
-    private String getPassageTitles() {
-        String passageTitles="";
-        for(Passage passage: parcelableReadings.passages) {
-            if(passageTitles.length() > 0){
-                passageTitles += ", ";
-            }
-            passageTitles += passage.getTitle();
-        }
-        return passageTitles;
-    }
 
     private boolean getAudioFocus() {
         AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
@@ -156,4 +125,7 @@ public class ReadingsPlayer implements AudioManager.OnAudioFocusChangeListener {
     }
 
 
+    public ParcelableReadings getParcelableReadings() {
+        return parcelableReadings;
+    }
 }

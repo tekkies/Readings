@@ -43,8 +43,6 @@ public class PlayerService extends Service implements OnCompletionListener {
     ReadingsPlayer readingsPlayer;
     PlayerBroadcastReceiver playerBroadcastReceiver;
     MediaPlayer mediaPlayer;
-    Notification notification;
-    NotificationCompat.Builder notificationBuilder;
     private int passageId = 0;
     Boolean beep = false;
     private final Binder binder = new PlayerServiceBinder();
