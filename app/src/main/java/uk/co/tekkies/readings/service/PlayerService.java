@@ -1,38 +1,18 @@
 package uk.co.tekkies.readings.service;
 
-import java.io.File;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
-import uk.co.tekkies.readings.R;
-import uk.co.tekkies.readings.activity.PassageActivity;
-import uk.co.tekkies.readings.model.ParcelableReadings;
-import uk.co.tekkies.readings.model.Passage;
-import uk.co.tekkies.readings.model.content.Mp3ContentLocator;
-import uk.co.tekkies.readings.util.Analytics;
 import android.app.Activity;
 import android.app.ActivityManager;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.Service;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.graphics.BitmapFactory;
-import android.media.AudioManager;
-import android.media.AudioManager.OnAudioFocusChangeListener;
-import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnCompletionListener;
-import android.net.Uri;
 import android.os.Binder;
 import android.os.IBinder;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
-import android.widget.Toast;
+
+import java.util.List;
+
+import uk.co.tekkies.readings.activity.PassageActivity;
+import uk.co.tekkies.readings.model.ParcelableReadings;
 
 public class PlayerService extends Service {
     private static final String INTENT_EXTRA_PASSAGE_ID = "passageId";
@@ -41,13 +21,7 @@ public class PlayerService extends Service {
     private static final String SERVICE_NAME = "uk.co.tekkies.readings.service.PlayerService";
     ReadingsPlayer readingsPlayer;
     private final Binder binder = new PlayerServiceBinder();
-    private Map<Activity, IPlayerUi> clients = new ConcurrentHashMap<Activity, IPlayerUi>();
 
-    public interface IPlayerUi {
-        void onPassageChange(int passageId);
-        void onEndAll();
-        void onPassageEnding(int passageId);
-    }
 
     public interface IPlayerService {
         void registerActivity(Activity activity, IPlayerUi callback);
@@ -127,10 +101,10 @@ public class PlayerService extends Service {
 
     public class PlayerServiceBinder extends Binder implements IPlayerService {
         public void registerActivity(Activity activity, IPlayerUi playerUi) {
-            clients.put(activity, playerUi);
+            readingsPlayer.registerActivity(activity, playerUi);
         }
         public void unregisterActivity(Activity activity) {
-            clients.remove(activity);
+            readingsPlayer.unregisterActivity(activity);
         }
         @Override
         public int getPassage() {

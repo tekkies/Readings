@@ -12,10 +12,11 @@ import android.util.Log;
 import android.widget.Toast;
 
 import java.io.File;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import uk.co.tekkies.readings.R;
 import uk.co.tekkies.readings.model.ParcelableReadings;
-import uk.co.tekkies.readings.model.Passage;
 import uk.co.tekkies.readings.model.content.Mp3ContentLocator;
 import uk.co.tekkies.readings.notification.IPlayerNotification;
 import uk.co.tekkies.readings.notification.PlayerNotificationApi14;
@@ -25,6 +26,17 @@ public class ReadingsPlayer implements AudioManager.OnAudioFocusChangeListener, 
     public static final String INTENT_STOP = "stop";
     private static final String LOG_TAG = "PLAYER";
 
+    public void setPassageId(int passageId) {
+        this.passageId = passageId;
+    }
+
+    public void registerActivity(Activity activity, IPlayerUi playerUi) {
+        clients.put(activity, playerUi);
+    }
+
+    public void unregisterActivity(Activity activity) {
+        clients.remove(activity);
+    }
 
 
     class PlayerBroadcastReceiver extends BroadcastReceiver {
@@ -39,6 +51,8 @@ public class ReadingsPlayer implements AudioManager.OnAudioFocusChangeListener, 
         }
     }
 
+
+
     private final Context context;
     private final ParcelableReadings parcelableReadings;
     private IPlayerNotification playerNotification;
@@ -46,13 +60,14 @@ public class ReadingsPlayer implements AudioManager.OnAudioFocusChangeListener, 
     MediaPlayer mediaPlayer;
     private int passageId = 0;
     Boolean beep = false;
+    private Map<Activity, IPlayerUi> clients = new ConcurrentHashMap<Activity, IPlayerUi>();
 
 
 
     public ReadingsPlayer(Context context, ParcelableReadings parcelableReadings, int passageId) {
         this.context = context;
         this.parcelableReadings = parcelableReadings;
-        this.passageId = passageId;
+        this.setPassageId(passageId);
         playerNotification = new PlayerNotificationApi14(context, this);
         playerNotification.show();
     }
@@ -74,14 +89,14 @@ public class ReadingsPlayer implements AudioManager.OnAudioFocusChangeListener, 
         Log.i(LOG_TAG, "Play:" + getPassageId() + "(" + positionAsThousandth + ")");
         if(getAudioFocus()) {
             beep = false;
-            String filePath = Mp3ContentLocator.getPassageFullPath(this, getPassageId());
+            String filePath = Mp3ContentLocator.getPassageFullPath(context, getPassageId());
             File file = new File(filePath);
             if(file.exists()) {
-                mediaPlayer = MediaPlayer.create(this, Uri.parse(filePath));
+                mediaPlayer = MediaPlayer.create(context, Uri.parse(filePath));
                 mediaPlayer.setOnCompletionListener(this);
                 setPlayerPosition(positionAsThousandth);
                 mediaPlayer.start();
-                updateOngoingNotification(getNotificationTitle(getPassageId()));
+                playerNotification.update(getPassageId());
                 for (Activity client : clients.keySet()) {
                     clients.get(client).onPassageChange(getPassageId());
                 }

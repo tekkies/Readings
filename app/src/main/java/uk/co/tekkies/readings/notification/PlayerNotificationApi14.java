@@ -32,6 +32,11 @@ public class PlayerNotificationApi14 implements IPlayerNotification {
         showOngoingNotification();
     }
 
+    @Override
+    public void update(int passageId) {
+        updateOngoingNotification(getNotificationTitle(passageId));
+    }
+
     private void showOngoingNotification() {
         TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context).addParentStack(PassageActivity.class);
         String title = getNotificationTitle(readingsPlayer.getPassageId());
