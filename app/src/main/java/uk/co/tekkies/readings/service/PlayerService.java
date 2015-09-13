@@ -19,16 +19,8 @@ public class PlayerService extends Service {
     private static final String INTENT_EXTRA_POSITION = "position";
     private static final String LOG_TAG = "PLAYSVC";
     private static final String SERVICE_NAME = "uk.co.tekkies.readings.service.PlayerService";
-    ReadingsPlayer readingsPlayer;
     private final Binder binder = new PlayerServiceBinder();
-
-    public interface IPlayerService {
-        void registerActivity(Activity activity, IPlayerUi callback);
-        void unregisterActivity(Activity activity);
-        int getPassage();
-        int getProgress();
-        void setPosition(int progressAsThousandth);
-    }
+    ReadingsPlayer readingsPlayer;
 
     public static void requestPlay(PassageActivity passageActivity, int passageId, int positionAsThousandth) {
         Intent intent = new Intent(PlayerService.SERVICE_NAME);
@@ -41,6 +33,19 @@ public class PlayerService extends Service {
     public static void requestStop(Context context) {
         Intent intent = new Intent(ReadingsPlayer.INTENT_STOP);
         context.sendBroadcast(intent);
+    }
+
+    public static Boolean isServiceRunning(Context context) {
+        Boolean serviceRunning = false;
+        ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningServiceInfo> runningServices = activityManager.getRunningServices(50);
+        for (ActivityManager.RunningServiceInfo runningServiceInfo : runningServices) {
+            if (runningServiceInfo.service.getClassName().equals(SERVICE_NAME)) {
+                serviceRunning = true;
+                break;
+            }
+        }
+        return serviceRunning;
     }
 
     @Override
@@ -62,25 +67,20 @@ public class PlayerService extends Service {
         return binder;
     }
 
-    public static Boolean isServiceRunning(Context context) {
-        Boolean serviceRunning = false;
-        ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        List<ActivityManager.RunningServiceInfo> runningServices = activityManager.getRunningServices(50);
-        for (ActivityManager.RunningServiceInfo runningServiceInfo : runningServices) {
-            if (runningServiceInfo.service.getClassName().equals(SERVICE_NAME)) {
-                serviceRunning = true;
-                break;
-            }
-        }
-        return serviceRunning;
-    }
-
     @Override
     public void onDestroy() {
         Log.i(LOG_TAG, "Service stopped");
         readingsPlayer.destroy();
         readingsPlayer = null;
         super.onDestroy();
+    }
+
+    public interface IPlayerService {
+        void registerActivity(Activity activity, IPlayerUi callback);
+        void unregisterActivity(Activity activity);
+        int getPassage();
+        int getProgress();
+        void setPosition(int progressAsThousandth);
     }
 
     public class PlayerServiceBinder extends Binder implements IPlayerService {
