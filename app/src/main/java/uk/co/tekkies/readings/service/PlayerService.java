@@ -46,11 +46,19 @@ public class PlayerService extends Service implements OnCompletionListener, OnAu
     private ParcelableReadings passableReadings;
     Notification notification;
     NotificationCompat.Builder notificationBuilder;
-    int passageId = 0;
+    private int passageId = 0;
     Boolean beep = false;
     private final Binder binder = new PlayerServiceBinder();
     private Map<Activity, IPlayerUi> clients = new ConcurrentHashMap<Activity, IPlayerUi>();
-    
+
+    public int getPassageId() {
+        return passageId;
+    }
+
+    public void setPassageId(int passageId) {
+        this.passageId = passageId;
+    }
+
     public interface IPlayerUi {
         void onPassageChange(int passageId);
         void onEndAll();
@@ -65,29 +73,77 @@ public class PlayerService extends Service implements OnCompletionListener, OnAu
         void setPosition(int progressAsThousandth);
     }
 
-    @Override
-    public IBinder onBind(Intent intent) {
-        return binder;
+    public static void requestPlay(PassageActivity passageActivity, int passageId, int positionAsThousandth) {
+        Intent intent = new Intent(PlayerService.SERVICE_NAME);
+        intent.putExtra(INTENT_EXTRA_PASSAGE_ID, passageId);
+        intent.putExtra(INTENT_EXTRA_POSITION, positionAsThousandth);
+        intent.putExtra(ParcelableReadings.PARCEL_NAME, passageActivity.getPassableReadings());
+        passageActivity.startService(intent);
+    }
+
+    public static void requestStop(Context context) {
+        Intent intent = new Intent(INTENT_STOP);
+        context.sendBroadcast(intent);
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         registerPlayerBroadcastReceiver();
-        passableReadings = (ParcelableReadings) (intent.getParcelableExtra(ParcelableReadings.PARCEL_NAME));
-        passageId = intent.getExtras().getInt(INTENT_EXTRA_PASSAGE_ID);
-        startWithOngoingNotification();
+        passableReadings = intent.getParcelableExtra(ParcelableReadings.PARCEL_NAME);
+        setPassageId(intent.getExtras().getInt(INTENT_EXTRA_PASSAGE_ID));
+        showOngoingNotification();
         int positionAsThousandth = intent.getExtras().getInt(INTENT_EXTRA_POSITION);
         doPlay(positionAsThousandth);
         return super.onStartCommand(intent, flags, startId);
     }
 
-    private void startWithOngoingNotification() {
+    class PlayerBroadcastReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (action.equals(INTENT_STOP)) {
+                doStop();
+            } else if (action.equals(AudioManager.ACTION_AUDIO_BECOMING_NOISY)) {
+                doStop();
+            }
+        }
+    }
+
+    public void onAudioFocusChange(int focusChange) {
+        Log.i(LOG_TAG, "onAudioFocusChange="+focusChange);
+        switch (focusChange) {
+            case AudioManager.AUDIOFOCUS_GAIN:
+                doResume();
+                break;
+
+            case AudioManager.AUDIOFOCUS_LOSS:
+                doStop();
+                break;
+
+            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
+                doPause();
+                break;
+
+            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
+                doPause();
+                //mediaPlayer.setVolume(1.0f, 1.0f);
+                break;
+        }
+    }
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        return binder;
+    }
+
+
+    private void showOngoingNotification() {
         TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(this).addParentStack(PassageActivity.class);
-        String title = getNotificationTitle(passageId);
+        String title = getNotificationTitle(getPassageId());
         String content = getPassageTitles();
         taskStackBuilder.addNextIntent(new Intent(this, PassageActivity.class).putExtra(ParcelableReadings.PARCEL_NAME,
                 passableReadings));
-        notificationBuilder = new NotificationCompat.Builder(this).setTicker(getPassageTitle(passageId))
+        notificationBuilder = new NotificationCompat.Builder(this).setTicker(getPassageTitle(getPassageId()))
                 .setSmallIcon(R.drawable.ic_action_av_play_holo_dark)
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher))
                 .setContentTitle(title).setContentText(content).setAutoCancel(true)
@@ -121,38 +177,14 @@ public class PlayerService extends Service implements OnCompletionListener, OnAu
         return serviceRunning;
     }
 
-    public static void requestPlay(PassageActivity passageActivity, int passageId, int positionAsThousandth) {
-        Intent intent = new Intent(PlayerService.SERVICE_NAME);
-        intent.putExtra(INTENT_EXTRA_PASSAGE_ID, passageId);
-        intent.putExtra(INTENT_EXTRA_POSITION, positionAsThousandth);
-        intent.putExtra(ParcelableReadings.PARCEL_NAME, passageActivity.getPassableReadings());
-        passageActivity.startService(intent);
-    }
-
-    public static void requestStop(Context context) {
-        Intent intent = new Intent(INTENT_STOP);
-        context.sendBroadcast(intent);
-    }
-
-    class PlayerBroadcastReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if (action.equals(INTENT_STOP)) {
-                doStop();
-            } else if (action.equals(AudioManager.ACTION_AUDIO_BECOMING_NOISY)) {
-                doStop();
-            }
-        }
-    }
 
     private void doStop() {
-        Log.i(LOG_TAG, "Stop");
+        Log.i(LOG_TAG, "doStop");
         abandonAudioFocus();
         for (Activity client : clients.keySet()) {
             clients.get(client).onEndAll();
         }
-        passageId = 0;
+        setPassageId(0);
         notification = null;
         if(mediaPlayer.isPlaying()) {
             mediaPlayer.stop();
@@ -162,19 +194,19 @@ public class PlayerService extends Service implements OnCompletionListener, OnAu
     }
 
     private void doPlay(int positionAsThousandth) {
-        Log.i(LOG_TAG, "Play:" + passageId);
+        Log.i(LOG_TAG, "Play:" + getPassageId() + "(" + positionAsThousandth + ")");
         if(getAudioFocus()) {
             beep = false;
-            String filePath = Mp3ContentLocator.getPassageFullPath(this, passageId);
+            String filePath = Mp3ContentLocator.getPassageFullPath(this, getPassageId());
             File file = new File(filePath);
             if(file.exists()) {
                 mediaPlayer = MediaPlayer.create(this, Uri.parse(filePath));
                 mediaPlayer.setOnCompletionListener(this);
                 setPlayerPosition(positionAsThousandth);
                 mediaPlayer.start();
-                updateOngoingNotification(getNotificationTitle(passageId));
+                updateOngoingNotification(getNotificationTitle(getPassageId()));
                 for (Activity client : clients.keySet()) {
-                    clients.get(client).onPassageChange(passageId);
+                    clients.get(client).onPassageChange(getPassageId());
                 }
             } else {
                 Toast.makeText(this, getString(R.string.mp3_not_found_goto_settings), Toast.LENGTH_LONG).show();
@@ -184,7 +216,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnAu
     }
 
     private void updateOngoingNotification(String contentTitle) {
-        notificationBuilder.setContentTitle(contentTitle).setTicker(getPassageTitle(passageId));
+        notificationBuilder.setContentTitle(contentTitle).setTicker(getPassageTitle(getPassageId()));
         ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).notify(
                 (int) Notification.FLAG_FOREGROUND_SERVICE, notificationBuilder.build());
     }
@@ -203,7 +235,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnAu
     public void onCompletion(MediaPlayer mp) {
         if (beep == false) {
             for (Activity client : clients.keySet()) {
-                clients.get(client).onPassageEnding(passageId);
+                clients.get(client).onPassageEnding(getPassageId());
             }
             doBeep();
         } else {
@@ -214,11 +246,11 @@ public class PlayerService extends Service implements OnCompletionListener, OnAu
 
     private void advanceOrExit() {
         for (int i = 0; i < passableReadings.passages.size(); i++) {
-            if (passageId == passableReadings.passages.get(i).getPassageId()) {
+            if (getPassageId() == passableReadings.passages.get(i).getPassageId()) {
                 i++;
                 if (i < passableReadings.passages.size()) {
                     // Play next
-                    passageId = passableReadings.passages.get(i).getPassageId();
+                    setPassageId(passableReadings.passages.get(i).getPassageId());
                     doPlay(0);
                 } else {
                     doStop();
@@ -245,7 +277,7 @@ public class PlayerService extends Service implements OnCompletionListener, OnAu
         }
         @Override
         public int getPassage() {
-            return passageId;
+            return getPassageId();
         }
 
         @Override
@@ -310,31 +342,18 @@ public class PlayerService extends Service implements OnCompletionListener, OnAu
         AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         audioManager.abandonAudioFocus(this);
     }
-    
-    public void onAudioFocusChange(int focusChange) {
-        switch (focusChange) {
-            case AudioManager.AUDIOFOCUS_GAIN:
-                if(!mediaPlayer.isPlaying()) {
-                    mediaPlayer.start();
-                }
-                break;
 
-            case AudioManager.AUDIOFOCUS_LOSS:
-                doStop();
-                break;
+    private void doPause() {
+        Log.i(LOG_TAG, "doPause");
+        if (mediaPlayer.isPlaying()) {
+            mediaPlayer.pause();
+        }
+    }
 
-            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
-                if (mediaPlayer.isPlaying()) {
-                    mediaPlayer.pause();
-                }
-                break;
-
-            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
-                if (mediaPlayer.isPlaying()) {
-                    mediaPlayer.pause();
-                }
-                //mediaPlayer.setVolume(1.0f, 1.0f);
-                break;
+    private void doResume() {
+        Log.i(LOG_TAG, "doResume");
+        if(!mediaPlayer.isPlaying()) {
+            mediaPlayer.start();
         }
     }
 }
