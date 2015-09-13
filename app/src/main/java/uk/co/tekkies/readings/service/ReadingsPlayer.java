@@ -43,10 +43,12 @@ public class ReadingsPlayer implements AudioManager.OnAudioFocusChangeListener, 
     }
 
     public void registerActivity(Activity activity, IPlayerUi playerUi) {
+        Log.i(LOG_TAG, "registerActivity:"+activity);
         clients.put(activity, playerUi);
     }
 
     public void unregisterActivity(Activity activity) {
+        Log.i(LOG_TAG, "unregisterActivity:"+activity);
         clients.remove(activity);
     }
 

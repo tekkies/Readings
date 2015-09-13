@@ -88,7 +88,8 @@ public class PlayerService extends Service {
             readingsPlayer.registerActivity(activity, playerUi);
         }
         public void unregisterActivity(Activity activity) {
-            readingsPlayer.unregisterActivity(activity);
+            if(readingsPlayer != null)
+                readingsPlayer.unregisterActivity(activity);
         }
         @Override
         public int getPassage() {
