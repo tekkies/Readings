@@ -33,6 +33,7 @@ public class ReadingsPlayer implements AudioManager.OnAudioFocusChangeListener, 
     private IPlayerNotification playerNotification;
     private int passageId = 0;
     private Map<Activity, IPlayerUi> clients = new ConcurrentHashMap<Activity, IPlayerUi>();
+
     public ReadingsPlayer(PlayerService playerService, ParcelableReadings parcelableReadings, int passageId) {
         this.playerService = playerService;
         this.parcelableReadings = parcelableReadings;
@@ -67,11 +68,11 @@ public class ReadingsPlayer implements AudioManager.OnAudioFocusChangeListener, 
     void doPlay(int positionAsThousandth) {
         registerPlayerBroadcastReceiver();
         Log.i(LOG_TAG, "Play:" + getPassageId() + "(" + positionAsThousandth + ")");
-        if(getAudioFocus()) {
+        if (getAudioFocus()) {
             beep = false;
             String filePath = Mp3ContentLocator.getPassageFullPath(playerService, getPassageId());
             File file = new File(filePath);
-            if(file.exists()) {
+            if (file.exists()) {
                 mediaPlayer = MediaPlayer.create(playerService, Uri.parse(filePath));
                 mediaPlayer.setOnCompletionListener(this);
                 setPlayerPosition(positionAsThousandth);
@@ -94,7 +95,7 @@ public class ReadingsPlayer implements AudioManager.OnAudioFocusChangeListener, 
         }
         setPassageId(0);
         destroyNotification();
-        if(mediaPlayer.isPlaying()) {
+        if (mediaPlayer.isPlaying()) {
             mediaPlayer.stop();
         }
         mediaPlayer.release();
@@ -103,7 +104,7 @@ public class ReadingsPlayer implements AudioManager.OnAudioFocusChangeListener, 
 
     private void destroyNotification() {
         Log.i(LOG_TAG, "destroyNotification");
-        if(playerNotification != null) {
+        if (playerNotification != null) {
             playerNotification.destroy();
             playerNotification = null;
         }
@@ -118,13 +119,13 @@ public class ReadingsPlayer implements AudioManager.OnAudioFocusChangeListener, 
 
     void doResume() {
         Log.i(LOG_TAG, "doResume");
-        if(!mediaPlayer.isPlaying()) {
+        if (!mediaPlayer.isPlaying()) {
             mediaPlayer.start();
         }
     }
 
     public void onAudioFocusChange(int focusChange) {
-        Log.i(LOG_TAG, "onAudioFocusChange="+focusChange);
+        Log.i(LOG_TAG, "onAudioFocusChange=" + focusChange);
         switch (focusChange) {
             case AudioManager.AUDIOFOCUS_GAIN:
                 doResume();
@@ -205,8 +206,8 @@ public class ReadingsPlayer implements AudioManager.OnAudioFocusChangeListener, 
     }
 
     public int getProgress() {
-        int progress=0;
-        if(beep) {
+        int progress = 0;
+        if (beep) {
             progress = 0;
         } else {
             try {
@@ -222,7 +223,7 @@ public class ReadingsPlayer implements AudioManager.OnAudioFocusChangeListener, 
     }
 
     void setPlayerPosition(int positionAsThousandth) {
-        mediaPlayer.seekTo((mediaPlayer.getDuration() *  positionAsThousandth) / 1000);
+        mediaPlayer.seekTo((mediaPlayer.getDuration() * positionAsThousandth) / 1000);
     }
 
     class PlayerBroadcastReceiver extends BroadcastReceiver {
