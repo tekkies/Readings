@@ -38,7 +38,6 @@ public class ReadingsPlayer implements AudioManager.OnAudioFocusChangeListener, 
         clients.remove(activity);
     }
 
-
     class PlayerBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -51,8 +50,6 @@ public class ReadingsPlayer implements AudioManager.OnAudioFocusChangeListener, 
         }
     }
 
-
-
     private final PlayerService playerService;
     private final ParcelableReadings parcelableReadings;
     private IPlayerNotification playerNotification;
@@ -61,8 +58,6 @@ public class ReadingsPlayer implements AudioManager.OnAudioFocusChangeListener, 
     private int passageId = 0;
     Boolean beep = false;
     private Map<Activity, IPlayerUi> clients = new ConcurrentHashMap<Activity, IPlayerUi>();
-
-
 
     public ReadingsPlayer(PlayerService playerService, ParcelableReadings parcelableReadings, int passageId) {
         this.playerService = playerService;
@@ -78,7 +73,6 @@ public class ReadingsPlayer implements AudioManager.OnAudioFocusChangeListener, 
             playerBroadcastReceiver = null;
         }
     }
-
 
     public int getPassageId() {
         return passageId;
@@ -122,8 +116,11 @@ public class ReadingsPlayer implements AudioManager.OnAudioFocusChangeListener, 
     }
 
     private void destroyNotification() {
-        playerNotification.destroy();
-        playerNotification = null;
+        Log.i(LOG_TAG, "destroyNotification");
+        if(playerNotification != null) {
+            playerNotification.destroy();
+            playerNotification = null;
+        }
     }
 
     void doPause() {
@@ -162,8 +159,6 @@ public class ReadingsPlayer implements AudioManager.OnAudioFocusChangeListener, 
         }
     }
 
-
-
     private boolean getAudioFocus() {
         AudioManager audioManager = (AudioManager) playerService.getSystemService(Context.AUDIO_SERVICE);
         return (audioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN) == AudioManager.AUDIOFOCUS_REQUEST_GRANTED);
@@ -174,11 +169,9 @@ public class ReadingsPlayer implements AudioManager.OnAudioFocusChangeListener, 
         audioManager.abandonAudioFocus(this);
     }
 
-
     public ParcelableReadings getParcelableReadings() {
         return parcelableReadings;
     }
-
 
     private void registerPlayerBroadcastReceiver() {
         playerBroadcastReceiver = new PlayerBroadcastReceiver();
@@ -245,6 +238,4 @@ public class ReadingsPlayer implements AudioManager.OnAudioFocusChangeListener, 
     void setPlayerPosition(int positionAsThousandth) {
         mediaPlayer.seekTo((mediaPlayer.getDuration() *  positionAsThousandth) / 1000);
     }
-
-
 }

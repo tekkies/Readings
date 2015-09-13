@@ -22,7 +22,6 @@ public class PlayerService extends Service {
     ReadingsPlayer readingsPlayer;
     private final Binder binder = new PlayerServiceBinder();
 
-
     public interface IPlayerService {
         void registerActivity(Activity activity, IPlayerUi callback);
         void unregisterActivity(Activity activity);
@@ -58,19 +57,15 @@ public class PlayerService extends Service {
         return new ReadingsPlayer(this, parcelableReadings, passageId);
     }
 
-
     private void doStop() {
         readingsPlayer.doStop();
         readingsPlayer = null;
     }
 
-
     @Override
     public IBinder onBind(Intent intent) {
         return binder;
     }
-
-
 
     public static Boolean isServiceRunning(Context context) {
         Boolean serviceRunning = false;
@@ -85,10 +80,6 @@ public class PlayerService extends Service {
         return serviceRunning;
     }
 
-
-
-
-
     @Override
     public void onDestroy() {
         Log.i(LOG_TAG, "Service stopped");
@@ -96,8 +87,6 @@ public class PlayerService extends Service {
         readingsPlayer = null;
         super.onDestroy();
     }
-
-
 
     public class PlayerServiceBinder extends Binder implements IPlayerService {
         public void registerActivity(Activity activity, IPlayerUi playerUi) {
@@ -121,13 +110,4 @@ public class PlayerService extends Service {
             readingsPlayer.setPlayerPosition(positionAsThousandth);
         }
     }
-    
-
-    public Context getPlayerService() {
-        return this;
-    }
-
-
-
-
 }
