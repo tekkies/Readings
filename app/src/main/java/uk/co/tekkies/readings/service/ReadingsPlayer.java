@@ -25,9 +25,20 @@ import uk.co.tekkies.readings.util.Analytics;
 public class ReadingsPlayer implements AudioManager.OnAudioFocusChangeListener, MediaPlayer.OnCompletionListener {
     public static final String INTENT_STOP = "stop";
     private static final String LOG_TAG = "PLAYER";
-
-    public void setPassageId(int passageId) {
-        this.passageId = passageId;
+    private final PlayerService playerService;
+    private final ParcelableReadings parcelableReadings;
+    PlayerBroadcastReceiver playerBroadcastReceiver;
+    MediaPlayer mediaPlayer;
+    Boolean beep = false;
+    private IPlayerNotification playerNotification;
+    private int passageId = 0;
+    private Map<Activity, IPlayerUi> clients = new ConcurrentHashMap<Activity, IPlayerUi>();
+    public ReadingsPlayer(PlayerService playerService, ParcelableReadings parcelableReadings, int passageId) {
+        this.playerService = playerService;
+        this.parcelableReadings = parcelableReadings;
+        this.setPassageId(passageId);
+        playerNotification = new PlayerNotificationApi14(playerService, this);
+        playerNotification.show();
     }
 
     public void registerActivity(Activity activity, IPlayerUi playerUi) {
@@ -36,35 +47,6 @@ public class ReadingsPlayer implements AudioManager.OnAudioFocusChangeListener, 
 
     public void unregisterActivity(Activity activity) {
         clients.remove(activity);
-    }
-
-    class PlayerBroadcastReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if (action.equals(INTENT_STOP)) {
-                doStop();
-            } else if (action.equals(AudioManager.ACTION_AUDIO_BECOMING_NOISY)) {
-                doStop();
-            }
-        }
-    }
-
-    private final PlayerService playerService;
-    private final ParcelableReadings parcelableReadings;
-    private IPlayerNotification playerNotification;
-    PlayerBroadcastReceiver playerBroadcastReceiver;
-    MediaPlayer mediaPlayer;
-    private int passageId = 0;
-    Boolean beep = false;
-    private Map<Activity, IPlayerUi> clients = new ConcurrentHashMap<Activity, IPlayerUi>();
-
-    public ReadingsPlayer(PlayerService playerService, ParcelableReadings parcelableReadings, int passageId) {
-        this.playerService = playerService;
-        this.parcelableReadings = parcelableReadings;
-        this.setPassageId(passageId);
-        playerNotification = new PlayerNotificationApi14(playerService, this);
-        playerNotification.show();
     }
 
     public void destroy() {
@@ -76,6 +58,10 @@ public class ReadingsPlayer implements AudioManager.OnAudioFocusChangeListener, 
 
     public int getPassageId() {
         return passageId;
+    }
+
+    public void setPassageId(int passageId) {
+        this.passageId = passageId;
     }
 
     void doPlay(int positionAsThousandth) {
@@ -237,5 +223,17 @@ public class ReadingsPlayer implements AudioManager.OnAudioFocusChangeListener, 
 
     void setPlayerPosition(int positionAsThousandth) {
         mediaPlayer.seekTo((mediaPlayer.getDuration() *  positionAsThousandth) / 1000);
+    }
+
+    class PlayerBroadcastReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (action.equals(INTENT_STOP)) {
+                doStop();
+            } else if (action.equals(AudioManager.ACTION_AUDIO_BECOMING_NOISY)) {
+                doStop();
+            }
+        }
     }
 }
