@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Day" parent="android:Theme.Holo.Light">
-
+    <style name="Day" parent="android:Theme.Material.Light">
         <!-- <item name="android:windowTitleSize">20dip</item> -->
         <!-- <item name="pagerBackground">#33b5e5</item> -->
         <item name="pagerBackground">@android:color/holo_blue_light</item>
@@ -21,7 +20,7 @@
         <item name="ic_action_social_school">@drawable/ic_action_social_school_holo_light</item>
 		</style>
 
-    <style name="Night" parent="android:Theme.Holo">
+    <style name="Night" parent="android:Theme.Material">
 
         <!-- <item name="android:windowTitleSize">20dip</item> -->
         <item name="pagerBackground">@color/dark_grey</item>
