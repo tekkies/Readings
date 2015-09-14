@@ -1,12 +1,12 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 15
+    compileSdkVersion 21
     buildToolsVersion "20.0.0"
     defaultConfig {
         applicationId 'uk.co.tekkies.readings'
-        minSdkVersion 14
-        targetSdkVersion 20
+        minSdkVersion 21
+        targetSdkVersion 21
         versionCode (100100000 + (minSdkVersion.mApiLevel)*1000000 + (System.getenv("BUILD_NUMBER") as Integer ?: 0))
         versionName "3.4.6." + System.getenv("BUILD_NUMBER") ?: "0"
         testApplicationId "uk.co.tekkies.readings.test"
