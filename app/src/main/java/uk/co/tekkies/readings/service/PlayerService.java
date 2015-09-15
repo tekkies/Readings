@@ -50,9 +50,11 @@ public class PlayerService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        readingsPlayer = CreateReadingsPlayer(intent);
-        int positionAsThousandth = intent.getExtras().getInt(INTENT_EXTRA_POSITION);
-        readingsPlayer.doPlay(positionAsThousandth);
+        if(intent != null) {
+            readingsPlayer = CreateReadingsPlayer(intent);
+            int positionAsThousandth = intent.getExtras().getInt(INTENT_EXTRA_POSITION);
+            readingsPlayer.doPlay(positionAsThousandth);
+        }
         return super.onStartCommand(intent, flags, startId);
     }
 
