@@ -6,7 +6,8 @@ import android.content.pm.PackageInfo;
 import android.preference.PreferenceManager;
 import android.test.ActivityInstrumentationTestCase2;
 
-import com.google.android.apps.common.testing.testrunner.InstrumentationRegistry;
+
+import org.hamcrest.Matchers;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -18,14 +19,14 @@ import uk.co.tekkies.readings.activity.ReadingsActivity;
 import uk.co.tekkies.readings.model.Prefs;
 import uk.co.tekkies.readings.util.Analytics;
 
-import static com.google.android.apps.common.testing.ui.espresso.Espresso.onView;
-import static com.google.android.apps.common.testing.ui.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
-import static com.google.android.apps.common.testing.ui.espresso.action.ViewActions.click;
-import static com.google.android.apps.common.testing.ui.espresso.assertion.ViewAssertions.matches;
-import static com.google.android.apps.common.testing.ui.espresso.matcher.ViewMatchers.isDisplayed;
-import static com.google.android.apps.common.testing.ui.espresso.matcher.ViewMatchers.withId;
-import static com.google.android.apps.common.testing.ui.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.text.StringContains.containsString;
+import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
+import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
+
 
 public class ReadingsActivityTestBase extends ActivityInstrumentationTestCase2<ReadingsActivity> {
     protected final String CalendarConfirmButtonText="OK";
@@ -49,7 +50,7 @@ public class ReadingsActivityTestBase extends ActivityInstrumentationTestCase2<R
         onView(withText(CalendarConfirmButtonText)).perform(click());
         Date date = new Date(Calendar.getInstance().getTimeInMillis());
         String expected = "Today (" +new SimpleDateFormat("E").format(date)+")";
-        onView(withText(containsString(expected))).check(matches(isDisplayed()));
+        onView(withText(Matchers.containsString(expected))).check(matches(isDisplayed()));
     }
 
     public static void suppressStartupWhatsNew(Context context) {

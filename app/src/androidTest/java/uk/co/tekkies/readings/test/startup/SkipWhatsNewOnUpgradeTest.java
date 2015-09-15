@@ -7,9 +7,9 @@ import uk.co.tekkies.readings.activity.ReadingsActivity;
 import uk.co.tekkies.readings.test.Utils;
 import uk.co.tekkies.readings.test.readingsActivity.ReadingsActivityTestBase;
 
-import static com.google.android.apps.common.testing.ui.espresso.Espresso.onView;
-import static com.google.android.apps.common.testing.ui.espresso.assertion.ViewAssertions.doesNotExist;
-import static com.google.android.apps.common.testing.ui.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 public class SkipWhatsNewOnUpgradeTest extends ReadingsActivityTestBase {
 

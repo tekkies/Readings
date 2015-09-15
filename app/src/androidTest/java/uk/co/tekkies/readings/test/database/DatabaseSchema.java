@@ -14,11 +14,11 @@ import uk.co.tekkies.readings.ReadingsApplication;
 import uk.co.tekkies.readings.activity.ReadingsActivity;
 import uk.co.tekkies.readings.util.DatabaseHelper;
 
-import static com.google.android.apps.common.testing.ui.espresso.Espresso.onView;
-import static com.google.android.apps.common.testing.ui.espresso.assertion.ViewAssertions.matches;
-import static com.google.android.apps.common.testing.ui.espresso.matcher.ViewMatchers.isDisplayed;
-import static com.google.android.apps.common.testing.ui.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.text.StringContains.containsString;
+import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
+//import static org.hamcrest.text.StringContains.containsString;
 
 public class DatabaseSchema extends ApplicationTestCase<ReadingsApplication> {
     private static final String DB_FILE = "/data/data/uk.co.tekkies.readings/databases/Readings.db3";
