@@ -40,6 +40,7 @@ public class ReadingsPlayer implements AudioManager.OnAudioFocusChangeListener, 
         this.setPassageId(passageId);
         playerNotification = new PlayerNotificationApi14(playerService, this);
         playerNotification.show();
+        registerPlayerBroadcastReceiver();
     }
 
     public void registerActivity(Activity activity, IPlayerUi playerUi) {
@@ -68,7 +69,6 @@ public class ReadingsPlayer implements AudioManager.OnAudioFocusChangeListener, 
     }
 
     void doPlay(int positionAsThousandth) {
-        registerPlayerBroadcastReceiver();
         Log.i(LOG_TAG, "Play:" + getPassageId() + "(" + positionAsThousandth + ")");
         if (getAudioFocus()) {
             beep = false;
