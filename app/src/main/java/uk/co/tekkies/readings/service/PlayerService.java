@@ -79,9 +79,8 @@ public class PlayerService extends Service {
     }
 
     public static void requestPause(Context context) {
-        Intent intent = new Intent(ReadingsPlayer.INTENT_STOP);
+        Intent intent = new Intent(ReadingsPlayer.INTENT_PAUSE);
         context.sendBroadcast(intent);
-
     }
 
     public interface IPlayerService {

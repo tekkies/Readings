@@ -24,6 +24,7 @@ import uk.co.tekkies.readings.util.Analytics;
 
 public class ReadingsPlayer implements AudioManager.OnAudioFocusChangeListener, MediaPlayer.OnCompletionListener {
     public static final String INTENT_STOP = "stop";
+    public static final String INTENT_PAUSE = "pause";
     private static final String LOG_TAG = "PLAYER";
     private final PlayerService playerService;
     private final ParcelableReadings parcelableReadings;
@@ -44,7 +45,7 @@ public class ReadingsPlayer implements AudioManager.OnAudioFocusChangeListener, 
     }
 
     public void registerActivity(Activity activity, IPlayerUi playerUi) {
-        Log.i(LOG_TAG, "registerActivity:"+activity);
+        Log.i(LOG_TAG, "registerActivity:" + activity);
         clients.put(activity, playerUi);
     }
 
@@ -72,21 +73,44 @@ public class ReadingsPlayer implements AudioManager.OnAudioFocusChangeListener, 
         Log.i(LOG_TAG, "Play:" + getPassageId() + "(" + positionAsThousandth + ")");
         if (getAudioFocus()) {
             beep = false;
-            String filePath = Mp3ContentLocator.getPassageFullPath(playerService, getPassageId());
-            File file = new File(filePath);
-            if (file.exists()) {
-                mediaPlayer = MediaPlayer.create(playerService, Uri.parse(filePath));
-                mediaPlayer.setOnCompletionListener(this);
-                setPlayerPosition(positionAsThousandth);
-                mediaPlayer.start();
-                playerNotification.update(getPassageId());
-                for (Activity client : clients.keySet()) {
-                    clients.get(client).onPassageChange(getPassageId());
-                }
-            } else {
-                Toast.makeText(playerService, playerService.getString(R.string.mp3_not_found_goto_settings), Toast.LENGTH_LONG).show();
+            if(createPlayerIfRequired(positionAsThousandth)) {
+                doResume();
             }
+            checkAudioFocus();
         }
+    }
+
+    private void checkAudioFocus() {
+        if(mediaPlayer == null || !mediaPlayer.isPlaying()) {
+            abandonAudioFocus();
+        }
+    }
+
+    private boolean createPlayerIfRequired(int positionAsThousandth) {
+        boolean success = true;
+        if(mediaPlayer == null) {
+            success = createMediaPlayer(positionAsThousandth);
+        }
+        return success;
+    }
+
+    private boolean createMediaPlayer(int positionAsThousandth) {
+        String filePath = Mp3ContentLocator.getPassageFullPath(playerService, getPassageId());
+        File file = new File(filePath);
+        boolean success = file.exists();
+        if (success) {
+            mediaPlayer = MediaPlayer.create(playerService, Uri.parse(filePath));
+            mediaPlayer.setOnCompletionListener(this);
+            setPlayerPosition(positionAsThousandth);
+            mediaPlayer.start();
+            playerNotification.update(getPassageId());
+            for (Activity client : clients.keySet()) {
+                clients.get(client).onPassageChange(getPassageId());
+            }
+        } else {
+            Toast.makeText(playerService, playerService.getString(R.string.mp3_not_found_goto_settings), Toast.LENGTH_LONG).show();
+        }
+        return success;
     }
 
     void doStop() {
@@ -166,6 +190,7 @@ public class ReadingsPlayer implements AudioManager.OnAudioFocusChangeListener, 
         playerBroadcastReceiver = new PlayerBroadcastReceiver();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(INTENT_STOP);
+        intentFilter.addAction(INTENT_PAUSE);
         intentFilter.addAction(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
         playerService.registerReceiver(playerBroadcastReceiver, intentFilter);
     }
@@ -234,6 +259,9 @@ public class ReadingsPlayer implements AudioManager.OnAudioFocusChangeListener, 
             String action = intent.getAction();
             if (action.equals(INTENT_STOP)) {
                 doStop();
+            }
+            if (action.equals(INTENT_STOP)) {
+                doPause();
             } else if (action.equals(AudioManager.ACTION_AUDIO_BECOMING_NOISY)) {
                 doStop();
             }
