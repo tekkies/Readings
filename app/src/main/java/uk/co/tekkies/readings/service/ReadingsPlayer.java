@@ -36,6 +36,7 @@ public class ReadingsPlayer implements AudioManager.OnAudioFocusChangeListener, 
     private Map<Activity, IPlayerUi> clients = new ConcurrentHashMap<Activity, IPlayerUi>();
 
     public ReadingsPlayer(PlayerService playerService, ParcelableReadings parcelableReadings, int passageId) {
+        Log.i(LOG_TAG, "ReadingsPlayer.ReadingsPlayer(...)");
         this.playerService = playerService;
         this.parcelableReadings = parcelableReadings;
         this.setPassageId(passageId);
@@ -55,6 +56,7 @@ public class ReadingsPlayer implements AudioManager.OnAudioFocusChangeListener, 
     }
 
     public void destroy() {
+        Log.i(LOG_TAG, "ReadingsPlayer.destroy()");
         if (playerBroadcastReceiver != null) {
             playerService.unregisterReceiver(playerBroadcastReceiver);
             playerBroadcastReceiver = null;
