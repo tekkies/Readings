@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 
 import java.util.List;
@@ -75,6 +76,12 @@ public class PlayerService extends Service {
         readingsPlayer.destroy();
         readingsPlayer = null;
         super.onDestroy();
+    }
+
+    public static void requestPause(Context context) {
+        Intent intent = new Intent(ReadingsPlayer.INTENT_STOP);
+        context.sendBroadcast(intent);
+
     }
 
     public interface IPlayerService {

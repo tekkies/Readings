@@ -316,8 +316,8 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
         if(playerService != null) {
             int playingPassageId = playerService.getPassage();
             int displayedPassageId = ((PassageActivity) getActivity()).getCurrentPassageId();
-            ((PassageActivity) getActivity()).unbindPlayerService();
-            PlayerService.requestStop(getActivity());
+            //((PassageActivity) getActivity()).unbindPlayerService();
+            PlayerService.requestPause(getActivity());
             playPauseButton.setImageResource(resolveThemeAttribute(R.attr.ic_action_av_play));
             if (playingPassageId != displayedPassageId) {
                 seekBar.setProgress(0);
