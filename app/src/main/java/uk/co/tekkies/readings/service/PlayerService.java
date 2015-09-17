@@ -89,6 +89,7 @@ public class PlayerService extends Service {
         int getPassage();
         int getProgress();
         void setPosition(int progressAsThousandth);
+        boolean isPlaying();
     }
 
     public class PlayerServiceBinder extends Binder implements IPlayerService {
@@ -112,6 +113,11 @@ public class PlayerService extends Service {
         @Override
         public void setPosition(int positionAsThousandth) {
             readingsPlayer.setPlayerPosition(positionAsThousandth);
+        }
+
+        @Override
+        public boolean isPlaying() {
+            return (readingsPlayer != null) && readingsPlayer.isPlaying();
         }
     }
 }

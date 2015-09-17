@@ -255,6 +255,10 @@ public class ReadingsPlayer implements AudioManager.OnAudioFocusChangeListener, 
         mediaPlayer.seekTo((mediaPlayer.getDuration() * positionAsThousandth) / 1000);
     }
 
+    public boolean isPlaying() {
+        return (mediaPlayer != null) && mediaPlayer.isPlaying();
+    }
+
     class PlayerBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -262,7 +266,7 @@ public class ReadingsPlayer implements AudioManager.OnAudioFocusChangeListener, 
             if (action.equals(INTENT_STOP)) {
                 doStop();
             }
-            if (action.equals(INTENT_STOP)) {
+            if (action.equals(INTENT_PAUSE)) {
                 doPause();
             } else if (action.equals(AudioManager.ACTION_AUDIO_BECOMING_NOISY)) {
                 doStop();

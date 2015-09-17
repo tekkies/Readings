@@ -124,7 +124,7 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
 
     public void setPlayPauseIcon() {
         if(playPauseButton != null) {
-            playPauseButton.setImageResource(resolveThemeAttribute(((PassageActivity)getActivity()).isServiceAvailable() ? R.attr.ic_action_av_pause : R.attr.ic_action_av_play));
+            playPauseButton.setImageResource(resolveThemeAttribute(isPlaying() ? R.attr.ic_action_av_pause : R.attr.ic_action_av_play));
         }
     }
 
@@ -269,12 +269,17 @@ public class PassageFragment extends Fragment implements OnSharedPreferenceChang
             prefs.saveMp3Product(""); //Only open settings once
             doSearch();
         } else {
-            if (!PlayerService.isServiceRunning(getActivity())) {
+            if (!isPlaying()) {
                 doPlay();
             } else {
                 doPause();
             }
         }
+    }
+
+    private boolean isPlaying() {
+        PlayerService.IPlayerService playerService = ((PassageActivity)getActivity()).getPlayerService();
+        return (playerService != null) && playerService.isPlaying();
     }
 
     private void doStudy() {

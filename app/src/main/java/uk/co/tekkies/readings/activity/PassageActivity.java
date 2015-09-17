@@ -86,7 +86,7 @@ public class PassageActivity extends BaseActivity implements IPlayerUi {
         viewPager = (ViewPager) findViewById(R.id.pager);
         viewPager.setAdapter(pagerAdapter);
     }
-    
+
     public class PagerAdapter extends FragmentStatePagerAdapter {
 		
     	WeakHashMap<Integer, Fragment> fragments=new WeakHashMap<Integer, Fragment>();
