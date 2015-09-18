@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
+import android.util.Log;
 
 import uk.co.tekkies.readings.R;
 import uk.co.tekkies.readings.activity.PassageActivity;
@@ -17,6 +18,7 @@ import uk.co.tekkies.readings.service.PlayerService;
 import uk.co.tekkies.readings.service.ReadingsPlayer;
 
 public class PlayerNotificationApi14 implements IPlayerNotification {
+    private static final String LOG_TAG = "NOTIFY";
     private final Context context;
     private final ReadingsPlayer readingsPlayer;
     private Notification notification;
@@ -29,16 +31,19 @@ public class PlayerNotificationApi14 implements IPlayerNotification {
 
     @Override
     public void show() {
+        Log.i(LOG_TAG,"show()");
         showOngoingNotification();
     }
 
     @Override
     public void update(int passageId) {
+        Log.i(LOG_TAG,"update("+passageId+")");
         updateOngoingNotification(getNotificationTitle(passageId));
     }
 
     @Override
     public void destroy() {
+        Log.i(LOG_TAG,"destroy()");
         notification = null;
     }
 

@@ -24,11 +24,16 @@ public class PlayerService extends Service {
     ReadingsPlayer readingsPlayer;
 
     public static void requestPlay(PassageActivity passageActivity, int passageId, int positionAsThousandth) {
-        Intent intent = new Intent(passageActivity, PlayerService.class);
-        intent.putExtra(INTENT_EXTRA_PASSAGE_ID, passageId);
-        intent.putExtra(INTENT_EXTRA_POSITION, positionAsThousandth);
-        intent.putExtra(ParcelableReadings.PARCEL_NAME, passageActivity.getPassableReadings());
-        passageActivity.startService(intent);
+        if(!isServiceRunning(passageActivity)) {
+            Intent intent = new Intent(passageActivity, PlayerService.class);
+            intent.putExtra(INTENT_EXTRA_PASSAGE_ID, passageId);
+            intent.putExtra(INTENT_EXTRA_POSITION, positionAsThousandth);
+            intent.putExtra(ParcelableReadings.PARCEL_NAME, passageActivity.getPassableReadings());
+            passageActivity.startService(intent);
+        } else {
+            Intent intent = new Intent(ReadingsPlayer.INTENT_RESUME);
+            passageActivity.sendBroadcast(intent);
+        }
     }
 
     public static void requestStop(Context context) {
