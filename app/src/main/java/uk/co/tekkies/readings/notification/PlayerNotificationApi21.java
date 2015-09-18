@@ -2,7 +2,9 @@ package uk.co.tekkies.readings.notification;
 
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.media.session.MediaSession;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
@@ -59,18 +61,21 @@ public class PlayerNotificationApi21 implements IPlayerNotification {
 //        notification = notificationBuilder.build();
 
 
+
         notificationBuilder = new Notification.Builder(context)
                 .setSmallIcon(R.drawable.ic_launcher)
                 .setContentTitle("Track title")
                 .setContentText("Artist - Album")
+                .addAction(new Notification.Action(R.drawable.ic_action_av_play_holo_dark, "play/pause", null))
                 //.setLargeIcon(R.drawable.ic_launcher)
                 .setStyle(new Notification.MediaStyle()
-                .setMediaSession(mediaSession.getSessionToken()));
+                        .setMediaSession(mediaSession.getSessionToken()));
 
         notification = notificationBuilder.build();
 
         ((PlayerService) context).startForeground((int) Notification.FLAG_FOREGROUND_SERVICE, notification);
     }
+
 
     private void updateOngoingNotification(String contentTitle) {
         notificationBuilder.setContentTitle(contentTitle).setTicker(getPassageTitle(readingsPlayer.getPassageId()));

@@ -11,6 +11,7 @@ import android.media.session.MediaSession;
 import android.media.session.PlaybackState;
 import android.net.Uri;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.widget.Toast;
 
 import java.io.File;
@@ -53,9 +54,23 @@ public class ReadingsPlayer implements AudioManager.OnAudioFocusChangeListener, 
     }
 
     private void createMediaSession(Context context, ParcelableReadings parcelableReadings) {
+
+        PlaybackState.Builder stateBuilder = new PlaybackState.Builder();
+        stateBuilder.setActions(PlaybackState.ACTION_PLAY_PAUSE);
+        stateBuilder.setState(PlaybackState.STATE_PLAYING, 0, 1.0f);
+
+
         mediaSession = new MediaSession(context, SESSION_TAG);
-        mediaSession.setActive(true);
+        mediaSession.setFlags(MediaSession.FLAG_HANDLES_MEDIA_BUTTONS);
+        mediaSession.setPlaybackState(stateBuilder.build());
         MediaSession.Callback callback = new MediaSession.Callback() {
+
+            @Override
+            public boolean onMediaButtonEvent(Intent mediaButtonIntent) {
+                doPause();
+                return super.onMediaButtonEvent(mediaButtonIntent);
+            }
+
             @Override
             public void onPause() {
                 super.onPause();
@@ -63,6 +78,7 @@ public class ReadingsPlayer implements AudioManager.OnAudioFocusChangeListener, 
             }
         };
         mediaSession.setCallback(callback);
+        mediaSession.setActive(true);
     }
 
     public void registerActivity(Activity activity, IPlayerUi playerUi) {
