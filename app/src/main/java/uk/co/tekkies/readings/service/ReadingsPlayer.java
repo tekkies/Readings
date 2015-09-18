@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.media.session.MediaSession;
+import android.media.session.PlaybackState;
 import android.net.Uri;
 import android.util.Log;
 import android.widget.Toast;
@@ -20,6 +22,7 @@ import uk.co.tekkies.readings.model.ParcelableReadings;
 import uk.co.tekkies.readings.model.content.Mp3ContentLocator;
 import uk.co.tekkies.readings.notification.IPlayerNotification;
 import uk.co.tekkies.readings.notification.PlayerNotificationApi14;
+import uk.co.tekkies.readings.notification.PlayerNotificationApi21;
 import uk.co.tekkies.readings.util.Analytics;
 
 public class ReadingsPlayer implements AudioManager.OnAudioFocusChangeListener, MediaPlayer.OnCompletionListener {
@@ -27,10 +30,12 @@ public class ReadingsPlayer implements AudioManager.OnAudioFocusChangeListener, 
     public static final String INTENT_RESUME = "resume";
     public static final String INTENT_PAUSE = "pause";
     private static final String LOG_TAG = "PLAYER";
+    private static final String SESSION_TAG = "uk.co.tekkies.mediaSessionTag";
     private final PlayerService playerService;
     private final ParcelableReadings parcelableReadings;
     PlayerBroadcastReceiver playerBroadcastReceiver;
     MediaPlayer mediaPlayer;
+    MediaSession mediaSession;
     Boolean beep = false;
     private IPlayerNotification playerNotification;
     private int passageId = 0;
@@ -41,9 +46,23 @@ public class ReadingsPlayer implements AudioManager.OnAudioFocusChangeListener, 
         this.playerService = playerService;
         this.parcelableReadings = parcelableReadings;
         this.setPassageId(passageId);
-        playerNotification = new PlayerNotificationApi14(playerService, this);
+        createMediaSession(playerService, parcelableReadings);
+        playerNotification = new PlayerNotificationApi21(playerService, this, mediaSession);
         playerNotification.show();
         registerPlayerBroadcastReceiver();
+    }
+
+    private void createMediaSession(Context context, ParcelableReadings parcelableReadings) {
+        mediaSession = new MediaSession(context, SESSION_TAG);
+        mediaSession.setActive(true);
+        MediaSession.Callback callback = new MediaSession.Callback() {
+            @Override
+            public void onPause() {
+                super.onPause();
+                doPause();
+            }
+        };
+        mediaSession.setCallback(callback);
     }
 
     public void registerActivity(Activity activity, IPlayerUi playerUi) {
