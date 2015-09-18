@@ -213,19 +213,27 @@ public class ReadingsPlayer implements AudioManager.OnAudioFocusChangeListener, 
     }
 
     private void advanceOrExit() {
+        int passageIndex = getPassageIndex(getPassageId());
+        if (passageIndex < parcelableReadings.passages.size()) {
+            // Play next
+            mediaPlayer.release();
+            mediaPlayer = null;
+            setPassageId(parcelableReadings.passages.get(passageIndex+1).getPassageId());
+            doPlay(0);
+        } else {
+            doStop();
+        }
+    }
+
+    private int getPassageIndex(int passageId) {
+        int passageIndex = Integer.MAX_VALUE;
         for (int i = 0; i < parcelableReadings.passages.size(); i++) {
-            if (getPassageId() == parcelableReadings.passages.get(i).getPassageId()) {
-                i++;
-                if (i < parcelableReadings.passages.size()) {
-                    // Play next
-                    setPassageId(parcelableReadings.passages.get(i).getPassageId());
-                    doPlay(0);
-                } else {
-                    doStop();
-                }
+            if (passageId == parcelableReadings.passages.get(i).getPassageId()) {
+                passageIndex = i;
                 break;
             }
         }
+        return passageIndex;
     }
 
     private void doBeep() {
