@@ -281,6 +281,7 @@ public class ReadingsPlayer implements AudioManager.OnAudioFocusChangeListener, 
                 doPause();
             }
             if (action.equals(INTENT_RESUME)) {
+                //Todo: Deal with resuming in new passage and new position
                 doResume();
             } else if (action.equals(AudioManager.ACTION_AUDIO_BECOMING_NOISY)) {
                 doStop();
