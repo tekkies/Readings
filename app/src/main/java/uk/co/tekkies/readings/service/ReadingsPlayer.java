@@ -214,11 +214,12 @@ public class ReadingsPlayer implements AudioManager.OnAudioFocusChangeListener, 
 
     private void advanceOrExit() {
         int passageIndex = getPassageIndex(getPassageId());
+        passageIndex++;
         if (passageIndex < parcelableReadings.passages.size()) {
             // Play next
             mediaPlayer.release();
             mediaPlayer = null;
-            setPassageId(parcelableReadings.passages.get(passageIndex+1).getPassageId());
+            setPassageId(parcelableReadings.passages.get(passageIndex).getPassageId());
             doPlay(0);
         } else {
             doStop();
