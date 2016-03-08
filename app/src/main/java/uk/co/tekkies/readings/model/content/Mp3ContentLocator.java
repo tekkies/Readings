@@ -42,6 +42,7 @@ public abstract class Mp3ContentLocator {
         mp3ContentLocators.add(new NltLaridianTreeMp3ContentLocator());
         mp3ContentLocators.add(new NltLaridianMp3ContentLocator());
         mp3ContentLocators.add(new KjvScourbyMp3ContentLocator());
+        mp3ContentLocators.add(new KjvScourby2Mp3ContentLocator());
         mp3ContentLocators.add(new KjvListenersMp3ContentLocator());
         mp3ContentLocators.add(new KjvFirefightersMp3ContentLocator());
         return mp3ContentLocators; 
