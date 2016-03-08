@@ -63,6 +63,9 @@ public abstract class Mp3ContentLocator {
         if(KjvScourbyMp3ContentLocator.class.getName().equalsIgnoreCase(mp3Product)) {
             contentLocator = new KjvScourbyMp3ContentLocator();    
         }
+        if(KjvScourby2Mp3ContentLocator.class.getName().equalsIgnoreCase(mp3Product)) {
+            contentLocator = new KjvScourby2Mp3ContentLocator();
+        }
         else if(NltLaridianTreeMp3ContentLocator.class.getName().equalsIgnoreCase(mp3Product)) {
             contentLocator = new NltLaridianTreeMp3ContentLocator();    
         }
