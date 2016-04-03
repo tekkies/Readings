@@ -26,10 +26,20 @@
 
 
 
+            <TextView android:layout_width="fill_parent" android:layout_marginTop="10dp"
+                android:layout_height="wrap_content"
+                android:text="Version 3.4.7"
+                android:textStyle="bold" />
+            <TextView android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="- Fix: Wrong Firefighters MP3 files were playing for some chapters." />
+
+
+
 
             <TextView android:layout_width="fill_parent" android:layout_marginTop="10dp"
                 android:layout_height="wrap_content"
-                android:text="Version 3.4.5"
+                android:text="Version 3.4.6"
                 android:textStyle="bold" />
             <TextView android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
