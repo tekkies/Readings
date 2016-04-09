@@ -22,6 +22,7 @@ import uk.co.tekkies.readings.R;
 import uk.co.tekkies.readings.ReadingsApplication;
 import uk.co.tekkies.readings.fragment.PassageFragment;
 import uk.co.tekkies.readings.model.ParcelableReadings;
+import uk.co.tekkies.readings.service.IPlayerUi;
 import uk.co.tekkies.readings.service.PlayerService;
 import uk.co.tekkies.readings.util.Analytics;
 import android.app.Activity;
@@ -44,7 +45,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 
-public class PassageActivity extends BaseActivity implements PlayerService.IClientInterface {
+public class PassageActivity extends BaseActivity implements IPlayerUi {
 
     private static final String TAG_BIND = "BIND";
     public static final String ARG_SELECTED_DATE = "selectedDate";
@@ -54,7 +55,7 @@ public class PassageActivity extends BaseActivity implements PlayerService.IClie
     PagerAdapter pagerAdapter;
     ViewPager viewPager;
     private ParcelableReadings passableReadings;
-    private PlayerService.IServiceInterface serviceInterface = null;
+    private PlayerService.IPlayerService playerService = null;
     private AsyncTask<String, Integer, Long> progressUpdateTask;
     private boolean serviceAvailable = false;
     private PlayerServiceConnection serviceConnection; 
@@ -209,26 +210,26 @@ public class PassageActivity extends BaseActivity implements PlayerService.IClie
         return page;
     }
     
-    public PlayerService.IServiceInterface getServiceInterface() {
-        return serviceInterface;
+    public PlayerService.IPlayerService getPlayerService() {
+        return playerService;
     }
 
-    public void setServiceInterface(PlayerService.IServiceInterface serviceInterface) {
-        this.serviceInterface = serviceInterface;
+    public void setPlayerService(PlayerService.IPlayerService playerService) {
+        this.playerService = playerService;
     }
 
    
     public class PlayerServiceConnection implements ServiceConnection
     {
 
-        public void onServiceConnected(ComponentName className, IBinder binder) {
+        public void onServiceConnected(ComponentName className, IBinder playerService) {
             Log.i(TAG_BIND, "onServiceConnected");
-            setServiceInterface((PlayerService.IServiceInterface) binder);
+            setPlayerService((PlayerService.IPlayerService) playerService);
             try {
-                getServiceInterface().registerActivity(PassageActivity.this, getPassageActivity());
+                getPlayerService().registerActivity(PassageActivity.this, getPassageActivity());
                 serviceAvailable = true;
                 progressUpdateTask = new ProgressUpdateTask().execute("");
-                viewPager.setCurrentItem(getPage(getServiceInterface().getPassage()));
+                viewPager.setCurrentItem(getPage(getPlayerService().getPassage()));
                 //Toast.makeText(getPassageActivity(), "PassageID="+getServiceInterface().getPassage(), Toast.LENGTH_SHORT).show();
             } catch (Exception e) {
                 Analytics.reportCaughtException(getPassageActivity(), e);
@@ -238,14 +239,14 @@ public class PassageActivity extends BaseActivity implements PlayerService.IClie
         public void onServiceDisconnected(ComponentName className) {
             Log.i(TAG_BIND, "onServiceDisconnected");
             serviceAvailable = false;
-            setServiceInterface(null);
+            setPlayerService(null);
         }
     };
 
     public void unbindPlayerService() {
         Log.i(TAG_BIND, "unbindPlayerService");
-        if(serviceInterface != null) {
-            serviceInterface.unregisterActivity(this);
+        if(playerService != null) {
+            playerService.unregisterActivity(this);
         }
         if(serviceAvailable) {
             serviceAvailable = false;
@@ -286,7 +287,7 @@ public class PassageActivity extends BaseActivity implements PlayerService.IClie
         protected Long doInBackground(String... unused) {
             while(isServiceAvailable()) {
                 try {
-                    publishProgress(getServiceInterface().getProgress());
+                    publishProgress(getPlayerService().getProgress());
                     Thread.sleep(200);
                 } catch (InterruptedException e) {
                     //swallow it

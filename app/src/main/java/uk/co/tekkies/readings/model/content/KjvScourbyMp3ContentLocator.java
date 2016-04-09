@@ -8,7 +8,7 @@ public class KjvScourbyMp3ContentLocator extends Mp3ContentLocator {
 
     @Override
     public String getTitle() {
-        return "Scourby NLT MP3";
+        return "Scourby KJV MP3";
     }
 
     @Override
