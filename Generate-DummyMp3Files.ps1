@@ -32,7 +32,9 @@ function GenerateKjvScourby2Files()
 {
     $versionName = "KjvScourby2"
 
-    CreateFolder (Join-Path $dummyRootFolder $versionName) 
+    $versionRoot = Join-Path $dummyRootFolder $versionName
+
+    CreateFolder ($versionRoot) 
 
 
     GenerateFile $versionName "01 Genesis 001.mp3" "Genesis 1"
@@ -1225,7 +1227,7 @@ function GenerateKjvScourby2Files()
     GenerateFile $versionName "66 Revelation 021.mp3" "Revelation 21"
     GenerateFile $versionName "66 Revelation 022.mp3" "Revelation 22"
 
-
+    adb push $versionRoot /sdcard/readings-samples/KjvScourby2
 
 }
 
