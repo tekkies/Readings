@@ -53,7 +53,6 @@ public class PortionArrayAdapter extends ArrayAdapter<Passage> implements OnClic
 
     private ReadingsActivity readingsActivity;
     private ArrayList<Passage> passages;
-    float defaultTextSize=0;
     Prefs prefs;
     
 
@@ -70,13 +69,8 @@ public class PortionArrayAdapter extends ArrayAdapter<Passage> implements OnClic
         ViewGroup view = (ViewGroup) inflater.inflate(R.layout.listitem_portion, parent, false);
         TextView textViewPassageTitle = (TextView) view.findViewById(R.id.passage_title);
         TextView textViewSummary = (TextView) view.findViewById(R.id.textViewSummary);
-        if(defaultTextSize == 0) {
-            defaultTextSize = textViewSummary.getTextSize();
-        }
-        textViewSummary.setTextSize((float) (prefs.loadPassageTextSize() * defaultTextSize));
         textViewPassageTitle.setText(passages.get(position).getTitle());
         view.setTag(passages.get(position).getTitle());
-
         textViewPassageTitle.setOnClickListener(this);
         view.findViewById(R.id.imageViewReadOffline).setOnClickListener(this);
         view.findViewById(R.id.imageViewReadOnline).setOnClickListener(this);
