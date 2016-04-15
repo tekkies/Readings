@@ -63,6 +63,8 @@ public class ContentLocationActivityTest{
 
     @Test
     public void testContentIsFound() {
+        Assert.assertTrue("Device must be prepared with dummy content using Generate-DummyMp3Files.ps1", SAMPLE_FOLDER.exists());
+
         onView(withId(R.id.button_browse)).perform(click());
 
         onView(withText(getFoundMessge("KjvScourby2"))).check(matches(isDisplayed()));
