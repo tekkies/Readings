@@ -5,6 +5,7 @@ import android.app.Instrumentation;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -36,7 +37,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 @RunWith(AndroidJUnit4.class)
 public class ContentLocationActivityTest{
 
-
+    protected final File SAMPLE_FOLDER = new File(Environment.getExternalStorageDirectory(), "readings-samples");
 
 
     @Rule
@@ -48,17 +49,13 @@ public class ContentLocationActivityTest{
 
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getInstrumentation().getTargetContext());
             preferences.edit().clear().commit();
-
         }
     };
 
     @Before
     public void setup() {
-
-
-
         Intent resultData = new Intent();
-        Uri uri = Uri.fromFile(new File("/storage/emulated/0/readings-samples"));
+        Uri uri = Uri.fromFile(SAMPLE_FOLDER);
         resultData.setData(uri);
         Instrumentation.ActivityResult result = new Instrumentation.ActivityResult(Activity.RESULT_OK, resultData);
         intending(toPackage("com.estrongs.android.pop")).respondWith(result);
@@ -66,14 +63,18 @@ public class ContentLocationActivityTest{
 
     @Test
     public void testContentIsFound() {
-
-        //Device must be prepared with dummy content using Generate-DummyMp3Files.ps1
+        Assert.assertTrue("Device must be prepared with dummy content using Generate-DummyMp3Files.ps1", SAMPLE_FOLDER.exists());
 
         onView(withId(R.id.button_browse)).perform(click());
 
-        onView(withText("Found: /storage/emulated/0/readings-samples/KjvScourby2")).check(matches(isDisplayed()));
+        onView(withText(getFoundMessge("KjvScourby2"))).check(matches(isDisplayed()));
     }
 
+    private String getFoundMessge(String version) {
+        File folder = new File(SAMPLE_FOLDER, version);
+        String message = String.format("Found: %1s", folder.toString());
+        return message;
+    }
 
 
 }
