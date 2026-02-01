@@ -1,3 +1,5 @@
+**⚠️ This repository is no longer maintained. Development has moved to [https://github.com/ophelimos/Readings](https://github.com/ophelimos/Readings). Please visit the new repository for the latest updates.**
+
 # Daily Bible Reading #
 
 <a href="http://goo.gl/dHdjhS">
